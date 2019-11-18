@@ -45,8 +45,11 @@ INSTALLED_APPS = [
     'Apps.Restaurantes',
     'Apps.Tiendas',
     'Apps.Usuarios',
+    'Apps.Notificaciones',
     'django_twilio',
-    'phonenumber_field',   
+    'phonenumber_field',
+    'rest_framework',
+    'rest_framework.authtoken',
 
 ]
 
@@ -118,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-us'
 
 TIME_ZONE = 'UTC'
 
@@ -138,3 +141,13 @@ TWILIO_ACCOUNT_SID = 'AC5770f9d44bc5f3ad36f3839537c832db'
 TWILIO_AUTH_TOKEN = '518b61d6d833818218cd269912cd2f82'
 TWILIO_PHONE_NUMBER= '+12407861324'
 PHONENUMBER_DB_FORMAT="INTERNATIONAL"
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100,
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework.authentication.TokenAuthentication',
+        ),
+        'DEFAULT_PERMISSION_CLASSES': (
+            'rest_framework.permissions.IsAuthenticated', )
+}
