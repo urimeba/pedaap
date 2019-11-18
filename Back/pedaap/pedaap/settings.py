@@ -25,7 +25,7 @@ SECRET_KEY = 'd$3_exs05isfpnuvt4t@+qbh-m=kf3z3bby_yop1l@2*o#5qc-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'Apps.Presupuestos',
+    'Apps.PresupuestosCompartidos',
+    'Apps.Productos',
+    'Apps.Promociones',
+    'Apps.Restaurantes',
+    'Apps.Tiendas',
+    'Apps.Usuarios',
+    'django_twilio',
+    'phonenumber_field',   
+
 ]
 
 MIDDLEWARE = [
@@ -54,7 +65,7 @@ ROOT_URLCONF = 'pedaap.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'Templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,8 +86,12 @@ WSGI_APPLICATION = 'pedaap.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'fiestaap',
+        'HOST':'127.0.0.1',
+        'USER':'urimeba',
+        'PASSWORD':'1819965powerdbzssj4',
+        'PORT':'3306'
     }
 }
 
@@ -115,6 +130,11 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
-
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'Static'),)
+AUTH_USER_MODEL = 'Usuarios.User'
+
+TWILIO_ACCOUNT_SID = 'AC5770f9d44bc5f3ad36f3839537c832db'
+TWILIO_AUTH_TOKEN = '518b61d6d833818218cd269912cd2f82'
+TWILIO_PHONE_NUMBER= '+12407861324'
+PHONENUMBER_DB_FORMAT="INTERNATIONAL"
