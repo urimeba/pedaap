@@ -8,16 +8,23 @@ export default (props) => {
             </View>
             <View style={styles.Inputs}>
                 <View style={styles.InputsTitle}>
-                    <Text style={styles.TextColorOne}>Ingresa a tu cuenta</Text>
+                    <Text style={styles.TextColorOne}>Crear una cuenta</Text>
                 </View>
                 <View style={styles.InputsUser}>
+                    <TextInput 
+                        style={styles.TInput}
+                        placeholder="|  Correo"
+                        placeholderTextColor="#848482"
+                    />
+                </View>
+                <View style={styles.InputsPassword}>
                     <TextInput 
                         style={styles.TInput}
                         placeholder="|  Usuario"
                         placeholderTextColor="#848482"
                     />
                 </View>
-                <View style={styles.InputsPassword}>
+                <View style={styles.InputsForgotPassword}>
                     <TextInput 
                         style={styles.TInput}
                         placeholder="|  Contraseña"
@@ -25,25 +32,25 @@ export default (props) => {
                     />
                 </View>
                 <View style={styles.InputsForgotPassword}>
-                    <TouchableOpacity
-                        onPress={() => props.navigation.navigate('Forgot')}
-                    >
-                        <Text style={styles.TextColorOne}>¿Olvidaste tu contraseña?</Text>
-                    </TouchableOpacity>
+                    <TextInput 
+                        style={styles.TInput}
+                        placeholder="|  Confirmar contraseña"
+                        placeholderTextColor="#848482"
+                    />
                 </View>
                 <View style={styles.InputsNav}>
                     <TouchableOpacity 
                         style={styles.InputsNavSignup} 
                         onPress={() => props.navigation.navigate('Signup')}
                     >
-                        <Text style={styles.TextColorOne}>Registrarme</Text>
+                        <Text style={styles.TextColorOne}>Ya tengo cuenta!</Text>
                     </TouchableOpacity>
                     <View style={styles.InputsNavEnter}>
                         <TouchableOpacity 
                             style={styles.InputsNavEnterButton} 
                             onPress={() => props.navigation.navigate('User')}
                         >
-                            <Text style={[styles.TextColorOne, styles.TextButton]}>Entrar</Text>
+                            <Text style={[styles.TextColorOne, styles.TextButton]}>Siguiente</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -124,7 +131,7 @@ const styles = StyleSheet.create({
         color: '#848482',
     },
     TextButton: {
-        fontSize: 26,
+        fontSize: 24,
         color: '#FAFAFA',
     },
 });
