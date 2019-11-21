@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import MainNavigator from './src/navigation/MainNavigator';
 
-//Pedaap
+//Pedaap v2
 export default class App extends React.Component {
     render() {
         return (
