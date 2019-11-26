@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import BudgetScreen from '../screens/userScreens/BudgetScreen';
 import EventScreen from '../screens/userScreens/EventScreen';
-import PromoScreen from '../screens/userScreens/EventScreen';
+import PromoScreen from '../screens/userScreens/PromoScreen';
 import GameScreen from '../screens/userScreens/GameSceen';
 import ProfileScreen from '../screens/userScreens/ProfileScreen';
 
@@ -57,6 +57,7 @@ const UserTabs = createBottomTabNavigator(
         },
     },
     {
+        initialRouteName: 'Promo',
         tabBarOptions: {
             showIcon: true,
             activeTintColor: '#DE4C63',
@@ -66,6 +67,7 @@ const UserTabs = createBottomTabNavigator(
             }
         },
     },
+    
 );
 
 export default UserTabs;

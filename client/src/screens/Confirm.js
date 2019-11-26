@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput,Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default (props) => {
-    return (
+
+export default (props) =>{
+    return(
         <View style={styles.container}>
             <View style={styles.Image}>
                 <Image
@@ -13,14 +14,14 @@ export default (props) => {
             </View>
             <View style={styles.Inputs}>
                 <View style={styles.InputsTitle}>
-                    <Text style={styles.TextColorOne}>Ingresa a tu correo</Text>
+                    <Text style={styles.TextColorOne}>Ingresa a tu código</Text>
                 </View>
                 <View style={styles.InputsUser}>
                     <View style={styles.TInput1}>
-                        <Icon name="at" size={24} color={'#FAFAFA'} style={styles.icon} />
+                        <Icon name="code-brackets" size={24} color={'#FAFAFA'} style={styles.icon} />
                         <TextInput 
                             style={styles.TInput}
-                            placeholder="|  Correo"
+                            placeholder="|  Código"
                             placeholderTextColor="#848482"
                         />
                     </View>
@@ -29,15 +30,14 @@ export default (props) => {
             <View style={styles.InputsNavEnter}>
                         <TouchableOpacity 
                             style={styles.InputsNavEnterButton} 
-                            onPress={() => props.navigation.navigate('Login')}
+                            onPress={() => props.navigation.navigate('User')}
                         >
                             <Text style={[styles.TextColorOne, styles.TextButton]}>Confirmar</Text>
                         </TouchableOpacity>
                     </View>
         </View>
-    );
+    )
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -66,27 +66,27 @@ const styles = StyleSheet.create({
         height: '40%',
         // backgroundColor:'purple',
         paddingTop: '4%',
-        paddingBottom: '4%',
+        paddingBottom:'4%',
         marginTop: '10%',
     },
     TInput: {
-        flex: 1,
+        flex:1,
         width: '80%',
         height: '80%',
         backgroundColor: '#393939',
         borderRadius: 35,
         // paddingLeft: '%',
-        paddingTop: '2%',
-        marginTop: '2%',
-        paddingBottom: '2%',
+        paddingTop:'2%',
+        marginTop:'2%',
+        paddingBottom:'2%',
         fontSize: 18,
         color: '#FAFAFA',
         // backgroundColor:'blue',
     },
     TInput1: {
-        flex: 1,
-        flexDirection: 'row',
-        width: '80%',
+        flex:1,
+        flexDirection:'row',
+        width:'80%',
         height: 40,
         // backgroundColor:'pink',
         backgroundColor: '#393939',
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#FAFAFA',
     },
-    TextColorOne: {
+     TextColorOne: {
         fontSize: 18,
         color: '#848482',
     },
@@ -103,26 +103,26 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#FAFAFA',
     },
-    icon: {
+    icon:{
         // flex:1,
         justifyContent: 'center',
-        padding: '3%',
+        padding:'3%',
         width: '15%',
-        height: '55%',
+        height:'55%',
         // backgroundColor: 'pink',
-        marginTop: '5%',
+        marginTop:'5%',
     },
     InputsNavEnter: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    InputsNavEnterButton: {
-        borderRadius: 35,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '15%',
-        width: '40%',
-        backgroundColor: '#393939',
-    },
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        InputsNavEnterButton: {
+            borderRadius: 35,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '15%',
+            width: '40%',
+            backgroundColor: '#393939',
+        },
 });
