@@ -8,6 +8,7 @@ import ForgotScreen from '../screens/ForgotScreen';
 import UserTabs from './UserTabNavigator';
 import AdminTabs from './AdminTabNavigator';
 import PromotionScreen from '../screens/userScreens/PromotionScreen';
+import PreferencesScreen from '../screens/Preferences';
 
 export default createAppContainer(createSwitchNavigator({
     Login: {
@@ -29,6 +30,9 @@ export default createAppContainer(createSwitchNavigator({
         screen: ConfirmScreen
     },
     Promotion: {
-        screen:PromotionScreen
+        screen: PromotionScreen
     },
+    Preferences: {
+        screen: PreferencesScreen
+    }
 }));

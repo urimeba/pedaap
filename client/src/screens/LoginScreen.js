@@ -55,7 +55,7 @@ export default (props) => {
                     <View style={styles.InputsNavEnter}>
                         <TouchableOpacity 
                             style={styles.InputsNavEnterButton} 
-                            onPress={() => props.navigation.navigate('User')}
+                            onPress={() => props.navigation.navigate('Preferences')}
                         >
                             <Text style={[styles.TextColorOne, styles.TextButton]}>Entrar</Text>
                         </TouchableOpacity>
