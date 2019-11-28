@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -6,77 +6,122 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const datos=[
     {
         id: '1',
-        titulo: '2 x 1 Cerveza Indio',
+        nombre: '2 x 1 Cerveza Indio',
         lugar: 'Oxxo Juriquilla',
-        vigencia: '20/11/2019'
+        vigencia: '20/11/2019',
+        categoria: 'bebidas',
+        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        direccion: 'google maps'
     }, 
     {
         id: '2',
-        titulo: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo LOoo',
-        vigencia: '20/11/2019'
+       nombre: '2 x 1 Cerveza Indio',
+        lugar: 'Oxxo 1',
+        vigencia: '20/11/2019',
+        categoria: 'bebidas',
+        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        direccion: 'google maps'
     }, 
     {
         id: '3',
-        titulo: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo Mi',
-        vigencia: '20/11/2019'
+        nombre: '2 x 1 Cerveza Indio',
+        lugar: 'Oxxo 2',
+        vigencia: '20/11/2019',
+        categoria: 'bebidas',
+        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        direccion: 'google maps'
     },
     {
         id: '4',
-        titulo: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo Mi',
-        vigencia: '20/11/2019'
+        nombre: '2 x 1 Cerveza Indio',
+        lugar: 'Oxxo 3',
+        vigencia: '20/11/2019',
+        categoria: 'bebidas',
+        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        direccion: 'google maps'
     },
     {
         id: '5',
-        titulo: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo Mi',
-        vigencia: '20/11/2019'
+       nombre: '2 x 1 Cerveza Indio',
+        lugar: 'Oxxo 4',
+        vigencia: '20/11/2019',
+        categoria: 'bebidas',
+        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        direccion: 'google maps'
     },
     {
         id: '6',
-        titulo: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo Mi',
-        vigencia: '20/11/2019'
+        nombre: '2 x 1 Cerveza Indio',
+        lugar: 'Oxxo 5',
+        vigencia: '20/11/2019',
+        categoria: 'bebidas',
+        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        direccion: 'google maps'
     },
     {
         id: '7',
-        titulo: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo Mi',
-        vigencia: '20/11/2019'
+        nombre: '2 x 1 Cerveza Indio',
+        lugar: 'Oxxo 6',
+        vigencia: '20/11/2019',
+        categoria: 'bebidas',
+        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        direccion: 'google maps'
     },
     {
         id: '8',
-        titulo: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo Mi',
-        vigencia: '20/11/2019'
+        nombre: '2 x 1 Cerveza Indio',
+        lugar: 'Oxxo 7',
+        vigencia: '20/11/2019',
+        categoria: 'bebidas',
+        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        direccion: 'google maps'
     },
     {
         id: '9',
-        titulo: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo Mi',
-        vigencia: '20/11/2019'
+        nombre: '2 x 1 Cerveza Indio',
+        lugar: 'Oxxo 8',
+        vigencia: '20/11/2019',
+        categoria: 'bebidas',
+        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        direccion: 'google maps'
     },
 ];
 
-function Cajas({data}){
-    console.log(data)
-    return (
-        <View style={styles.caja}>
+export default class App extends Component{
+    constructor(props) {
+            super(props);
+            this.state={
+
+            };
+    }
+
+    // _vista = async()=>{
+    //     props.navigation.navigate('Promotion', {datos: data})}
+    // }
+
+    caja= ({item})=>(
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('Promotion', {
+            datos: item, 
+            id: item.id,
+            nombre: item.nombre,
+            lugar: item.lugar,
+            vigencia: item.vigencia,
+            categoria: item.categoria,
+            descripcion: item.descripcion,
+            direccion: item.direccion
+             })} style={styles.caja}>
             <View style={styles.imgCaja}>
                 <Image/>
             </View>
             <View style={styles.datosCaja}>
-                <Text style={styles.titulo}>{data.titulo}</Text>
-                <Text style={styles.titulo}>{data.lugar}</Text>
-                <Text style={styles.titulo}>{data.vigencia}</Text>
+                <Text style={styles.titulo}>{item.titulo}</Text>
+                <Text style={styles.titulo}>{item.lugar}</Text>
+                <Text style={styles.titulo}>{item.vigencia}</Text>
             </View>
-        </View>
-    );
-}
+        </TouchableOpacity>
+    )
 
-export default (props) => {
+    render(){
     return (
         <View style={styles.todo}>
             <View style={styles.container}>
@@ -102,16 +147,37 @@ export default (props) => {
                 <FlatList
                     style={styles.flat}
                     data={datos}
-                    renderItem={({item})=> 
-                    <Cajas data={item}/>
-                }
-                keyExtractor={item => item.id}
+                    renderItem={this.caja}
+                    keyExtractor={item => item.id}
                 />
             </View>
         </View>
         
     );
 }
+
+    
+}
+
+function Cajas({data}){
+    console.log(data)
+    return (
+        <TouchableOpacity onPress={() => props.navigation.navigate('Login', {datos: data})} style={styles.caja}>
+            <View style={styles.imgCaja}>
+                <Image/>
+            </View>
+            <View style={styles.datosCaja}>
+                <Text style={styles.titulo}>{data.titulo}</Text>
+                <Text style={styles.titulo}>{data.lugar}</Text>
+                <Text style={styles.titulo}>{data.vigencia}</Text>
+            </View>
+        </TouchableOpacity>
+    );
+}
+
+
+
+
 console.log(datos[0].vigencia)
 const styles = StyleSheet.create({
     todo:{

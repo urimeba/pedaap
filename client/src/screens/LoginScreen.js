@@ -1,9 +1,37 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput,Image,} from 'react-native';
+import React, {Component} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput,Image, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+const userInfo={username:'aixa', password:'1234'}
 
-export default (props) => {
+export default class App extends Component{
+    constructor(props) {
+    super(props);
+             this.state = {
+                 username: '',
+                 password: '',
+                 error1: false,
+                 error2: false
+             };
+}
+_singin = async(props)=>{
+    console.log(userInfo.username, this.state.username)
+    console.log(userInfo.password, this.state.password)
+    if(this.state.username=="" || this.state.password==""){
+        this.setState({error1: true})
+        this.setState({error2: false})
+    }else{
+        if(userInfo.username===this.state.username && userInfo.password===this.state.password){
+        Alert.alert('logged')
+        this.props.navigation.navigate('User')
+    }else{
+        this.setState({error2: true})
+        this.setState({error1: false})
+    }
+    }
+    
+}
+    render(){
     return (
         <View style={styles.container}>
             <View style={styles.Image}>
@@ -21,8 +49,11 @@ export default (props) => {
                         <Icon name="account" size={24} color={'#FAFAFA'} style={styles.icon} />
                         <TextInput 
                             style={styles.TInput}
+                            value={this.state.username}
+                            onChangeText={(username) => this.setState({ username })}
                             placeholder="|  Usuario"
                             placeholderTextColor="#848482"
+                            value={this.state.username}
                         />
                     </View>
                 </View>
@@ -31,13 +62,23 @@ export default (props) => {
                         <Icon name="lock" size={25} color={'#FAFAFA'} style={styles.icon} />
                        <TextInput 
                         style={styles.TInput}
+                        value={this.state.password}
+                        onChangeText={(password) => this.setState({ password })}
                         placeholder="|  Contraseña"
                         placeholderTextColor="#848482"
                         autoCompleteType="password"
                         secureTextEntry={true}
+                        value={this.state.password}
                     />
                     </View> 
                 </View>
+                {this.state.error1 === true && (
+                    <Text style={styles.warning}>Completa los campos</Text>
+                )}
+                {this.state.error2 === true && (
+                    <Text style={styles.error}>Usuario o contraseña incorrectos</Text>
+                )}
+                {/* {this.state.error ? ( < Text > error </Text>) : (<Text>no error</Text > )} */}
                 <View style={styles.InputsForgotPassword}>
                     <TouchableOpacity
                         onPress={() => props.navigation.navigate('Forgot')}
@@ -55,7 +96,9 @@ export default (props) => {
                     <View style={styles.InputsNavEnter}>
                         <TouchableOpacity 
                             style={styles.InputsNavEnterButton} 
-                            onPress={() => props.navigation.navigate('User')}
+                            // onPress={() => props.navigation.navigate('User')}
+                            // onPress={this.onLogin.bind(this)}
+                            onPress={this._singin}
                         >
                             <Text style={[styles.TextColorOne, styles.TextButton]}>Entrar</Text>
                         </TouchableOpacity>
@@ -64,6 +107,9 @@ export default (props) => {
             </View>
         </View>
     );
+
+}
+
 }
 
 const styles = StyleSheet.create({
@@ -93,6 +139,16 @@ const styles = StyleSheet.create({
         height: 20,
         paddingTop: '5%',
         paddingBottom: '5%',
+    },
+    warning:{
+        color:'#FEDB6B',
+        fontSize: 16,
+        marginLeft: 120,
+    },
+    error:{
+        color:'#DE4C63',
+        fontSize: 16,
+        marginLeft: 70,
     },
     TInput: {
         flex:1,
