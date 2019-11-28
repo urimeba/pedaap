@@ -92,8 +92,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'fiestaap',
         'HOST':'127.0.0.1',
-        'USER':'urimeba',
-        'PASSWORD':'1819965powerdbzssj4',
+        'USER':'root',
+        'PASSWORD':'',
         'PORT':'3306'
     }
 }

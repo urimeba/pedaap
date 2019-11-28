@@ -28,9 +28,9 @@ def login(request):
     if not user:
         return Response({"Error":"Credenciales no validas"}, status=HTTP_404_NOT_FOUND)
 
-    token, _ = Token.objects.get_or_create(user=user)
-    print(_)
-    return Response({"token":token.key, "id":str(user.id)}, status=HTTP_200_OK)
+    token, created = Token.objects.get_or_create(user=user)
+    print(created)
+    return Response({"token":token.key, "id":str(user.id), 'username':str(user.username)}, status=HTTP_200_OK)
 
 @csrf_exempt
 @api_view(["POST"])
@@ -44,7 +44,7 @@ def registro(request):
     last_name = request.data.get("apellido")
     verificado = 0
 
-    if username=="" or password=="" or email=="" or number=="" or first_name=="" or last_name=="":
+    if username=="" or password=="" or (email=="" or number=="") or first_name=="" or last_name=="":
         return Response({"Error":"Favor de completar todos los campos"}, status=HTTP_400_BAD_REQUEST)
     else:
         user, created = User.objects.get_or_create(username=username)
