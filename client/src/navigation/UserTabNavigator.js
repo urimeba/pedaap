@@ -8,6 +8,8 @@ import PromoScreen from '../screens/userScreens/PromoScreen';
 import GameScreen from '../screens/userScreens/GameSceen';
 import ProfileScreen from '../screens/userScreens/ProfileScreen';
 
+import PromotionStack from '../navigation/PromotionStack';
+
 const UserTabs = createBottomTabNavigator(
     {
         Budget: {
@@ -29,7 +31,7 @@ const UserTabs = createBottomTabNavigator(
             },
         },
         Promo: {
-            screen: PromoScreen,
+            screen: PromotionStack,
             navigationOptions: {
                 tabBarLabel: 'Promociones',
                 tabBarIcon: ({tintColor}) => (

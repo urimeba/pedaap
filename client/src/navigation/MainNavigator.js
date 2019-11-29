@@ -9,6 +9,7 @@ import UserTabs from './UserTabNavigator';
 import AdminTabs from './AdminTabNavigator';
 import PromotionScreen from '../screens/userScreens/PromotionScreen';
 import SignupStack from './SignupStack';
+import PromotionStack from './PromotionStack';
 
 export default createAppContainer(createSwitchNavigator({
     Login: {
@@ -29,9 +30,9 @@ export default createAppContainer(createSwitchNavigator({
     Confirm: {
         screen: ConfirmScreen
     },
-    Promotion: {
-        screen: PromotionScreen
-    },
+    // Promotion: {
+    //     screen: PromotionStack
+    // },
     SignupPref: {
         screen: SignupStack
     }

@@ -11,13 +11,15 @@ export default class App extends Component{
             contra:'',
             tel:'',
             verContra:'',
-            error1: false,
-            error2: false,
-            error3: false,
+            error1: false, //campos
+            error2: false, //correo
+            error3: false, //contra
         }
     }
 
     _confirm = async()=>{
+        let text = this.state.correo;
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         console.log(JSON.stringify(this.state.correo))
         if (this.state.usuario== "" || this.state.contra=="" || this.state.tel =="" || this.state.verContra=="" || this.state.correo== "") {
               this.setState({error1:true})
@@ -26,13 +28,32 @@ export default class App extends Component{
         }else{
             if (this.state.contra != this.state.verContra) {
                 this.setState({error3:true})
-              this.setState({error2:false})
-              this.setState({error1:false})
-            } else if (JSON.stringify(this.state.correo).contains("@")) {
-                Alert.alert("correo")
+                this.setState({error2:false})
+                this.setState({error1:false})
+            } else if (reg.test(text) === false) {
+                // console.warn("Invalid email")
+                this.setState({
+                    email: text,
+                    error2: true,
+                    error1: false,
+                    error3:false
+                })
+                return false;
+            }else{
+                this.setState({
+                    email: text,
+                    error1: false,
+                    error1: false,
+                    error3:false
+                })
+                console.log("Email is Correct");
                 this.props.navigation.navigate('Confirm',{tel: this.tel})
-
             }
+            // if (JSON.stringify(this.state.correo).contains("@")) {
+            //     Alert.alert("correo")
+            //     this.props.navigation.navigate('Confirm',{tel: this.tel})
+
+            // }
         }
     }
 
@@ -56,7 +77,7 @@ export default class App extends Component{
                                 style={styles.TInput}
                                 placeholder="|  Usuario"
                                 placeholderTextColor="#848482"
-                                onChangeText={(user) => this.setState({ user })}
+                                onChangeText={(usuario) => this.setState({ usuario })}
                             />
                         </View>
                     </View>
@@ -116,7 +137,7 @@ export default class App extends Component{
                         <Text style={styles.warning}>Completa los campos</Text>
                     )}
                     {this.state.error2=== true && (
-                        <Text style={styles.warning}>Revisa el correo</Text>
+                        <Text style={styles.warning}>El correo no es valido</Text>
                     )}
                     {this.state.error3=== true && (
                         <Text style={styles.error}>Las contraseñas no coinciden</Text>

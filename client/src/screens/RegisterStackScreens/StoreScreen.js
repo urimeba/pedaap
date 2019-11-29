@@ -91,7 +91,7 @@ export default (props) => {
                 <View style={styles.viewContinue}>
                     <TouchableOpacity 
                         style={styles.continue} 
-                        onPress={() => props.navigation.navigate('Login')}
+                        onPress={() => props.navigation.navigate('User')}
                     >
                     <Text style={styles.white}>Continuar</Text>
                     </TouchableOpacity>

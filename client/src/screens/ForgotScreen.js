@@ -1,27 +1,50 @@
 import React, {Component} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {validate} from 'validate.js';
+// import {validate} from 'validate.js';
+import ValidationComponent from 'react-native-form-validator/index';
+// import validate from 'vali'
 
-export default class App extends Component{
+export default class FormTest extends Component{
     constructor(props){
         super(props);
         this.state={
-            correo:'',
-            error1: '',
-            error2: false,
+            email:'',
+            error1: false, //campos
+            error2: false, //email valido
+            errr3: false, // no encontrado
         }
         // this._correo= this._correo.bind(this)
     }
 
 
 
-    _correo(){
-        const validation = validate('email',this.state.correo);
-        console.log(validation)
+    _correo=async()=>{
 
-        this.setState({error1: validation})
-
+        let text = this.state.email;
+        if(text===""){
+            this.setState({
+                erro1: true
+            })
+        }else{
+                let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                if (reg.test(text) === false) {
+                    // console.warn("Invalid email")
+                    this.setState({
+                        email: text,
+                        error2: true,
+                    })
+                    return false;
+                } else {
+                    this.setState({
+                        email: text,
+                        error1: false
+                    })
+                    console.log("Email is Correct");
+                    this.props.navigation.navigate('Login')
+                }
+        }
+        
     }
     render(){
         return (
@@ -43,12 +66,21 @@ export default class App extends Component{
                                 style={styles.TInput}
                                 placeholder="|  Correo"
                                 placeholderTextColor="#848482"
-                                onChangeText={(correo) => this.setState({ correo })}
-                                value={this.state.correo}
+                                onChangeText={(email) => this.setState({ email })}
+                                value={this.state.email}
                             />
                         </View>
                     </View>
                 </View>
+                 {this.state.error1 === true && (
+                    <Text style={styles.warning}>Completa el campo</Text>
+                )}
+                 {this.state.error2 === true && (
+                    <Text style={styles.warning}>El correo no es valido</Text>
+                )}
+                 {this.state.error3 === true && (
+                    <Text style={styles.error}>El correo no esta registrado</Text>
+                )}
                <View style={styles.InputsNav}>
                     <TouchableOpacity 
                         style={styles.InputsNavSignup} 
@@ -170,4 +202,14 @@ const styles = StyleSheet.create({
             justifyContent: 'center',
             alignItems: 'center',
         },
+         warning:{
+        color:'#FEDB6B',
+        fontSize: 16,
+        marginLeft: 120,
+    },
+    error:{
+        color:'#DE4C63',
+        fontSize: 16,
+        marginLeft: 70,
+    },
 });
