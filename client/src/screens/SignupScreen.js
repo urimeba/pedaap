@@ -1,97 +1,150 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
+import React, {Component} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+export default class App extends Component{
+    constructor(props){
+        super(props);
+        this.state={
+            usuario:'',
+            correo:'',
+            contra:'',
+            tel:'',
+            verContra:'',
+            error1: false,
+            error2: false,
+            error3: false,
+        }
+    }
 
-export default (props) => {
-    return (
-        <View style={styles.container}>
-            <View style={styles.Image}>
-                <Image
-                    style={{width:'100%', height:'100%', borderBottomLeftRadius: 60,}}
-                    source={require('../img/principal.jpg')}
-                 />
-            </View>
-            <View style={styles.Inputs}>
-                <View style={styles.InputsTitle}>
-                    <Text style={styles.TextColorOne}>Crear una cuenta</Text>
+    _confirm = async()=>{
+        console.log(JSON.stringify(this.state.correo))
+        if (this.state.usuario== "" || this.state.contra=="" || this.state.tel =="" || this.state.verContra=="" || this.state.correo== "") {
+              this.setState({error1:true})
+              this.setState({error2:false})
+              this.setState({error3:false})
+        }else{
+            if (this.state.contra != this.state.verContra) {
+                this.setState({error3:true})
+              this.setState({error2:false})
+              this.setState({error1:false})
+            } else if (JSON.stringify(this.state.correo).contains("@")) {
+                Alert.alert("correo")
+                this.props.navigation.navigate('Confirm',{tel: this.tel})
+
+            }
+        }
+    }
+
+    render() {
+        return (
+            <View style={styles.container}>
+                <View style={styles.Image}>
+                    <Image
+                        style={{ width: '100%', height: '100%', borderBottomLeftRadius: 60, }}
+                        source={require('../img/principal.jpg')}
+                    />
                 </View>
-                <View style={styles.InputsUser}>
-                    <View style={styles.TInput1}>
-                        <Icon name="account" size={24} color={'#FAFAFA'} style={styles.icon} />
-                        <TextInput 
-                            style={styles.TInput}
-                            placeholder="|  Usuario"
-                            placeholderTextColor="#848482"
-                        />
+                <View style={styles.Inputs}>
+                    <View style={styles.InputsTitle}>
+                        <Text style={styles.TextColorOne}>Crear una cuenta</Text>
                     </View>
-                </View>
-                <View style={styles.InputEmail}>
-                    <View style={styles.TInput1}>
-                        <Icon name="at" size={24} color={'#FAFAFA'} style={styles.icon} />
-                        <TextInput 
-                            style={styles.TInput}
-                            placeholder="|  Correo"
-                            placeholderTextColor="#848482"
-                            autoCapitalize='none'
-                            keyboardType='email-address'
-                        />
+                    <View style={styles.InputsUser}>
+                        <View style={styles.TInput1}>
+                            <Icon name="account" size={24} color={'#FAFAFA'} style={styles.icon} />
+                            <TextInput
+                                style={styles.TInput}
+                                placeholder="|  Usuario"
+                                placeholderTextColor="#848482"
+                                onChangeText={(user) => this.setState({ user })}
+                            />
+                        </View>
                     </View>
-                </View>
-                <View style={styles.InputPhone}>
-                    <View style={styles.TInput1}>
-                        <Icon name="phone" size={24} color={'#FAFAFA'} style={styles.icon} />
-                        <TextInput 
-                            style={styles.TInput}
-                            placeholder="|  Telefono"
-                            placeholderTextColor="#848482"
-                            keyboardType='numeric'
-                            maxLength={10}
-                        />
+                    <View style={styles.InputEmail}>
+                        <View style={styles.TInput1}>
+                            <Icon name="at" size={24} color={'#FAFAFA'} style={styles.icon} />
+                            <TextInput
+                                style={styles.TInput}
+                                placeholder="|  Correo"
+                                placeholderTextColor="#848482"
+                                autoCapitalize='none'
+                                keyboardType='email-address'
+                                 onChangeText={(correo) => this.setState({ correo })}
+                            />
+                        </View>
                     </View>
-                </View>
-                <View style={styles.InputPassword}>
-                    <View style={styles.TInput1}>
-                        <Icon name="lock" size={24} color={'#FAFAFA'} style={styles.icon} />
-                        <TextInput 
-                            style={styles.TInput}
-                            placeholder="|  Contraseña"
-                            placeholderTextColor="#848482"
-                            secureTextEntry = {true}
-                        />
+                    <View style={styles.InputPhone}>
+                        <View style={styles.TInput1}>
+                            <Icon name="phone" size={24} color={'#FAFAFA'} style={styles.icon} />
+                            <TextInput
+                                style={styles.TInput}
+                                placeholder="|  Telefono"
+                                placeholderTextColor="#848482"
+                                keyboardType='numeric'
+                                maxLength={10}
+                                onChangeText={(tel) => this.setState({ tel })}
+                            />
+                        </View>
                     </View>
-                </View>
-                <View style={styles.InputPassword}>
-                    <View style={styles.TInput1}>
-                        <Icon name="lock" size={24} color={'#FAFAFA'} style={styles.icon} />
-                        <TextInput 
-                            style={styles.TInput}
-                            placeholder="|  Confirmar contrseña"
-                            placeholderTextColor="#848482"
-                            secureTextEntry={true}
-                        />
+                    <View style={styles.InputPassword}>
+                        <View style={styles.TInput1}>
+                            <Icon name="lock" size={24} color={'#FAFAFA'} style={styles.icon} />
+                            <TextInput
+                                style={styles.TInput}
+                                placeholder="|  Contraseña"
+                                placeholderTextColor="#848482"
+                                secureTextEntry={true}
+                                onChangeText={(contra) => this.setState({ contra })}
+
+                            />
+                        </View>
                     </View>
-                </View>
-                <View style={styles.InputsNav}>
-                    <TouchableOpacity 
-                        style={styles.InputsNavSignup} 
-                        onPress={() => props.navigation.navigate('Login')}
-                    >
-                        <Text style={styles.TextColorOne}>Ya tengo cuenta!</Text>
-                    </TouchableOpacity>
-                    <View style={styles.InputsNavEnter}>
-                        <TouchableOpacity 
-                            style={styles.InputsNavEnterButton} 
-                            onPress={() => props.navigation.navigate('Confirm')}
+                    <View style={styles.InputPassword}>
+                        <View style={styles.TInput1}>
+                            <Icon name="lock" size={24} color={'#FAFAFA'} style={styles.icon} />
+                            <TextInput
+                                style={styles.TInput}
+                                placeholder="|  Confirmar contrseña"
+                                placeholderTextColor="#848482"
+                                secureTextEntry={true}
+                                onChangeText={(verContra) => this.setState({ verContra })}
+
+                            />
+                        </View>
+                    </View>
+                    {this.state.error1=== true && (
+                        <Text style={styles.warning}>Completa los campos</Text>
+                    )}
+                    {this.state.error2=== true && (
+                        <Text style={styles.warning}>Revisa el correo</Text>
+                    )}
+                    {this.state.error3=== true && (
+                        <Text style={styles.error}>Las contraseñas no coinciden</Text>
+                    )}
+                    <View style={styles.InputsNav}>
+                        <TouchableOpacity
+                            style={styles.InputsNavSignup}
+                            onPress={() => this.props.navigation.navigate('Login')}
                         >
-                            <Text style={[styles.TextColorOne, styles.TextButton]}>Siguiente</Text>
+                            <Text style={styles.TextColorOne}>Ya tengo cuenta!</Text>
                         </TouchableOpacity>
+                        <View style={styles.InputsNavEnter}>
+                            <TouchableOpacity
+                                style={styles.InputsNavEnterButton}
+                                onPress={this._confirm}
+                            >
+                                <Text style={[styles.TextColorOne, styles.TextButton]}>Siguiente</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </View>
-        </View>
-    );
+        );
+    }
+
 }
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -225,5 +278,15 @@ const styles = StyleSheet.create({
          height: '100%',
         //  backgroundColor: 'pink',
          marginTop: '1%',
-     }
+     },
+     warning:{
+        color:'#FEDB6B',
+        fontSize: 16,
+        marginLeft: 120,
+    },
+    error:{
+        color:'#DE4C63',
+        fontSize: 16,
+        marginLeft: 70,
+    },
 });

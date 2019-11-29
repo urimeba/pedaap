@@ -1,42 +1,76 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput} from 'react-native';
+import React, {Component} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {validate} from 'validate.js';
 
-export default (props) => {
-    return (
-        <View style={styles.container}>
-            <View style={styles.Image}>
-                <Image
-                    style={{width:'100%', height:'100%', borderBottomLeftRadius: 60,}}
-                    source={require('../img/principal.jpg')}
-                 />
-            </View>
-            <View style={styles.Inputs}>
-                <View style={styles.InputsTitle}>
-                    <Text style={styles.TextColorOne}>Ingresa a tu correo</Text>
+export default class App extends Component{
+    constructor(props){
+        super(props);
+        this.state={
+            correo:'',
+            error1: '',
+            error2: false,
+        }
+        // this._correo= this._correo.bind(this)
+    }
+
+
+
+    _correo(){
+        const validation = validate('email',this.state.correo);
+        console.log(validation)
+
+        this.setState({error1: validation})
+
+    }
+    render(){
+        return (
+            <View style={styles.container}>
+                <View style={styles.Image}>
+                    <Image
+                        style={{width:'100%', height:'100%', borderBottomLeftRadius: 60,}}
+                        source={require('../img/principal.jpg')}
+                    />
                 </View>
-                <View style={styles.InputsUser}>
-                    <View style={styles.TInput1}>
-                        <Icon name="at" size={24} color={'#FAFAFA'} style={styles.icon} />
-                        <TextInput 
-                            style={styles.TInput}
-                            placeholder="|  Correo"
-                            placeholderTextColor="#848482"
-                        />
+                <View style={styles.Inputs}>
+                    <View style={styles.InputsTitle}>
+                        <Text style={styles.TextColorOne}>Ingresa a tu correo</Text>
+                    </View>
+                    <View style={styles.InputsUser}>
+                        <View style={styles.TInput1}>
+                            <Icon name="at" size={24} color={'#FAFAFA'} style={styles.icon} />
+                            <TextInput 
+                                style={styles.TInput}
+                                placeholder="|  Correo"
+                                placeholderTextColor="#848482"
+                                onChangeText={(correo) => this.setState({ correo })}
+                                value={this.state.correo}
+                            />
+                        </View>
                     </View>
                 </View>
-            </View>
-            <View style={styles.InputsNavEnter}>
+               <View style={styles.InputsNav}>
+                    <TouchableOpacity 
+                        style={styles.InputsNavSignup} 
+                        onPress={() => this.props.navigation.navigate('Login')}
+                    >
+                        <Text style={styles.TextColorOne}>Cancelar</Text>
+                    </TouchableOpacity>
+                    <View style={styles.InputsNavEnter}>
                         <TouchableOpacity 
                             style={styles.InputsNavEnterButton} 
-                            onPress={() => props.navigation.navigate('Login')}
+                            onPress={this._correo}
                         >
                             <Text style={[styles.TextColorOne, styles.TextButton]}>Confirmar</Text>
                         </TouchableOpacity>
                     </View>
-        </View>
-    );
+                </View>
+            </View>
+         );
+        
+    }
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -122,7 +156,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         height: '15%',
-        width: '40%',
+        width: '70%',
         backgroundColor: '#393939',
     },
+       InputsNav: {
+           flex: 2,
+           flexDirection: 'row',
+           justifyContent: 'center',
+           alignItems: 'center',
+       },
+        InputsNavSignup: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
 });
