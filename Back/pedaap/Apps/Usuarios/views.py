@@ -51,7 +51,7 @@ def registro(request):
         if created:
             user.set_password(password)
             user.email=email
-            user.telefono=number
+            user.telefono=number    
             user.first_name=first_name
             user.last_name=last_name
             user.verificado=verificado
