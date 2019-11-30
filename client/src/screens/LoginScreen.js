@@ -81,7 +81,7 @@ _singin = async(props)=>{
                 {/* {this.state.error ? ( < Text > error </Text>) : (<Text>no error</Text > )} */}
                 <View style={styles.InputsForgotPassword}>
                     <TouchableOpacity
-                        onPress={() => props.navigation.navigate('Forgot')}
+                        onPress={() => this.props.navigation.navigate('Forgot')}
                     >
                         <Text style={styles.TextColorOne}>¿Olvidaste tu contraseña?</Text>
                     </TouchableOpacity>
@@ -89,7 +89,7 @@ _singin = async(props)=>{
                 <View style={styles.InputsNav}>
                     <TouchableOpacity 
                         style={styles.InputsNavSignup} 
-                        onPress={() => props.navigation.navigate('Signup')}
+                        onPress={() => this.props.navigation.navigate('Signup')}
                     >
                         <Text style={styles.TextColorOne}>Registrarme</Text>
                     </TouchableOpacity>
