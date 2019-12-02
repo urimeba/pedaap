@@ -31,18 +31,33 @@ _singin = async(props)=>{
     
           }).then( res => 
             {
-            AsyncStorage.setItem("userToken",res.data.token);
-            AsyncStorage.setItem("userId",res.data.id);
+                console.log(res.data);
 
-            console.log(res.data);
-            
-            // console.log("Token");
-            // console.log(res.data.token);
-            // console.log("ID");
-            // console.log(res.data.id);
-
-            // this.props.navigation.navigate("App");
                 
+                token = res.data.token;
+                idUser = res.data.id;
+                verificado = res.data.verificado;
+
+                if(verificado=='1'){
+                    AsyncStorage.setItem("userToken",res.data.token);
+                    AsyncStorage.setItem("userId",res.data.id);
+
+                }else{
+
+                }
+
+                
+
+                
+
+                
+                // console.log("Token");
+                // console.log(res.data.token);
+                // console.log("ID");
+                // console.log(res.data.id);
+
+                // this.props.navigation.navigate("App");
+
 
 
 
@@ -102,7 +117,7 @@ _singin = async(props)=>{
                 {/* {this.state.error ? ( < Text > error </Text>) : (<Text>no error</Text > )} */}
                 <View style={styles.InputsForgotPassword}>
                     <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate('Forgot')}
+                        onPress={() => props.navigation.navigate('Forgot')}
                     >
                         <Text style={styles.TextColorOne}>¿Olvidaste tu contraseña?</Text>
                     </TouchableOpacity>
@@ -110,7 +125,7 @@ _singin = async(props)=>{
                 <View style={styles.InputsNav}>
                     <TouchableOpacity 
                         style={styles.InputsNavSignup} 
-                        onPress={() => this.props.navigation.navigate('Signup')}
+                        onPress={() => props.navigation.navigate('Signup')}
                     >
                         <Text style={styles.TextColorOne}>Registrarme</Text>
                     </TouchableOpacity>
