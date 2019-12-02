@@ -30,7 +30,15 @@ def login(request):
 
     token, created = Token.objects.get_or_create(user=user)
     print(created)
-    return Response({"token":token.key, "id":str(user.id), 'username':str(user.username)}, status=HTTP_200_OK)
+    print(user.verificado)
+
+    if user.verificado==1:
+        return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado)}, status=HTTP_200_OK)
+    else:
+        return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado)}, status=HTTP_200_OK)
+
+
+
 
 @csrf_exempt
 @api_view(["POST"])
@@ -51,7 +59,7 @@ def registro(request):
         if created:
             user.set_password(password)
             user.email=email
-            user.telefono=number    
+            user.telefono=number
             user.first_name=first_name
             user.last_name=last_name
             user.verificado=verificado

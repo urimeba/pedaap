@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput,Image, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-const userInfo={username:'aixa', password:'1234'}
+import axios from 'axios';
+import { AsyncStorage } from 'react-native';
 
 export default class App extends Component{
     constructor(props) {
@@ -15,21 +15,43 @@ export default class App extends Component{
              };
 }
 _singin = async(props)=>{
-    console.log(userInfo.username, this.state.username)
-    console.log(userInfo.password, this.state.password)
-    if(this.state.username=="" || this.state.password==""){
-        this.setState({error1: true})
-        this.setState({error2: false})
-    }else{
-        if(userInfo.username===this.state.username && userInfo.password===this.state.password){
-        Alert.alert('logged')
-        this.props.navigation.navigate('User')
-    }else{
-        this.setState({error2: true})
-        this.setState({error1: false})
-    }
-    }
+    if(this.state.username=='' || this.state.password==''){
+        Alert.alert("Verifica tus datos", "Favor de ingresar el usuario y la contraseña");
+      }
+      else{
+        // console.log(this.state.username, this.state.password);
+        url = await AsyncStorage.getItem("server")+'login/'
+        axios({
+          method: 'POST',
+          url: url,
+          data: {username:this.state.username, password:this.state.password},
+          headers: {
+            "content-type":"application/json",
+          },
     
+          }).then( res => 
+            {
+            AsyncStorage.setItem("userToken",res.data.token);
+            AsyncStorage.setItem("userId",res.data.id);
+
+            console.log(res.data);
+            
+            // console.log("Token");
+            // console.log(res.data.token);
+            // console.log("ID");
+            // console.log(res.data.id);
+
+            // this.props.navigation.navigate("App");
+                
+
+
+
+          }).catch(err => {
+            console.log("Error");
+            console.log(err);
+            Alert.alert("Datos incorrectos", "Verifica los datos ingresados");
+          });
+      }
 }
     render(){
     return (
@@ -50,10 +72,10 @@ _singin = async(props)=>{
                         <TextInput 
                             style={styles.TInput}
                             value={this.state.username}
-                            onChangeText={(username) => this.setState({ username })}
                             placeholder="|  Usuario"
                             placeholderTextColor="#848482"
-                            value={this.state.username}
+                            onChangeText= { username => this.setState({username}) } 
+                            autoCapitalize="none"
                         />
                     </View>
                 </View>
@@ -63,12 +85,11 @@ _singin = async(props)=>{
                        <TextInput 
                         style={styles.TInput}
                         value={this.state.password}
-                        onChangeText={(password) => this.setState({ password })}
                         placeholder="|  Contraseña"
                         placeholderTextColor="#848482"
                         autoCompleteType="password"
                         secureTextEntry={true}
-                        value={this.state.password}
+                        onChangeText= { password => this.setState({password}) } 
                     />
                     </View> 
                 </View>
@@ -96,8 +117,6 @@ _singin = async(props)=>{
                     <View style={styles.InputsNavEnter}>
                         <TouchableOpacity 
                             style={styles.InputsNavEnterButton} 
-                            // onPress={() => props.navigation.navigate('User')}
-                            // onPress={this.onLogin.bind(this)}
                             onPress={this._singin}
                         >
                             <Text style={[styles.TextColorOne, styles.TextButton]}>Entrar</Text>
