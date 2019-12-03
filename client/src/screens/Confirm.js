@@ -19,7 +19,7 @@ export default class Confirm extends Component{
         url = await AsyncStorage.getItem("server")+'verificar/'
         token = await AsyncStorage.getItem("userToken")
         idUser = await AsyncStorage.getItem("userId")
-        // console.log(url, token, idUser, this.state.codigo)
+        console.log(url, token, idUser, this.state.codigo)
 
         axios({
           method: 'POST',
@@ -37,6 +37,30 @@ export default class Confirm extends Component{
             console.log("Error");
             console.log(err);
             Alert.alert("Datos incorrectos", "Verifica tu codigo");
+          });
+    }
+
+    _enviarCorreo = async(props)=>{
+        url = await AsyncStorage.getItem("server")+'enviar_correo/'
+        token = await AsyncStorage.getItem("userToken")
+        idUser = await AsyncStorage.getItem("userId")
+        // console.log(url, token, idUser, this.state.codigo)
+
+        axios({
+          method: 'POST',
+          url: url,
+          data: {idUser:idUser},
+          headers: {
+            "content-type":"application/json",
+            "Authorization": "Token "+ token
+          },
+    
+          }).then( res => {
+                console.log(res.data);
+          }).catch(err => {
+            console.log("Error");
+            console.log(err);
+            Alert.alert("Error", "Algo ha fallado. Intenta nuevamente.");
           });
     }
 

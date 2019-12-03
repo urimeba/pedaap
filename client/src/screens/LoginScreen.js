@@ -19,7 +19,7 @@ _singin = async(props)=>{
         Alert.alert("Verifica tus datos", "Favor de ingresar el usuario y la contraseña");
       }
       else{
-        console.log(this.state.username, this.state.password);
+        // console.log(this.state.username, this.state.password);
         url = await AsyncStorage.getItem("server")+'login/'
         axios({
           method: 'POST',

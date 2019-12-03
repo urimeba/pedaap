@@ -52,4 +52,5 @@ urlpatterns = [
     path('registro/', views_usuarios.registro),
     path('registro/', views_usuarios.registro),
     path('verificar/', views_usuarios.verificar),
+    path('enviar_correo/', views_usuarios.enviar_correo),
 ]

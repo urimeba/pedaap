@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Alert, AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 export default class App extends Component{
     constructor(props){
@@ -15,6 +16,32 @@ export default class App extends Component{
             error2: false, //correo
             error3: false, //contra
         }
+    }
+
+    _registrar = async(props)=>{
+        url = await AsyncStorage.getItem("server")+'registro/'
+        // console.log(this.state.usuario, this.state.correo, this.state.contra, this.state.verContra, this.state.tel)
+
+        axios({
+          method: 'POST',
+          url: url,
+          data: {usuario:this.state.usuario, password: this.state.contra, correo: this.state.correo, telefono: this.state.tel, },
+          headers: {
+            "content-type":"application/json",
+            // "Authorization": "Token "+ token
+          },
+    
+          }).then( res => {
+                console.log(res.data);
+                Alert.alert("Correcto", "Registro correcto");
+                AsyncStorage.setItem("userToken",res.data.token);
+                AsyncStorage.setItem("userId",res.data.id);
+                this.props.navigation.navigate("Confirm");
+          }).catch(err => {
+            // console.log("Error");
+            // console.log(err);
+            Alert.alert("Error", "El usuario, correo o teléfono ya han sido usados");
+          });
     }
 
     _confirm = async()=>{
@@ -47,7 +74,8 @@ export default class App extends Component{
                     error3:false
                 })
                 console.log("Email is Correct");
-                this.props.navigation.navigate('Confirm',{tel: this.tel})
+                this._registrar()
+                // this.props.navigation.navigate('Confirm',{tel: this.tel})
             }
             // if (JSON.stringify(this.state.correo).contains("@")) {
             //     Alert.alert("correo")
@@ -77,7 +105,9 @@ export default class App extends Component{
                                 style={styles.TInput}
                                 placeholder="|  Usuario"
                                 placeholderTextColor="#848482"
-                                onChangeText={(usuario) => this.setState({ usuario })}
+                                // onChangeText={(usuario) => this.setState({ usuario })}
+                                onChangeText= { usuario => this.setState({usuario}) } 
+                                autoCapitalize="none"
                             />
                         </View>
                     </View>
@@ -90,7 +120,10 @@ export default class App extends Component{
                                 placeholderTextColor="#848482"
                                 autoCapitalize='none'
                                 keyboardType='email-address'
-                                 onChangeText={(correo) => this.setState({ correo })}
+                                //  onChangeText={(correo) => this.setState({ correo })}
+                                 onChangeText= { correo => this.setState({correo}) } 
+                                 autoCapitalize="none"
+                                 
                             />
                         </View>
                     </View>
@@ -103,7 +136,9 @@ export default class App extends Component{
                                 placeholderTextColor="#848482"
                                 keyboardType='numeric'
                                 maxLength={10}
-                                onChangeText={(tel) => this.setState({ tel })}
+                                // onChangeText={(tel) => this.setState({ tel })}
+                                onChangeText= { tel => this.setState({tel}) } 
+                                autoCapitalize="none"
                             />
                         </View>
                     </View>
@@ -115,7 +150,9 @@ export default class App extends Component{
                                 placeholder="|  Contraseña"
                                 placeholderTextColor="#848482"
                                 secureTextEntry={true}
-                                onChangeText={(contra) => this.setState({ contra })}
+                                // onChangeText={(contra) => this.setState({ contra })}
+                                onChangeText= { contra => this.setState({contra}) } 
+                                autoCapitalize="none"
 
                             />
                         </View>
@@ -128,7 +165,9 @@ export default class App extends Component{
                                 placeholder="|  Confirmar contrseña"
                                 placeholderTextColor="#848482"
                                 secureTextEntry={true}
-                                onChangeText={(verContra) => this.setState({ verContra })}
+                                // onChangeText={(verContra) => this.setState({ verContra })}
+                                onChangeText= { verContra => this.setState({verContra}) }
+                                autoCapitalize="none" 
 
                             />
                         </View>
