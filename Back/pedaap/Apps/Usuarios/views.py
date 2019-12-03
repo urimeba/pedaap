@@ -44,8 +44,8 @@ def login(request):
             body='Codigo de verificación: ' + str(user.codigo),
             to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
-        subject = 'Prueba'
-        message = 'Prueba1 '
+        subject = 'Codigo de verificación Fiestaap'
+        message = 'El codigo de verificacion es: ' +  str(user.codigo)
         email_from = settings.EMAIL_HOST_USER
         recipient_list = ['urimeba511@gmail.com',]
         send_mail( subject, message, email_from, recipient_list )
