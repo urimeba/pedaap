@@ -136,10 +136,10 @@ export default class App extends Component{
                             placeholder="Buscar"
                             placeholderTextColor="#848482"
                         />
-                        <TouchableOpacity style={styles.iconE}  onPress={() => props.navigation.navigate('Promotion')}>
+                        <TouchableOpacity style={styles.iconE}  >
                              <Icon name="store" size={24} color={'#DE4C63'} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.iconA} onPress={() => props.navigation.navigate('Login')}>
+                        <TouchableOpacity style={styles.iconA} onPress={() => this.props.navigation.navigate('New')}>
                             <Icon name="plus" size={24} color={'#FEDB6B'}  />
                         </TouchableOpacity>
                     </View>
