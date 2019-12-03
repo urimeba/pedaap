@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as Permissions from 'expo-permissions';
+import { Camera } from 'expo-camera';
 
 const datos=[
     {
@@ -19,58 +21,44 @@ export default class App extends Component{
     constructor(props){
         super(props);
             this.state={
-                datos: []
+                hasPermission: null,
+                type: Camera.Constants.Type.back,
+                camera: false,
+                photo:'',
+                take: false,
             }
+    }
 
+    async componentDidMount() {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA);
+        this.setState({ hasPermission: status === 'granted' });
     }
 
     _user =async()=>{
         this.props.navigation.goBack()
     }
-    
 
-     cajas=({item})=>(
-        <View style={styles.caja}>
-            <View style={styles.imgCaja}>
-                <Image/>
-            </View>
-            <View style={styles.datosCaja}>
-                 <Text style={styles.titulo1}>Nombre de la promoción</Text>
-                <View style={styles.inputs}>
-                     <Text style={styles.titulo}>{item.nombre}</Text>
-                </View>
-                <Text style={styles.titulo1}>categoría</Text>
-                <View style={styles.inputs}>
-                     <Text style={styles.titulo}>{item.categoria}</Text>
-                </View>
-                 <Text style={styles.titulo1}>Descripción</Text>
-                <View style={styles.grande}>
-                     <Text style={ styles.titulo}>{item.descripcion}</Text>
-                </View>
-                 <Text style={styles.titulo1}>Vigencia</Text>
-                <View style={styles.inputs}>
-                     <Text style={styles.titulo}>{item.vigencia}</Text>
-                </View>
-                 <Text style={styles.titulo1}>Direccion</Text>
-                <View style={styles.grande}>
-                     <Text style={styles.titulo}>{item.direccion}</Text>
-                </View>
-                 <Text style={styles.titulo1}>Lugar</Text>
-                <View style={styles.inputs}>
-                     <Text style={styles.titulo}>{item.lugar}</Text>
-                </View>
-            </View>
-        </View>
-    )
-
+    snap = async () => {
+        if (this.camera) {
+            let photo = await this.camera.takePictureAsync();
+            console.log(photo.uri);
+            this.setState({camera:false});
+            this.setState({photo: photo.uri})
+            this.setState({take: true})
+        }
+    };
 
 
     render(){
-        // const item = this.props.navigation.getParam('datos', 'data');
-        // id = this.props.navigation.getParam('id', 'n')
-        // console.log(item)
-    return (
-        <View style={styles.todo}>
+        console.log(this.state.hasPermission, this.state.camera)
+    const { hasPermission } = this.state
+        if (hasPermission === null) {
+              return <View/> ;
+        } else if (hasPermission === false) {
+                return <Text> No access to camera </Text>;
+        } else {
+    return(
+       <View style={styles.todo}>
             <View style={styles.container}>
                 <View style={styles.arriba}>
                     <View style={styles.textoP}>
@@ -82,44 +70,72 @@ export default class App extends Component{
                         <Text style={styles.tituloP}>Promoción</Text>
                     </View>
                 </View>
-                <ScrollView>
+           
+                                <View style={{ flex: 1 }}>
+                                    
+                                </View>
+                <ScrollView style={styles.container2}>
                         <View style={styles.caja}>
-                            <View style={styles.imgCaja}>
-                                <Image/>
-                            </View>
+                            <TouchableOpacity
+                             style={styles.imgCaja}
+                              onPress={()=>{this.setState({camera:true})}}>
+                            {this.state.camera===true && (
+                                <Camera style={{ flex: 1 }} type={this.state.cameraType} ref={ref => { this.camera = ref; }}>
+                                        <View style={styles.camerabuttonview}>
+                                            <TouchableOpacity
+                                                style={styles.cameraButtons}
+                                                onPress={this.snap}
+                                            >
+                                                <Text
+                                                style={{ fontSize: 18, marginBottom: 10, color: "white" }}
+                                                >
+                                                foto
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                </Camera>
+                            )}
+                            {this.state.take===true && (
+                                <Image
+                                    style={styles.imgCaja2}
+                                    source={{uri:this.state.photo}}
+                                />
+                            )}
+                            </TouchableOpacity>
+                           
                             <View style={styles.datosCaja}>
                                 <Text style={styles.titulo1}>Nombre de la promoción</Text>
                                 <View style={styles.inputs}>
-                                    <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('nombre', 'promo'))}</Text>
+                                    <Text style={styles.titulo}>njn</Text>
                                 </View>
                                 <Text style={styles.titulo1}>categoría</Text>
                                 <View style={styles.inputs}>
-                                    <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('categoria', 'promo'))}</Text>
+                                    <Text style={styles.titulo}>n n </Text>
                                 </View>
                                 <Text style={styles.titulo1}>Descripción</Text>
                                 <View style={styles.grande}>
-                                    <Text style={ styles.titulo}>{JSON.stringify(this.props.navigation.getParam('descripcion', 'promo'))}</Text>
+                                    <Text style={ styles.titulo}>m m ñ</Text>
                                 </View>
                                 <Text style={styles.titulo1}>Vigencia</Text>
                                 <View style={styles.inputs}>
-                                    <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('vigencia', 'promo'))}</Text>
+                                    <Text style={styles.titulo}>ggg</Text>
                                 </View>
                                 <Text style={styles.titulo1}>Direccion</Text>
                                 <View style={styles.grande}>
-                                    <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('direccion', 'promo'))}</Text>
+                                    <Text style={styles.titulo}>yyy</Text>
                                 </View>
                                 <Text style={styles.titulo1}>Lugar</Text>
                                 <View style={styles.inputs}>
-                                    <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('lugar', 'promo'))}</Text>
+                                    <Text style={styles.titulo}>eee</Text>
                                 </View>
                             </View>
                         </View>
                 </ScrollView>
             </View>
         </View>
-        
-    );
-}
+    )
+  }
+  }
 }
 
 
@@ -132,6 +148,8 @@ export default class App extends Component{
 const styles = StyleSheet.create({
     todo:{
         flex: 1,
+        width: '100%',
+        // backgroundColor: 'red',
     },
     arriba:{
         // flex:1,
@@ -176,6 +194,16 @@ const styles = StyleSheet.create({
         height: '100%',
         width:'100%',
     },
+    container: {
+        // flex: 4,
+        // alignItems: 'center',
+        // flexDirection:'column',
+        // justifyContent: 'center',
+        backgroundColor:'#FAFAFA',
+        // marginTop: '20%',
+        height: '100%',
+        width:'100%',
+    },
     titulo:{
         // flex: 3,
         alignSelf:'center',
@@ -210,6 +238,14 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor:'gray',
         marginBottom: 10,
+    },
+    imgCaja2:{
+        // flex: 2,
+        width:'100%',
+        height: '100%',
+        borderRadius: 10,
+        // backgroundColor:'gray',
+        // marginBottom: 10,
     },
     datosCaja:{
         // flex:3,
