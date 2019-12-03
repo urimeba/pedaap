@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'Apps.Presupuestos',
     'Apps.PresupuestosCompartidos',
     'Apps.Productos',
@@ -138,9 +138,10 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'Static'),)
 AUTH_USER_MODEL = 'Usuarios.User'
 
 TWILIO_ACCOUNT_SID = 'AC5770f9d44bc5f3ad36f3839537c832db'
-TWILIO_AUTH_TOKEN = '518b61d6d833818218cd269912cd2f82'
+TWILIO_AUTH_TOKEN = 'a95578edc70e7746d70d776348b4582d'
 TWILIO_PHONE_NUMBER= '+12407861324'
 PHONENUMBER_DB_FORMAT="INTERNATIONAL"
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -151,3 +152,10 @@ REST_FRAMEWORK = {
         'DEFAULT_PERMISSION_CLASSES': (
             'rest_framework.permissions.IsAuthenticated', )
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'fiestaapqueretaro@gmail.com'
+EMAIL_HOST_PASSWORD = 'mochila1'

@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import Group
+from twilio.rest import Client
+from django.conf import settings
 from Apps.Usuarios.models import User
 from Apps.Usuarios.serializers import UserSerializer, GroupSerializer
 from rest_framework import viewsets
@@ -14,6 +16,8 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
     HTTP_200_OK
 )
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 @csrf_exempt
@@ -29,13 +33,54 @@ def login(request):
         return Response({"Error":"Credenciales no validas"}, status=HTTP_404_NOT_FOUND)
 
     token, created = Token.objects.get_or_create(user=user)
-    print(created)
-    print(user.verificado)
 
     if user.verificado==1:
         return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado)}, status=HTTP_200_OK)
     else:
+
+        to = user.telefono
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        client.messages.create(
+            body='Codigo de verificación: ' + str(user.codigo),
+            to=to, from_=settings.TWILIO_PHONE_NUMBER)
+
+        subject = 'Prueba'
+        message = 'Prueba1 '
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = ['urimeba511@gmail.com',]
+        send_mail( subject, message, email_from, recipient_list )
+
+
         return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado)}, status=HTTP_200_OK)
+
+
+
+# @csrf_exempt
+@api_view(["POST"])
+# @permission_classes((AllowAny,))
+def verificar(request):
+    idUser = request.data.get("idUser")
+    codigo = request.data.get("codigo")
+
+    if idUser is None or codigo is None:
+        return Response({'Error':'Favor de completar los campos'}, status=HTTP_400_BAD_REQUEST)
+
+    user = User.objects.get(id=idUser)
+
+    if codigo == str(user.codigo):
+        user.verificado=1
+        user.save()
+        return Response(status=HTTP_200_OK)
+
+    else:
+        return Response(status=HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
 
 
 

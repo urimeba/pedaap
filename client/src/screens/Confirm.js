@@ -1,9 +1,46 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput,Image } from 'react-native';
+import React, {Component} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput,Image, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { AsyncStorage } from 'react-native';
+import axios from 'axios';
 
 
-export default (props) =>{
+// export default (props) =>
+export default class Confirm extends Component{
+
+    constructor(props) {
+        super(props);
+                 this.state = {
+                     codigo: ''
+                 };
+    }
+
+    _verify = async(props)=>{
+        url = await AsyncStorage.getItem("server")+'verificar/'
+        token = await AsyncStorage.getItem("userToken")
+        idUser = await AsyncStorage.getItem("userId")
+        // console.log(url, token, idUser, this.state.codigo)
+
+        axios({
+          method: 'POST',
+          url: url,
+          data: {idUser:idUser, codigo:this.state.codigo},
+          headers: {
+            "content-type":"application/json",
+            "Authorization": "Token "+ token
+          },
+    
+          }).then( res => 
+            {
+                this.props.navigation.navigate("User");
+          }).catch(err => {
+            console.log("Error");
+            console.log(err);
+            Alert.alert("Datos incorrectos", "Verifica tu codigo");
+          });
+    }
+
+    render(){
     return(
         <View style={styles.container}>
             <View style={styles.Image}>
@@ -23,6 +60,9 @@ export default (props) =>{
                             style={styles.TInput}
                             placeholder="|  Código"
                             placeholderTextColor="#848482"
+                            maxLength = {6}
+                            keyboardType='numeric'
+                            onChangeText= { codigo => this.setState({codigo}) } 
                         />
                     </View>
                 </View>
@@ -30,13 +70,14 @@ export default (props) =>{
             <View style={styles.InputsNavEnter}>
                         <TouchableOpacity 
                             style={styles.InputsNavEnterButton} 
-                            onPress={() => props.navigation.navigate('SignupPref')}
+                            // onPress={() => props.navigation.navigate('SignupPref')}
+                            onPress={this._verify}
                         >
                             <Text style={[styles.TextColorOne, styles.TextButton]}>Confirmar</Text>
                         </TouchableOpacity>
                     </View>
         </View>
-    )
+    )}
 }
 const styles = StyleSheet.create({
     container: {

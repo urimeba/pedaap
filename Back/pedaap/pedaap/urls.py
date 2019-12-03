@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers  
+from rest_framework import routers
 from Apps.Notificaciones import views as views_notificacion
 from Apps.Usuarios import views as views_usuarios
 from Apps.Tiendas import views as views_tienda
@@ -50,4 +50,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('login/', views_usuarios.login),
     path('registro/', views_usuarios.registro),
+    path('registro/', views_usuarios.registro),
+    path('verificar/', views_usuarios.verificar),
 ]
