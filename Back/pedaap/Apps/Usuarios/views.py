@@ -37,21 +37,33 @@ def login(request):
     if user.verificado==1:
         return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado)}, status=HTTP_200_OK)
     else:
-
         to = user.telefono
         client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
         client.messages.create(
             body='Codigo de verificación: ' + str(user.codigo),
             to=to, from_=settings.TWILIO_PHONE_NUMBER)
-
-        subject = 'Codigo de verificación Fiestaap'
-        message = 'El codigo de verificacion es: ' +  str(user.codigo)
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = ['urimeba511@gmail.com',]
-        send_mail( subject, message, email_from, recipient_list )
-
-
         return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado)}, status=HTTP_200_OK)
+
+
+# @csrf_exempt
+@api_view(["POST"])
+# @permission_classes((AllowAny,))
+def enviar_correo(request):
+    idUser = request.data.get("idUser")
+
+    if idUser is None:
+        return Response({'Error':'Favor de completar los campos'}, status=HTTP_400_BAD_REQUEST)
+
+    user = User.objects.get(id=idUser)
+
+    subject = 'Codigo de verificación Fiestaap'
+    message = 'Ingresa el siguiente codigo para verificar su cuenta: ' +  str(user.codigo)
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [str(user.email),]
+    send_mail( subject, message, email_from, recipient_list )
+    return Response({"Exito":"Correo enviado correctamente"}, status=HTTP_200_OK)
+
+
 
 
 
@@ -92,24 +104,43 @@ def registro(request):
     username = request.data.get("usuario")
     password = request.data.get("password")
     email = request.data.get("correo")
-    number = request.data.get("telefono")
-    first_name = request.data.get("nombre")
-    last_name = request.data.get("apellido")
+    number = "+52" + str(request.data.get("telefono"))
+    # print(username, password, email, number)
+    # first_name = request.data.get("nombre")
+    # last_name = request.data.get("apellido")
     verificado = 0
 
-    if username=="" or password=="" or (email=="" or number=="") or first_name=="" or last_name=="":
+    if username=="" or password=="" or email=="" or number=="":
         return Response({"Error":"Favor de completar todos los campos"}, status=HTTP_400_BAD_REQUEST)
     else:
-        user, created = User.objects.get_or_create(username=username)
+        user, created = User.objects.get_or_create(username=username, telefono=number, email=email )
         if created:
             user.set_password(password)
             user.email=email
             user.telefono=number
-            user.first_name=first_name
-            user.last_name=last_name
+            # user.first_name=first_name
+            # user.last_name=last_name
             user.verificado=verificado
             user.save()
-            return Response({"Registrado": "Usuario registrado exitosamente"}, status=HTTP_200_OK)
+
+            client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+
+            # validation_request = client.validation_requests.create(
+            #                     friendly_name=str(user.username),
+            #                     phone_number='+14158675310'
+            #                 )
+            #
+            # print(validation_request.friendly_name)
+
+
+            to = user.telefono
+            client.messages.create(
+                body='Codigo de verificación: ' + str(user.codigo),
+                to=to, from_=settings.TWILIO_PHONE_NUMBER)
+
+            token, created = Token.objects.get_or_create(user=user)
+
+            return Response({"Registrado": "Usuario registrado exitosamente", "token":token.key, "id":str(user.id)}, status=HTTP_200_OK)
         else:
             return Response({"Error": "El usuario ya existe"}, status=HTTP_400_BAD_REQUEST)
 

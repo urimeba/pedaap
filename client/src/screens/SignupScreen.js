@@ -7,9 +7,11 @@ import {
     TextInput,
     Image,
     Alert,
-    KeyboardAvoidingView 
+    KeyboardAvoidingView,
+    AsyncStorage 
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 export default class App extends Component{
     constructor(props){
@@ -26,6 +28,32 @@ export default class App extends Component{
         };
     }
 
+    _registrar = async(props)=>{
+        url = await AsyncStorage.getItem("server")+'registro/'
+        // console.log(this.state.usuario, this.state.correo, this.state.contra, this.state.verContra, this.state.tel)
+
+        axios({
+          method: 'POST',
+          url: url,
+          data: {usuario:this.state.usuario, password: this.state.contra, correo: this.state.correo, telefono: this.state.tel, },
+          headers: {
+            "content-type":"application/json",
+            // "Authorization": "Token "+ token
+          },
+    
+          }).then( res => {
+                console.log(res.data);
+                Alert.alert("Correcto", "Registro correcto");
+                AsyncStorage.setItem("userToken",res.data.token);
+                AsyncStorage.setItem("userId",res.data.id);
+                this.props.navigation.navigate("Confirm");
+          }).catch(err => {
+            // console.log("Error");
+            // console.log(err);
+            Alert.alert("Error", "El usuario, correo o teléfono ya han sido usados");
+          });
+    }
+    
     _confirm = async() => {
         let text = this.state.correo;
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -60,7 +88,8 @@ export default class App extends Component{
                     error3:false
                 });
                 console.log("Email is Correct");
-                this.props.navigation.navigate('Confirm',{tel: this.tel});
+                this._registrar()
+                // this.props.navigation.navigate('Confirm',{tel: this.tel})
             }
         }
     }

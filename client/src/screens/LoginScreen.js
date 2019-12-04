@@ -22,7 +22,7 @@ export default class App extends Component{
             error2: false
         };
     }
-
+    
     _singin = async(props)=>{
         if(this.state.username=='' || this.state.password==''){
             this.setState({

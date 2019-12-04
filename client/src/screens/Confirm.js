@@ -43,6 +43,30 @@ export default class Confirm extends Component{
         });
     }
 
+    _enviarCorreo = async(props)=>{
+        url = await AsyncStorage.getItem("server")+'enviar_correo/'
+        token = await AsyncStorage.getItem("userToken")
+        idUser = await AsyncStorage.getItem("userId")
+        // console.log(url, token, idUser, this.state.codigo)
+
+        axios({
+          method: 'POST',
+          url: url,
+          data: {idUser:idUser},
+          headers: {
+            "content-type":"application/json",
+            "Authorization": "Token "+ token
+          },
+    
+          }).then( res => {
+                console.log(res.data);
+          }).catch(err => {
+            console.log("Error");
+            console.log(err);
+            Alert.alert("Error", "Algo ha fallado. Intenta nuevamente.");
+          });
+    }
+
     render(){
         return(
             <KeyboardAvoidingView style={styles.container} behavior="position" enabled>
