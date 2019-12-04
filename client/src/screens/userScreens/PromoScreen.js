@@ -87,17 +87,49 @@ const datos=[
     },
 ];
 
+const estable=[
+    {
+        id:'1',
+        nombre:'Oxxo',
+        direccion:'centro'
+    },
+    {
+        id:'2',
+        nombre:'Oxxovv',
+        direccion:'centro'
+    },
+    {
+        id:'3',
+        nombre:'Oxxoww',
+        direccion:'centro'
+    },
+    {
+        id:'4',
+        nombre:'Oxxoqq',
+        direccion:'centro'
+    },
+]
+
 export default class App extends Component{
     constructor(props) {
             super(props);
             this.state={
-
+                establecimieniemtos: false
             };
     }
 
     // _vista = async()=>{
     //     props.navigation.navigate('Promotion', {datos: data})}
     // }
+    _estable=()=>{
+        if(this.state.establecimieniemtos===false){
+            this.setState({establecimieniemtos:true})
+        }
+        if(this.state.establecimieniemtos===true){
+            this.setState({establecimieniemtos:false})
+        }
+        
+    }
 
     caja= ({item})=>(
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Promotion', {
@@ -121,6 +153,18 @@ export default class App extends Component{
         </TouchableOpacity>
     )
 
+    caja2= ({item})=>(
+        <TouchableOpacity style={styles.caja}>
+            <View style={styles.imgCaja}>
+                <Image/>
+            </View>
+            <View style={styles.datosCaja}>
+                <Text style={styles.titulo}>{item.nombre}</Text>
+                <Text style={styles.titulo}>{item.lugar}</Text>
+            </View>
+        </TouchableOpacity>
+    )
+
     render(){
     return (
         <View style={styles.todo}>
@@ -136,20 +180,34 @@ export default class App extends Component{
                             placeholder="Buscar"
                             placeholderTextColor="#848482"
                         />
-                        <TouchableOpacity style={styles.iconE}  >
-                             <Icon name="store" size={24} color={'#DE4C63'} />
+                        <TouchableOpacity 
+                            style={styles.iconE}  
+                            onPress={this._estable}>
+                             <Icon name="store" size={24} color={'#DE4C63'}
+                             />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.iconA} onPress={() => this.props.navigation.navigate('New')}>
                             <Icon name="plus" size={24} color={'#FEDB6B'}  />
                         </TouchableOpacity>
                     </View>
                 </View>
-                <FlatList
+                {this.state.establecimieniemtos===false && (
+                    <FlatList
                     style={styles.flat}
                     data={datos}
                     renderItem={this.caja}
                     keyExtractor={item => item.id}
                 />
+                )}
+                {this.state.establecimieniemtos===true && (
+                    <FlatList
+                    style={styles.flat}
+                    data={estable}
+                    renderItem={this.caja2}
+                    keyExtractor={item => item.id}
+                />
+                )}
+                
             </View>
         </View>
         
