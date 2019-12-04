@@ -1,5 +1,14 @@
 import React from 'react';
-import { FlatList, StyleSheet, View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import {
+    FlatList,
+    StyleSheet,
+    View,
+    Text,
+    SafeAreaView,
+    TouchableOpacity,
+    AsyncStorage,
+} from 'react-native';
+import axios from 'axios';
 
 import Circle from '../../components/Circle';
 
@@ -46,7 +55,73 @@ const p = [
     }
 ];
 
+async function _prefLis() {
+    url = await AsyncStorage.getItem("server")+'categoriasProductos/';
+    token = await AsyncStorage.getItem('userToken');
+    axios({
+        method: 'GET',
+        url: url,
+        data: {},
+        headers: {
+            "content-type": "application/json",
+            'Authorization': 'Token '+token, 
+        }, 
+    }).then( res => {
+        console.log(res.data);
+        return res.data;
+    }).catch(err => {
+        console.log('Error');
+    });
+}
+
 export default (props) => {
+    //Data
+    const [dataP, setDataP] = React.useState([])
+
+    React.useEffect(() => {
+        async function _prefLis() {
+            console.log('useEffect')
+            url = await AsyncStorage.getItem("server")+'categoriaProductos/';
+            token = await AsyncStorage.getItem('userToken');
+            console.log(url);
+            console.log(token);
+
+            try {
+                let request = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Token '+token, 
+                    }
+                });
+                let resp = await request.json();
+                console.log(resp)
+                setDataP(resp.results)
+            } catch (error) {
+                console.error(error)
+            }
+            // axios({
+            //     method: 'get',
+            //     url: url,
+            //     data: {},
+            //     headers: {
+            //         // "content-type": "application/json",
+            //         'Authorization': 'Token '+token,
+            //         'Access-Control-Allow-Origin': '*',
+            //     }, 
+            // }).then(res => {
+            //     console.log(res.data);
+            //     console.log(res);
+            //     setDataP(res.data);
+            // }).catch(err => {
+            //     console.error(err);
+            // });
+        }
+        _prefLis();
+    }, [setDataP]);
+
+    //Cirulos
     const [selected, setSelected] = React.useState(new Map());
 
     const onSelect = React.useCallback(
@@ -56,8 +131,15 @@ export default (props) => {
 
             setSelected(newSelected);
         },
-        [selected],
+        [selected]
     );
+
+    // function onSelect(id) {
+    //     const newSelected = new Map(selected);
+    //     newSelected.set(id, !selected.get(id));
+
+    //     setSelected(newSelected);
+    // }
 
     /*
     const onContinue = React.useCallback(
@@ -77,7 +159,7 @@ export default (props) => {
             <View style={styles.flatContainer}>
                 <FlatList 
                     style={styles.flat} 
-                    data={p} 
+                    data={p}
                     renderItem={({item}) => (
                         <Circle 
                             data={item}
@@ -95,7 +177,8 @@ export default (props) => {
                 <View style={styles.viewContinue}>
                     <TouchableOpacity 
                         style={styles.continue} 
-                        onPress={() => props.navigation.navigate('Stores')}
+                        //onPress={() => props.navigation.navigate('Stores')}
+                        onPress={props._prefList}
                     >
                         <Text style={styles.white}>Continuar</Text>
                     </TouchableOpacity>
