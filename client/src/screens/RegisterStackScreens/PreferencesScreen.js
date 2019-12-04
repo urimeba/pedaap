@@ -55,25 +55,6 @@ const p = [
     }
 ];
 
-async function _prefLis() {
-    url = await AsyncStorage.getItem("server")+'categoriasProductos/';
-    token = await AsyncStorage.getItem('userToken');
-    axios({
-        method: 'GET',
-        url: url,
-        data: {},
-        headers: {
-            "content-type": "application/json",
-            'Authorization': 'Token '+token, 
-        }, 
-    }).then( res => {
-        console.log(res.data);
-        return res.data;
-    }).catch(err => {
-        console.log('Error');
-    });
-}
-
 export default (props) => {
     //Data
     const [dataP, setDataP] = React.useState([])
