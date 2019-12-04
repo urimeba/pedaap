@@ -7,14 +7,14 @@ import MainNavigator from './src/navigation/MainNavigator';
 export default class App extends React.Component {
     componentDidMount = () => {
         this._initdata();
-     }
+    }
     
-    _initdata = async() =>{
-      AsyncStorage.setItem("server", "http://148.220.210.66:8000/")
-      AsyncStorage.getItem("server").then((obj)=>{
-        this.state.server = obj
-        this.forceUpdate();
-      })
+    _initdata = async() => {
+        AsyncStorage.setItem("server", "http://148.220.211.113:8000/");
+        AsyncStorage.getItem("server").then((obj)=>{
+            this.state.server = obj;
+            this.forceUpdate();
+        })
     }
     
     state = {server: AsyncStorage.getItem("server")}
