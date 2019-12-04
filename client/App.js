@@ -10,7 +10,7 @@ export default class App extends React.Component {
      }
     
     _initdata = async() =>{
-      AsyncStorage.setItem("server", "http://148.220.210.66:8000/")
+      AsyncStorage.setItem("server", "http://148.220.208.136:8000/")
       AsyncStorage.getItem("server").then((obj)=>{
         this.state.server = obj
         this.forceUpdate();
