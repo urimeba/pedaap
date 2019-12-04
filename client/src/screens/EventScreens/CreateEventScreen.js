@@ -15,7 +15,7 @@ export default class Event extends Component{
     }
 
     _crear=()=>{
-
+        this.props.navigation.navigate('EventK')
     }
 
     render(){
@@ -63,8 +63,8 @@ const styles = StyleSheet.create({
         alignContent:'center',
         alignItems:'center',
         width: '100%',
-        height: '20%',
-        marginTop:'30%',
+        height: '30%',
+        marginTop:30,
         // backgroundColor:'purple',
         padding: 40,
     },

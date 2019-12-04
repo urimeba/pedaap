@@ -114,7 +114,8 @@ export default class App extends Component{
     constructor(props) {
             super(props);
             this.state={
-                establecimieniemtos: false
+                establecimieniemtos: false,
+                filter:false
             };
     }
 
@@ -131,6 +132,14 @@ export default class App extends Component{
         
     }
 
+    _filtro=()=>{
+        if(this.state.filter===false){
+            this.setState({filter:true})
+        }
+        if(this.state.filter===true){
+            this.setState({filter:false})
+        }
+    }
     caja= ({item})=>(
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Promotion', {
             datos: item, 
@@ -180,6 +189,17 @@ export default class App extends Component{
                             placeholder="Buscar"
                             placeholderTextColor="#848482"
                         />
+                        <TouchableOpacity style={styles.iconF}
+                            onPress={this._filtro}
+                        >
+                             {this.state.filter===false &&(
+                                 <Icon name="swap-vertical" size={24} color={'#707070'} />
+                            )}
+                             {this.state.filter===true &&(
+                                 <Icon name="swap-vertical" size={24} color={'#71C0F2'} />
+                            )}
+                            
+                        </TouchableOpacity>
                         <TouchableOpacity 
                             style={styles.iconE}  
                             onPress={this._estable}>
@@ -265,11 +285,15 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
     iconE:{
-       marginLeft: '8%',
+       marginLeft: '5%',
        marginTop: 12.5
     },
     iconA:{
         marginLeft: '5%',
+        marginTop: 12.5
+    },
+    iconF:{
+        marginLeft: '6%',
         marginTop: 12.5
     },
     iconB:{
@@ -286,7 +310,7 @@ const styles = StyleSheet.create({
         // backgroundColor:'blue'
     },
     TInput:{
-        width: '70%',
+        width: '60%',
         height: '70%',
         marginTop: 10,
         backgroundColor:'white',

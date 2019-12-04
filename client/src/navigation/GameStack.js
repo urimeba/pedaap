@@ -23,7 +23,7 @@ const GameStack = createStackNavigator(
     },
     {
         initialRouteName: 'CreateGame',
-        headerMode: 'none',
+        headerMode: 'float',
         navigationOptions: {
             headerVisible: false,
         }

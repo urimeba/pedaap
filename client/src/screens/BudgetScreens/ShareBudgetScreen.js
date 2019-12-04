@@ -39,6 +39,16 @@ const datos=[
         nombre:'Uriel',
         aporte:'$200',
     },
+    {
+        id:'8',
+        nombre:'Uriel',
+        aporte:'$200',
+    },
+    {
+        id:'9',
+        nombre:'Uriel',
+        aporte:'$200',
+    },
 ]
 
 export default class App extends Component{
@@ -48,6 +58,13 @@ export default class App extends Component{
 
         }
     }
+    _eliminar=()=>{
+
+    }
+
+    _combo = () => {
+        this.props.navigation.navigate('ComboBudget')
+    }
 
     caja= ({item})=>(
         <View style={styles.caja}>
@@ -56,11 +73,11 @@ export default class App extends Component{
             </View>
             <View style={styles.datosCaja}>
                 <Text style={styles.nombre}>{item.nombre}</Text>
-                <Text style={styles.aporte}>{item.lugar}</Text>
+                <Text style={styles.aporte}>{item.aporte}</Text>
             </View>
             <View style={styles.cerrar}>
-                <TouchableOpacity style={styles.btnCerrar}>
-                    <Icon name="plus" size={24} color={'#D5D5D5'}/>
+                <TouchableOpacity style={styles.btnCerrar} onPress={this._eliminar}>
+                    <Icon name="close" size={24} color={'#D5D5D5'}/>
                 </TouchableOpacity>
             </View>
         </View>
@@ -69,20 +86,11 @@ export default class App extends Component{
     render(){
         return(
             <ScrollView style={styles.todo}>
-                <View style={styles.container}>
-                    <View style={styles.arriba}>
-                        <View style={styles.textoP}>
-                            <TouchableOpacity onPress={this._back} >
-                                <Icon name="arrow-left" size={25} color={'#707070'} style={styles.icon} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
                 <View style={styles.presupuesto}>
                     <Text style={styles.textoPresup}>Presupuesto</Text>
                     <Text style={styles.BoxPresup}>{JSON.stringify(this.props.navigation.getParam('presupuesto', 'dato'))}</Text>
                 </View>
-                <TouchableOpacity style={styles.verCombos}>
+                <TouchableOpacity style={styles.verCombos} onPress={this._combo}>
                     <Text style={styles.verCombosText}>Ver combos</Text>
                 </TouchableOpacity>
                 <View style={styles.codigoC}>
@@ -112,43 +120,24 @@ const styles= StyleSheet.create({
     },
     arriba: {
         // flex:1,
-        marginTop: 25,
+        // marginTop: 25,
         width: '100%',
         height: '100%',
         paddingLeft: 10,
         paddingRight: 10,
         // backgroundColor: '#FAFAFA',
-        // backgroundColor:'yellow',
+        // backgroundColor:'orange',
     },
-    container: {
-        // flex: 4,
-        alignItems: 'center',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        backgroundColor: '#FAFAFA',
-        marginTop: '8%',
-        height: '5%',
-        width: '100%',
-    },
-     textoP: {
-         flexDirection: 'row',
-         alignItems: 'center',
-         // justifyContent:'center',
-         width: '100%',
-         height: '100%',
-         marginTop: 6
-
-         // backgroundColor:'blue'
-     },
      presupuesto:{
          justifyContent: 'center',
          alignItems:'center',
          alignContent:'center',
          width: '100%',
-         height:'20%',
+         height:200,
          paddingLeft:40,
          paddingRight:40,
-         marginTop:10
+         marginTop:10,
+        //  backgroundColor:'red'
      },
      textoPresup:{
          justifyContent: 'center',
@@ -166,7 +155,8 @@ const styles= StyleSheet.create({
          borderRadius: 20,
          marginTop: 20,
          textAlign: 'center',
-         padding: 20
+         padding: 20,
+        //  backgroundColor:'blue'
      },
      verCombos:{
          justifyContent: 'center',
@@ -187,7 +177,8 @@ const styles= StyleSheet.create({
         height: '10%',
         textAlign: 'left',
         marginTop: 20,
-        padding: 20
+        padding: 20,
+        // backgroundColor:'yellow'
      },
      titulo1:{
          textAlign:'left',
@@ -204,8 +195,9 @@ const styles= StyleSheet.create({
          height:'5%',
          textAlign:'left',
          fontSize:18,
-         marginTop:10,
-         padding:20
+        //  marginTop:10,
+         padding:20,
+        //  backgroundColor:'purple'
      },
      titulAporta:{
          textAlign:'left',
@@ -213,7 +205,10 @@ const styles= StyleSheet.create({
      },
      flat:{
          width:'100%',
-         padding: 20,
+         paddingLeft: 20,
+         paddingRight: 20,
+         paddingBottom:20,
+        //  backgroundColor:'green'
         //  height: 200
      },
      caja:{
@@ -242,7 +237,8 @@ const styles= StyleSheet.create({
          height: 50,
          borderRadius: 40,
          backgroundColor:'blue',
-         marginTop: 5
+         marginTop: 5,
+         marginLeft: 10,
      },
      datosCaja:{
          justifyContent: 'center',

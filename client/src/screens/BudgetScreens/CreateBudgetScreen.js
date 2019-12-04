@@ -57,7 +57,7 @@ const styles= StyleSheet.create({
         width:'100%',
         paddingLeft: 40,
         paddingRight: 40,
-        marginTop: '30%'
+        marginTop: 40
 
     },
     textTitulo:{

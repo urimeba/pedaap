@@ -12,14 +12,12 @@ export default class App extends Component{
     }
 
     _create=()=>{
-
+        this.props.navigation.navigate('GameRoom')
     }
 
     _join=()=>{
-
+         this.props.navigation.navigate('JoinGame')
     }
-
-
     render(){
         return(
             <View style={styles.todo}>
@@ -48,7 +46,10 @@ export default class App extends Component{
 
 const styles= StyleSheet.create({
     todo:{
-        flex:1
+        flex:1,
+        justifyContent:'center',
+        alignContent:'center',
+        alignItems:'center',
     },
     titulo:{
         alignContent:'center',
@@ -58,7 +59,7 @@ const styles= StyleSheet.create({
         width:'100%',
         paddingLeft: 40,
         paddingRight: 40,
-        marginTop: '30%'
+        // marginTop: 80
 
     },
     textTitulo:{
@@ -74,14 +75,13 @@ const styles= StyleSheet.create({
         width:'100%',
         paddingLeft:40,
         paddingRight:40
-
     },
     btnCreate:{
         justifyContent:'center',
         alignItems:'center',
         alignContent:'center',
         width: '100%',
-        height: '30%',
+        height: '27%',
         borderRadius: 20,
         backgroundColor: '#6930BF',
     },
@@ -90,7 +90,7 @@ const styles= StyleSheet.create({
         alignItems:'center',
         alignContent:'center',
         width: '100%',
-        height: '30%',
+        height: '27%',
         borderRadius: 20,
         marginTop: 70,
         backgroundColor: '#71C0F2',

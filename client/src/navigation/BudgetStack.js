@@ -31,7 +31,7 @@ const BudgetStack = createStackNavigator(
     },
     {
         initialRouteName: 'CreateBudget',
-        headerMode: 'none',
+        headerMode: 'float',
         navigationOptions: {
             headerVisible: false,
         }

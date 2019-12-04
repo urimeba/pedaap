@@ -23,15 +23,6 @@ export default class App extends Component{
     render(){
         return(
             <View style={styles.todo}>
-                <View style={styles.container}>
-                    <View style={styles.arriba}>
-                        <View style={styles.textoP}>
-                            <TouchableOpacity onPress={this._back} >
-                                <Icon name="arrow-left" size={25} color={'#707070'} style={styles.icon} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
                 <View style={styles.presup}>
                     <Text style={styles.tituloPres}>Ingresa el presupuesto inicial</Text>
                     <TextInput 
@@ -147,11 +138,12 @@ const styles = StyleSheet.create({
         fontSize: 25,
     },
     abajoNegro:{
+        flex:1,
         alignContent:'center',
         alignItems:'center',
         // justifyContent:'center',
         width: '100%',
-        height:'50%',
+        height:'70%',
         marginTop: 20,
         borderTopRightRadius: 40,
         borderTopLeftRadius: 40,
