@@ -35,10 +35,17 @@ export default class Confirm extends Component{
                 "Authorization": "Token "+ token
             },
         }).then( res => {
-            this.props.navigation.navigate("User");
+            tiendas = parseInt(res.data.tiendas);
+            categorias = parseInt(res.data.categorias);
+
+            if(tiendas==0 || categorias == 0){
+                this.props.navigation.navigate("SignupPref");
+            }else{
+                this.props.navigation.navigate("User");
+            }
         }).catch(err => {
-            console.log("Error");
-            console.log(err);
+            // console.log("Error");
+            // console.log(err);
             Alert.alert("Datos incorrectos", "Verifica tu codigo");
         });
     }
@@ -59,10 +66,10 @@ export default class Confirm extends Component{
           },
     
           }).then( res => {
-                console.log(res.data);
+                // console.log(res.data);
           }).catch(err => {
-            console.log("Error");
-            console.log(err);
+            // console.log("Error");
+            // console.log(err);
             Alert.alert("Error", "Algo ha fallado. Intenta nuevamente.");
           });
     }

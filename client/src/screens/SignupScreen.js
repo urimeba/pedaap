@@ -32,15 +32,13 @@ export default class App extends Component{
           },
     
           }).then( res => {
-                console.log(res.data);
-                Alert.alert("Correcto", "Registro correcto");
+                // console.log(res.data);
+                // Alert.alert("Correcto", "Registro correcto");
                 AsyncStorage.setItem("userToken",res.data.token);
                 AsyncStorage.setItem("userId",res.data.id);
                 this.props.navigation.navigate("Confirm");
           }).catch(err => {
-            // console.log("Error");
-            // console.log(err);
-            Alert.alert("Error", "El usuario, correo o teléfono ya han sido usados");
+            Alert.alert("Error", err.response.data.Error);
           });
     }
 
@@ -108,6 +106,7 @@ export default class App extends Component{
                                     placeholder="|  Usuario"
                                     placeholderTextColor="#848482"
                                     onChangeText={(usuario) => this.setState({ usuario })}
+                                    autoCapitalize='none'
                                 />
                             </View>
                         </View>
@@ -125,6 +124,7 @@ export default class App extends Component{
                                     autoCapitalize='none'
                                     keyboardType='email-address'
                                     onChangeText={(correo) => this.setState({ correo })}
+                                    autoCapitalize='none'
                                 />
                             </View>
                         </View>
@@ -158,6 +158,8 @@ export default class App extends Component{
                                     placeholderTextColor="#848482"
                                     secureTextEntry={true}
                                     onChangeText={(contra) => this.setState({ contra })}
+                                    autoCapitalize='none'
+
                                 />
                             </View>
                         </View>
@@ -174,6 +176,8 @@ export default class App extends Component{
                                     placeholderTextColor="#848482"
                                     secureTextEntry={true}
                                     onChangeText={(verContra) => this.setState({ verContra })}
+                                    autoCapitalize='none'
+
                                 />
                             </View>
                         </View>
