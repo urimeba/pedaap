@@ -123,7 +123,7 @@ def registro(request):
             user.verificado=verificado
             user.save()
 
-            client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+            # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
             # validation_request = client.validation_requests.create(
             #                     friendly_name=str(user.username),
@@ -133,10 +133,10 @@ def registro(request):
             # print(validation_request.friendly_name)
 
 
-            to = user.telefono
-            client.messages.create(
-                body='Codigo de verificación: ' + str(user.codigo),
-                to=to, from_=settings.TWILIO_PHONE_NUMBER)
+            # to = user.telefono
+            # client.messages.create(
+            #     body='Codigo de verificación: ' + str(user.codigo),
+            #     to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
             token, created = Token.objects.get_or_create(user=user)
 
