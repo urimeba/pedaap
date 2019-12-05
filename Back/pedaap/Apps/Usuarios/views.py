@@ -178,11 +178,12 @@ class UserCategoriasViewSet(viewsets.ModelViewSet):
     serializer_class = UserCategoriasSerializer
 
     @action(detail=False, methods=['post'])
-    def eliminarCategorias(self, request):
+    def eliminarCategoria(self, request):
         idUser = request.data.get('idUser')
-        print(idUser)
+        idCategoria = request.data.get('idCategoria')
         user = User.objects.get(id=idUser)
-        UserCategorias.objects.filter(user=user).delete()
+        categoria = Cata
+        # UserCategorias.objects.filter(user=user, categorias).delete()
         return Response({"Exito":"Categorias eliminadas"}, status=HTTP_200_OK)
 
 class GroupsViewSet(viewsets.ModelViewSet):
