@@ -22,7 +22,7 @@ export default class App extends Component{
             error2: false
         };
     }
-
+    
     _singin = async(props)=>{
         if(this.state.username=='' || this.state.password==''){
             this.setState({
@@ -217,6 +217,7 @@ const styles = StyleSheet.create({
     TInput: {
         fontSize: 18,
         width: '100%',
+        color: '#FFFFFF'
     },
     InputsForgotPassword: {
         flex: 1,

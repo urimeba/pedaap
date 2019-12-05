@@ -1,52 +1,65 @@
 import React from 'react';
-import { FlatList, StyleSheet, View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import {
+    FlatList,
+    StyleSheet,
+    View,
+    Text,
+    SafeAreaView,
+    TouchableOpacity,
+    AsyncStorage,
+} from 'react-native';
+import axios from 'axios';
 
 import Circle from '../../components/Circle';
 
-const p = [
-    {
-        id: '1',
-        name: 'Vodka'
-    },
-    {
-        id: '2',
-        name: 'Tequila'
-    },
-    {
-        id: '3',
-        name: 'Vodka'
-    },
-    {
-        id: '4',
-        name: 'Tequila'
-    },
-    {
-        id: '5',
-        name: 'Tequila'
-    },
-    {
-        id: '6',
-        name: 'Vodka'
-    },
-    {
-        id: '7',
-        name: 'Tequila'
-    },
-    {
-        id: '8',
-        name: 'Vodka'
-    },
-    {
-        id: '9',
-        name: 'Tequila'
-    },
-    {
-        id: '10',
-        name: 'Tequila'
-    }
-];
-
 export default (props) => {
+    //Data
+    const [dataP, setDataP] = React.useState([]);
+
+    React.useEffect(() => {
+        async function _prefLis() {
+            url = await AsyncStorage.getItem("server")+'categoriaProductos/';
+            token = await AsyncStorage.getItem('userToken');
+
+            try {
+                let request = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Token '+token, 
+                    }
+                });
+                let resp = await request.json();
+                setDataP(resp.results);
+            } catch (error) {
+                console.error(error);
+            }
+            /*
+                * Posible error de AXIOS con REACT NATIVE o EXPO con peticiones GET
+                * Investigacion futura es necesaria
+            */
+            // axios({
+            //     method: 'get',
+            //     url: url,
+            //     data: {},
+            //     headers: {
+            //         // "content-type": "application/json",
+            //         'Authorization': 'Token '+token,
+            //         'Access-Control-Allow-Origin': '*',
+            //     }, 
+            // }).then(res => {
+            //     console.log(res.data);
+            //     console.log(res);
+            //     setDataP(res.data);
+            // }).catch(err => {
+            //     console.error(err);
+            // });
+        }
+        _prefLis();
+    }, [setDataP]);
+
+    //Cirulos
     const [selected, setSelected] = React.useState(new Map());
 
     const onSelect = React.useCallback(
@@ -56,8 +69,15 @@ export default (props) => {
 
             setSelected(newSelected);
         },
-        [selected],
+        [selected]
     );
+
+    // function onSelect(id) {
+    //     const newSelected = new Map(selected);
+    //     newSelected.set(id, !selected.get(id));
+
+    //     setSelected(newSelected);
+    // }
 
     /*
     const onContinue = React.useCallback(
@@ -69,6 +89,24 @@ export default (props) => {
     );
     */
 
+    //Send Data
+    const sendData = (s) => () => {
+        // console.log(Array.from(selected.entries()));
+        /*
+            Se convierte el MAP en un JSON que se puede enviar a la API
+        */
+        let obj = Object.create(null);
+        for (let [k,v] of s) {
+            obj[k] = v;
+        }
+        console.log(JSON.stringify(obj));
+        goNext();
+    }
+
+    const goNext = () => {
+        props.navigation.navigate('Stores');
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.title}>
@@ -77,7 +115,7 @@ export default (props) => {
             <View style={styles.flatContainer}>
                 <FlatList 
                     style={styles.flat} 
-                    data={p} 
+                    data={dataP}
                     renderItem={({item}) => (
                         <Circle 
                             data={item}
@@ -95,7 +133,8 @@ export default (props) => {
                 <View style={styles.viewContinue}>
                     <TouchableOpacity 
                         style={styles.continue} 
-                        onPress={() => props.navigation.navigate('Stores')}
+                        onPress={sendData(selected)}
+                        // onPress={() => props.navigation.navigate('Stores')}
                     >
                         <Text style={styles.white}>Continuar</Text>
                     </TouchableOpacity>

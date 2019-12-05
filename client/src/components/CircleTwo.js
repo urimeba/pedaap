@@ -1,8 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+    StyleSheet,
+    View,
+    Text,
+    TouchableOpacity,
+    Image,
+} from 'react-native';
 
-export default Circle = ({data, selected, onSelect}) => {
+export default CircleTwo = ({data, selected, onSelect}) => {
     return (
         <View style={styles.dataBox}>
             <View style={styles.topBox}>
@@ -13,7 +18,7 @@ export default Circle = ({data, selected, onSelect}) => {
                         {backgroundColor: selected ? '#FFFFFF' : '#393939'}
                     ]}          
                 >
-                    <Icon name={data.icono} size={50} color={'#707070'} />
+                    <Image source={require('../img/stores/Oxxo.svg')} />
                 </TouchableOpacity>
             </View>
             <View style={styles.bottomBox}>

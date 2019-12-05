@@ -1,6 +1,8 @@
 
 *.pyc
 
+*.sqlite3
+
 Back/pedaap/Apps/Notificaciones/migrations/
 
 Back/pedaap/Apps/Presupuestos/migrations/

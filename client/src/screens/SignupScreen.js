@@ -1,6 +1,15 @@
 import React, {Component} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Alert, AsyncStorage, KeyboardAvoidingView } from 'react-native';
-     
+import { 
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    TextInput,
+    Image,
+    Alert,
+    KeyboardAvoidingView,
+    AsyncStorage 
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 
@@ -41,8 +50,8 @@ export default class App extends Component{
             Alert.alert("Error", err.response.data.Error);
           });
     }
-
-    _confirm = async()=>{
+    
+    _confirm = async() => {
         let text = this.state.correo;
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         console.log(JSON.stringify(this.state.correo));
@@ -242,6 +251,7 @@ const styles = StyleSheet.create({
     TInput: {
         fontSize: 18,
         width: '100%',
+        color: '#FFFFFF'
     },
     TInput1: {
         flexDirection: 'row',

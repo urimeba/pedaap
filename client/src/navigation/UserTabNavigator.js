@@ -9,11 +9,15 @@ import GameScreen from '../screens/userScreens/GameSceen';
 import ProfileScreen from '../screens/userScreens/ProfileScreen';
 
 import PromotionStack from '../navigation/PromotionStack';
+import EventStack from '../navigation/EventStack';
+import GameStack from '../navigation/GameStack';
+import BudgetStack from '../navigation/BudgetStack';
+import ProfileStack from '../navigation/ProfileStack';
 
 const UserTabs = createBottomTabNavigator(
     {
         Budget: {
-            screen: BudgetScreen,
+            screen: BudgetStack,
             navigationOptions: {
                 tabBarLabel: 'Presupuesto',
                 tabBarIcon: ({tintColor}) => (
@@ -22,7 +26,7 @@ const UserTabs = createBottomTabNavigator(
             },
         },
         Event: {
-            screen: EventScreen,
+            screen: EventStack,
             navigationOptions: {
                 tabBarLabel: 'Evento',
                 tabBarIcon: ({tintColor}) => (
@@ -40,7 +44,7 @@ const UserTabs = createBottomTabNavigator(
             },
         },
         Game: {
-            screen: GameScreen,
+            screen: GameStack,
             navigationOptions: {
                 tabBarLabel: 'Juego',
                 tabBarIcon: ({tintColor}) => (
@@ -49,7 +53,7 @@ const UserTabs = createBottomTabNavigator(
             },
         },
         Profile: {
-            screen: ProfileScreen,
+            screen: ProfileStack,
             navigationOptions: {
                 tabBarLabel: 'Perfil',
                 tabBarIcon: ({tintColor}) => (

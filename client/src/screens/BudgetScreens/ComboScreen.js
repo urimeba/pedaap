@@ -87,28 +87,6 @@ const datos=[
     },
 ];
 
-const estable=[
-    {
-        id:'1',
-        nombre:'Oxxo',
-        direccion:'centro'
-    },
-    {
-        id:'2',
-        nombre:'Oxxovv',
-        direccion:'centro'
-    },
-    {
-        id:'3',
-        nombre:'Oxxoww',
-        direccion:'centro'
-    },
-    {
-        id:'4',
-        nombre:'Oxxoqq',
-        direccion:'centro'
-    },
-]
 
 export default class App extends Component{
     constructor(props) {
@@ -119,29 +97,8 @@ export default class App extends Component{
             };
     }
 
-    // _vista = async()=>{
-    //     props.navigation.navigate('Promotion', {datos: data})}
-    // }
-    _estable=()=>{
-        if(this.state.establecimieniemtos===false){
-            this.setState({establecimieniemtos:true})
-        }
-        if(this.state.establecimieniemtos===true){
-            this.setState({establecimieniemtos:false})
-        }
-        
-    }
-
-    _filtro=()=>{
-        if(this.state.filter===false){
-            this.setState({filter:true})
-        }
-        if(this.state.filter===true){
-            this.setState({filter:false})
-        }
-    }
     caja= ({item})=>(
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('Promotion', {
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionC', {
             datos: item, 
             id: item.id,
             nombre: item.nombre,
@@ -162,17 +119,14 @@ export default class App extends Component{
         </TouchableOpacity>
     )
 
-    caja2= ({item})=>(
-        <TouchableOpacity style={styles.caja}>
-            <View style={styles.imgCaja}>
-                <Image/>
-            </View>
-            <View style={styles.datosCaja}>
-                <Text style={styles.titulo}>{item.nombre}</Text>
-                <Text style={styles.titulo}>{item.lugar}</Text>
-            </View>
-        </TouchableOpacity>
-    )
+     _filtro=()=>{
+        if(this.state.filter===false){
+            this.setState({filter:true})
+        }
+        if(this.state.filter===true){
+            this.setState({filter:false})
+        }
+    }
 
     render(){
     return (
@@ -180,54 +134,26 @@ export default class App extends Component{
             <View style={styles.container}>
                 <View style={styles.arriba}>
                     <View style={styles.textoP}>
-                        <Text style={styles.tituloP}>Promociones</Text>
-                        <Icon name="bell-outline" size={22} color={'#707070'} style={styles.iconB} />
+                        <Text style={styles.tituloP}>Combos</Text>
                     </View>
-                    <View style={styles.botones}>
-                        <TextInput 
-                            style={styles.TInput}
-                            placeholder="Buscar"
-                            placeholderTextColor="#848482"
-                        />
-                        <TouchableOpacity style={styles.iconF}
+                     <TouchableOpacity style={styles.iconF}
                             onPress={this._filtro}
                         >
                              {this.state.filter===false &&(
-                                 <Icon name="swap-vertical" size={24} color={'#707070'} />
+                                 <Icon name="swap-vertical" size={26} color={'#707070'} />
                             )}
                              {this.state.filter===true &&(
-                                 <Icon name="swap-vertical" size={24} color={'#71C0F2'} />
+                                 <Icon name="swap-vertical" size={26} color={'#71C0F2'} />
                             )}
                             
                         </TouchableOpacity>
-                        <TouchableOpacity 
-                            style={styles.iconE}  
-                            onPress={this._estable}>
-                             <Icon name="store" size={24} color={'#DE4C63'}
-                             />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.iconA} onPress={() => this.props.navigation.navigate('New')}>
-                            <Icon name="plus" size={24} color={'#FEDB6B'}  />
-                        </TouchableOpacity>
-                    </View>
                 </View>
-                {this.state.establecimieniemtos===false && (
                     <FlatList
                     style={styles.flat}
                     data={datos}
                     renderItem={this.caja}
                     keyExtractor={item => item.id}
                 />
-                )}
-                {this.state.establecimieniemtos===true && (
-                    <FlatList
-                    style={styles.flat}
-                    data={estable}
-                    renderItem={this.caja2}
-                    keyExtractor={item => item.id}
-                />
-                )}
-                
             </View>
         </View>
         
@@ -237,35 +163,19 @@ export default class App extends Component{
     
 }
 
-function Cajas({data}){
-    console.log(data)
-    return (
-        <TouchableOpacity onPress={() => props.navigation.navigate('Login', {datos: data})} style={styles.caja}>
-            <View style={styles.imgCaja}>
-                <Image/>
-            </View>
-            <View style={styles.datosCaja}>
-                <Text style={styles.titulo}>{data.titulo}</Text>
-                <Text style={styles.titulo}>{data.lugar}</Text>
-                <Text style={styles.titulo}>{data.vigencia}</Text>
-            </View>
-        </TouchableOpacity>
-    );
-}
-
-
-
-
 console.log(datos[0].vigencia)
 const styles = StyleSheet.create({
     todo:{
         flex: 1,
     },
+     iconE: {
+         marginTop: 12.5
+     },
     arriba:{
         // flex:1,
-        marginTop: 25,
+        // marginTop: 25,
         width:'100%',
-        height: '16%',
+        height: 75,
         paddingLeft: 10,
         paddingRight: 10,
         // backgroundColor: '#FAFAFA',
@@ -276,41 +186,53 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         alignContent: 'center',
         // justifyContent: 'center',
-        width: '100%',
-        height:'50%',
-        padding: 5,
+        width: '25%',
+        height:'35%',
+        // padding: 5,
+        marginTop:10,
+        backgroundColor:'white',
+        borderRadius: 15,
+         shadowColor: "#000",
+        shadowOffset: {
+               width: 0,
+               height: 2,
+           },
+           shadowOpacity: 0.25,
+           shadowRadius: 3.84,
+           elevation: 5,
+        padding: 8,
         // backgroundColor:'red'
     },
     tituloP:{
         fontSize: 20
     },
     iconE:{
-       marginLeft: '5%',
+       marginLeft: '2%',
        marginTop: 12.5
     },
     iconA:{
-        marginLeft: '5%',
-        marginTop: 12.5
-    },
-    iconF:{
-        marginLeft: '6%',
+        marginLeft: '2%',
         marginTop: 12.5
     },
     iconB:{
-        marginLeft: '59%'
+        // marginLeft: 10
+    },
+    iconF: {
+        marginLeft: '2%',
+        marginTop: 12.5
     },
     textoP:{
         flexDirection:'row',
         alignItems:'center',
         // justifyContent:'center',
         width: '100%',
-        height:'30%',
+        height:'25%',
         marginTop: 15
 
         // backgroundColor:'blue'
     },
     TInput:{
-        width: '60%',
+        width: '70%',
         height: '70%',
         marginTop: 10,
         backgroundColor:'white',
