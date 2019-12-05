@@ -18,6 +18,7 @@ from rest_framework.status import (
 )
 from django.core.mail import send_mail
 from django.conf import settings
+from rest_framework.decorators import action
 
 # Create your views here.
 @csrf_exempt
@@ -144,8 +145,6 @@ def verificar(request):
     else:
         return Response(status=HTTP_400_BAD_REQUEST)
 
-
-
 # @csrf_exempt
 @api_view(["POST"])
 # @permission_classes((AllowAny,))
@@ -165,14 +164,6 @@ def enviar_correo(request):
     return Response({"Exito":"Correo enviado correctamente"}, status=HTTP_200_OK)
 
 
-
-
-
-
-
-
-
-
 class UsuariosViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -186,6 +177,13 @@ class UserCategoriasViewSet(viewsets.ModelViewSet):
     queryset = UserCategorias.objects.all()
     serializer_class = UserCategoriasSerializer
 
+    @action(detail=False, methods=['post'])
+    def eliminarCategorias(self, request):
+        idUser = request.data.get('idUser')
+        print(idUser)
+        user = User.objects.get(id=idUser)
+        UserCategorias.objects.filter(user=user).delete()
+        return Response({"Exito":"Categorias eliminadas"}, status=HTTP_200_OK)
 
 class GroupsViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()

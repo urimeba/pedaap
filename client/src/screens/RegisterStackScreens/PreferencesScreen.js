@@ -90,7 +90,7 @@ export default (props) => {
     */
 
     //Send Data
-    const sendData = (s) => () => {
+    const sendData = (s) => async() => {
         // console.log(Array.from(selected.entries()));
         /*
             Se convierte el MAP en un JSON que se puede enviar a la API
@@ -100,6 +100,58 @@ export default (props) => {
             obj[k] = v;
         }
         console.log(JSON.stringify(obj));
+
+        servidor = await AsyncStorage.getItem("server")
+        
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+
+        // for(categoria in obj){
+        //     if(obj[categoria]==true){
+        //         console.log("TRUE-----------------------------");
+        //         console.log(categoria);
+        //         url = servidor+'userCategorias/';
+
+        //         axios({
+        //             method: 'POST',
+        //             url: url,
+        //             data: {user:servidor+"usuarios/"+idUser+"/", categoria: servidor+"categoriaProductos/"+categoria+"/"},
+        //             headers: {
+        //                 "content-type":"application/json",
+        //                 "Authorization": "Token "+token
+        //             }, 
+        //         }).then( res => {
+        //             console.log(res.data);
+        //         }).catch(err => {
+        //             console.log(err.response.data);
+        //         });
+
+
+        //     }else{
+        //         console.log("FALSE------------------------");
+        //         console.log(categoria);
+
+        //         url = servidor+'userCategorias/';
+
+        //         axios({
+        //             method: 'DELETE',
+        //             url: url+categoria+"/",
+        //             data: {},
+        //             headers: {
+        //                 "content-type":"application/json",
+        //                 "Authorization": "Token "+token
+        //             }, 
+        //         }).then( res => {
+        //             console.log(res.data);
+        //         }).catch(err => {
+        //             console.log(err.response.data);
+        //         });
+                
+        //     }
+        // }
+
+        
+
         goNext();
     }
 
