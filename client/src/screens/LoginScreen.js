@@ -30,7 +30,7 @@ export default class App extends Component{
                 error2: false,
             });
         }else{
-            console.log(this.state.username, this.state.password);
+            // console.log(this.state.username, this.state.password);
             url = await AsyncStorage.getItem("server")+'login/'
             axios({
                 method: 'POST',
@@ -40,16 +40,24 @@ export default class App extends Component{
                     "content-type":"application/json",
                 }, 
             }).then( res => {
-                console.log(res.data);
+                // console.log(res.data);
                 
                 token = res.data.token;
                 idUser = res.data.id;
                 verificado = res.data.verificado;
-                AsyncStorage.setItem("userToken",res.data.token);
-                AsyncStorage.setItem("userId",res.data.id);
+                tiendas = parseInt(res.data.tiendas)
+                categorias = parseInt(res.data.categorias)
+
+                AsyncStorage.setItem("userToken",token);
+                AsyncStorage.setItem("userId",idUser);
 
                 if(verificado=='1'){
-                    this.props.navigation.navigate("User");
+                    if (tiendas==0 || categorias==0){
+                        this.props.navigation.navigate("SignupPref");
+                    }else{
+                        this.props.navigation.navigate("User");
+                    }
+                    
                 }else{
                     this.props.navigation.navigate('Confirm')
                 }
@@ -87,7 +95,8 @@ export default class App extends Component{
                                     placeholder="|  Usuario"
                                     placeholderTextColor="#848482"
                                     onChangeText= { username => this.setState({username}) } 
-                                    autoCapitalize="none"
+                                    autoCapitalize='none'
+                                    autoCompleteType='username'
                                 />  
                             </View>
                         </View>
@@ -106,6 +115,8 @@ export default class App extends Component{
                                     autoCompleteType="password"
                                     secureTextEntry={true}
                                     onChangeText= { password => this.setState({password}) } 
+                                    autoCompleteType='password'
+
                                 />
                             </View>
                         </View> 
