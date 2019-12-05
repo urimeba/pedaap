@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     Image,
 } from 'react-native';
+import Logo from '../components/StoreIcons'
 
 export default CircleTwo = ({data, selected, onSelect}) => {
     return (
@@ -18,7 +19,13 @@ export default CircleTwo = ({data, selected, onSelect}) => {
                         {backgroundColor: selected ? '#FFFFFF' : '#393939'}
                     ]}          
                 >
-                    <Image source={require('../img/stores/Oxxo.svg')} />
+                    <View style={styles.png}>
+                        <Image
+                            style={styles.pngImage}
+                            source={Logo[data.icono]}
+                            resizeMode="center"
+                        />
+                    </View>
                 </TouchableOpacity>
             </View>
             <View style={styles.bottomBox}>
@@ -57,4 +64,14 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 18,
     },
+    png: {
+        height: '90%',
+        width: '90%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    pngImage:{
+        height: 70,
+        width: 70,
+    }
 });

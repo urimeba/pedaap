@@ -31,6 +31,7 @@ export default (props) => {
                     }
                 });
                 let resp = await request.json();
+                console.log(resp.results);
                 setDataP(resp.results);
             } catch (error) {
                 console.error(error);
