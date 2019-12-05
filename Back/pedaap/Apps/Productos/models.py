@@ -18,6 +18,7 @@ class Producto(models.Model):
 class CategoriaProducto(models.Model):
     nombre = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=100)
+    icono = models.CharField(max_length=100)
 
 class RangoPrecioProducto(models.Model):
     nombre = models.CharField(max_length=50)

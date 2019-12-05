@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Circle from '../../components/Circle';
+import Circle from '../../components/CircleTwo';
 
 export default (props) => {
     //Data

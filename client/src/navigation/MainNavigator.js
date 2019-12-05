@@ -10,6 +10,9 @@ import AdminTabs from './AdminTabNavigator';
 import SignupStack from './SignupStack';
 
 export default createAppContainer(createSwitchNavigator({
+    SignupPref: {
+        screen: SignupStack
+    },
     Login: {
         screen: LoginScreen
     },
@@ -28,7 +31,4 @@ export default createAppContainer(createSwitchNavigator({
     Confirm: {
         screen: ConfirmScreen
     },
-    SignupPref: {
-        screen: SignupStack
-    }
 }));
