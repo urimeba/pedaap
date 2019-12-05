@@ -10,8 +10,7 @@ from django.db import models
 
 # Create your models here.
 class Promociones(models.Model):
-    tienda = models.ForeignKey('Tiendas.Tienda', on_delete=models.CASCADE)
-    producto = models.ForeignKey('Productos.Producto', on_delete=models.CASCADE)
+    productoTienda = models.ForeignKey('Tiendas.TiendaProducto', on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=200)
     fechaInicio = models.DateField(auto_now=False, auto_now_add=False)
     fechaVencimiento = models.DateField(auto_now=False, auto_now_add=False)
