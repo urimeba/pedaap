@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, Modal, Alert} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Permissions from 'expo-permissions';
@@ -26,7 +26,45 @@ export default class App extends Component{
                 camera: false,
                 photo:'',
                 take: false,
+                error1: false, //campos vacios
+                error2: false, //error al mandarlos
+                succes: true, //todo bien
+
+                lugar:'',
+                nombre: '',
+                categoria:'',
+                descrip:'',
+                vigencia:'',
+                direccion:'',
+
+
+                 modalVisible: false,
             }
+    }
+
+    setModalVisible(visible) {
+        this.setState({modalVisible: visible});
+    } 
+
+    _enviar =async () => {
+        // console.log("kfnvfnk")
+        // console.log(this.state)
+        if (this.state.lugar =="" || this.state.nombre =="" || this.state.categoria =="" || this.state.descrip == "" || this.state.vigencia == "" || this.state.direccion == "") {
+            this.setState({error1:true})
+            this.setState({error2:false})
+            this.setState({succes:false})
+            this.setModalVisible(true);
+        } else if (this.state.error1 === true) {
+            this.setState({error2:true})
+            this.setState({error1:false})
+            this.setModalVisible(true);
+        } else if (this.state.correcto === true) {
+           this.setState({succes:true})
+            this.setState({error1:false})
+            this.setState({error1:false})
+            this.setModalVisible(true);
+        }
+
     }
 
     async componentDidMount() {
@@ -59,6 +97,71 @@ export default class App extends Component{
         } else {
     return(
        <View style={styles.todo}>
+           <Modal
+                animationType="slide"
+                transparent={true}
+                // transparent={false}
+                style={{width: 80, height: 80, backgroundColor: 'pink'}}
+                visible={this.state.modalVisible}
+                onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    this.setState({modalVisible:false})
+                }}>
+                <View style = {styles.modal} >
+                    
+                    {this.state.error1===true &&(
+                        <View style={{justifyContent:'center', alignContent:'center',alignItems:'center'}}>
+                            <Image
+                                 style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
+                                 source={require('../../img/remove.png')}
+                            />
+                            <Text style={{marginTop: 20}} >Completa los campos</Text>
+                            <TouchableOpacity
+                               style={styles.botonModal}
+                                onPress={() => {
+                                this.setModalVisible(!this.state.modalVisible);
+                                }}>
+                            <Text style={{color: 'white'}}>Aceptar</Text>
+                        </TouchableOpacity>
+                        </View>
+                           
+                    )}
+                    {this.state.error2===true &&(
+                        <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
+                            <Image
+                                 style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
+                                 source={require('../../img/remove.png')}
+                            />
+                            < Text style={{marginTop: 20}} >Error al mandar la promocion</Text>
+                            <TouchableOpacity
+                            style={styles.botonModal}
+                            onPress={() => {
+                            this.setModalVisible(!this.state.modalVisible);
+                            }}>
+                            <Text style={{color: 'white'}}>Aceptar</Text>
+                        </TouchableOpacity>
+
+                        </View>
+                        
+                    )}
+                    {this.state.succes===true &&(
+                        <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
+                            <Image
+                                 style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
+                                 source={require('../../img/check.png')}
+                            />
+                            < Text style={{marginTop: 20}}>Enviado correctamente</Text>
+                            <TouchableOpacity
+                                style={styles.botonModal}
+                                onPress={() => {
+                                this.setModalVisible(!this.state.modalVisible);
+                                }}>
+                                <Text style={{color: 'white'}}>Aceptar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                </View>
+        </Modal>
             <View style={styles.container}>
                 <View style={styles.arriba}>
                     <View style={styles.textoP}>
@@ -106,30 +209,61 @@ export default class App extends Component{
                             <View style={styles.datosCaja}>
                                 <Text style={styles.titulo1}>Nombre de la promoción</Text>
                                 <View style={styles.inputs}>
-                                    <Text style={styles.titulo}>njn</Text>
+                                    <TextInput style={styles.titulo2}
+                                        placeholder="Nombre"
+                                        placeholderTextColor="#848482"
+                                        onChangeText={(nombre) => this.setState({ nombre })}
+                                    ></TextInput>
                                 </View>
                                 <Text style={styles.titulo1}>categoría</Text>
                                 <View style={styles.inputs}>
-                                    <Text style={styles.titulo}>n n </Text>
+                                    <TextInput style={styles.titulo2}
+                                        placeholder="Categoria"
+                                        placeholderTextColor="#848482"
+                                        onChangeText={(categoria) => this.setState({ categoria })}
+                                    ></TextInput>
                                 </View>
                                 <Text style={styles.titulo1}>Descripción</Text>
                                 <View style={styles.grande}>
-                                    <Text style={ styles.titulo}>m m ñ</Text>
+                                    <TextInput multiline style={ styles.titulo2}
+                                     placeholder="Descripción"
+                                        placeholderTextColor="#848482"
+                                        onChangeText={(descrip) => this.setState({ descrip })}></TextInput>
                                 </View>
                                 <Text style={styles.titulo1}>Vigencia</Text>
                                 <View style={styles.inputs}>
-                                    <Text style={styles.titulo}>ggg</Text>
+                                    <TextInput style={styles.titulo2}
+                                        placeholder="Vigencia"
+                                        placeholderTextColor="#848482"
+                                        onChangeText={(vigencia) => this.setState({ vigencia })}
+                                    ></TextInput>
                                 </View>
                                 <Text style={styles.titulo1}>Direccion</Text>
                                 <View style={styles.grande}>
-                                    <Text style={styles.titulo}>yyy</Text>
+                                    <TextInput multiline style={styles.titulo2} 
+                                        placeholder="Direccion"
+                                        placeholderTextColor="#848482"
+                                        onChangeText={(direccion) => this.setState({ direccion })}
+                                    ></TextInput>
                                 </View>
                                 <Text style={styles.titulo1}>Lugar</Text>
                                 <View style={styles.inputs}>
-                                    <Text style={styles.titulo}>eee</Text>
+                                    <TextInput style={styles.titulo2} 
+                                        placeholder="Lugar"
+                                        placeholderTextColor="#848482"
+                                        onChangeText={(lugar) => this.setState({ lugar })}
+                                    ></TextInput>
                                 </View>
                             </View>
                         </View>
+                    <View style={styles.send}>
+                        <TouchableOpacity
+                            style={styles.enviar}
+                             onPress={ this._enviar}
+                        >
+                            <Text style={{color:'white', width:'100%',height:'100%',textAlign:'center', fontSize:15, alignSelf:'center'}}>Enviar</Text>
+                        </TouchableOpacity>
+                    </View>
                 </ScrollView>
             </View>
         </View>
@@ -267,6 +401,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#F0F0F0',
         borderRadius: 10,
         marginTop: 10,
+        padding: 10,
         // marginBottom: 20,
     },
     grande:{
@@ -280,6 +415,8 @@ const styles = StyleSheet.create({
         // backgroundColor: 'green',
         borderRadius: 10,
         marginTop: 10,
+        flexDirection: 'row',
+        padding: 10,
         // marginBottom: '20%',
     },
     titulo1:{
@@ -290,5 +427,70 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 2,
         fontSize: 18
+    },
+    titulo2:{
+        flex: 1,
+        flexWrap: 'wrap',
+        flexGrow: 2,
+        width: '100%',
+        height: '100%',
+        textAlign:'left',
+        fontSize: 18,
+    },
+    send:{
+        // flex: 1,
+        alignItems:'center',
+        justifyContent:'center',
+        width: '100%',
+        height: 100,
+        // backgroundColor:'purple',
+        // marginTop: 20
+    },
+    enviar:{
+        // flex:1,
+        justifyContent:'center',
+        alignContent:'center',
+        alignItems:'center',
+        width: 70,
+        height: 40,
+        backgroundColor: 'blue',
+        color: 'white',
+        fontSize: 18,
+        borderRadius: 5,
+        textAlign:'center',
+        padding:5
+    },
+    botonModal:{
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FEDB6B',
+        color: 'white',
+        width: 70,
+        height: 30,
+        padding: 5,
+        borderRadius: 8,
+        marginTop: 40,
+    },
+    modal: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+        // backgroundColor: '#F0F0F0',
+        backgroundColor: 'white',
+        width: '80%',
+        height: 200,
+        borderRadius: 10,
+        marginLeft: '10%',
+        marginTop: '10%',
+        padding: 20,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     }
+    
 });

@@ -21,7 +21,7 @@ const PromotionStack = createStackNavigator(
     },
     {
         initialRouteName: 'Promos',
-        headerMode: 'none',
+        headerMode: 'flolat',
         navigationOptions: {
             headerVisible: false,
         }
