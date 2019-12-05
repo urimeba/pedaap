@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Alert, AsyncStorage } from 'react-native';
-    KeyboardAvoidingView 
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Alert, AsyncStorage, KeyboardAvoidingView } from 'react-native';
+     
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 
@@ -29,7 +29,6 @@ export default class App extends Component{
           data: {usuario:this.state.usuario, password: this.state.contra, correo: this.state.correo, telefono: this.state.tel, },
           headers: {
             "content-type":"application/json",
-            // "Authorization": "Token "+ token
           },
     
           }).then( res => {

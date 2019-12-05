@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from twilio.rest import Client
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -137,8 +138,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'Static'),)
 AUTH_USER_MODEL = 'Usuarios.User'
 
-TWILIO_ACCOUNT_SID = 'AC5770f9d44bc5f3ad36f3839537c832db'
-TWILIO_AUTH_TOKEN = 'a95578edc70e7746d70d776348b4582d'
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
 TWILIO_PHONE_NUMBER= '+12407861324'
 PHONENUMBER_DB_FORMAT="INTERNATIONAL"
 

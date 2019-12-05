@@ -44,6 +44,8 @@ router.register(r'compartidos', views_compartidos.PresupuestosCompartidosViewSet
 router.register(r'categoriasCompartido', views_compartidos.CompartidoCategoriasViewSet)
 router.register(r'usuariosCompartido', views_compartidos.UsuariosPresupuestoCompartidoViewSet)
 router.register(r'notificaciones', views_notificacion.NotificacionViewSet)
+router.register(r'userTiendas', views_usuarios.UserTiendasViewSet)
+router.register(r'userCategorias', views_usuarios.UserCategoriasViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
