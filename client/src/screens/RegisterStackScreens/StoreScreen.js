@@ -1,53 +1,45 @@
 import React from 'react';
-import { FlatList, StyleSheet, View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import {
+    FlatList,
+    StyleSheet,
+    View,
+    Text,
+    SafeAreaView,
+    TouchableOpacity,
+    AsyncStorage,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Circle from '../../components/Circle';
 
-const p = [
-    {
-        id: '1',
-        name: 'Oxxo'
-    },
-    {
-        id: '2',
-        name: 'Fresko'
-    },
-    {
-        id: '3',
-        name: 'Oxxo'
-    },
-    {
-        id: '4',
-        name: 'Fresko'
-    },
-    {
-        id: '5',
-        name: 'Fresko'
-    },
-    {
-        id: '6',
-        name: 'Oxxo'
-    },
-    {
-        id: '7',
-        name: 'Fresko'
-    },
-    {
-        id: '8',
-        name: 'Oxxo'
-    },
-    {
-        id: '9',
-        name: 'Fresko'
-    },
-    {
-        id: '10',
-        name: 'Fresko'
-    }
-];
-
 export default (props) => {
+    //Data
+    const [dataS, setDataS] = React.useState([]);
+
+    React.useEffect(() => {
+        async function _prefLis() {
+            url = await AsyncStorage.getItem("server")+'tiendas/';
+            token = await AsyncStorage.getItem('userToken');
+
+            try {
+                let request = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Token '+token, 
+                    }
+                });
+                let resp = await request.json();
+                setDataS(resp.results);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        _prefLis();
+    }, [setDataS]);
+
+    //Circulos
     const [selected, setSelected] = React.useState(new Map());
 
     const onSelect = React.useCallback(
@@ -60,6 +52,15 @@ export default (props) => {
         [selected],
     );
 
+    //Send Data to API
+    const sendData = (s) => () => {
+        let obj = Object.create(null);
+        for (let [k,v] of s) {
+            obj[k] = v;
+        }
+        console.log(JSON.stringify(obj));
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.title}>
@@ -68,7 +69,7 @@ export default (props) => {
             <View style={styles.flatContainer}>
                 <FlatList 
                     style={styles.flat} 
-                    data={p} 
+                    data={dataS}
                     renderItem={({item}) => (
                         <Circle 
                             data={item}
@@ -91,7 +92,7 @@ export default (props) => {
                 <View style={styles.viewContinue}>
                     <TouchableOpacity 
                         style={styles.continue} 
-                        onPress={() => props.navigation.navigate('User')}
+                        onPress={sendData(selected)}
                     >
                     <Text style={styles.white}>Continuar</Text>
                     </TouchableOpacity>

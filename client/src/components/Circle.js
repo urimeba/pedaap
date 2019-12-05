@@ -17,7 +17,7 @@ export default Circle = ({data, selected, onSelect}) => {
                 </TouchableOpacity>
             </View>
             <View style={styles.bottomBox}>
-                <Text style={styles.bottomBoxText}>{data.name}</Text>
+                <Text style={styles.bottomBoxText}>{data.nombre}</Text>
             </View>
         </View>
     );
@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 5,
+        textAlign: 'center',
     },
     bottomBoxText:{
         color: '#FFFFFF',

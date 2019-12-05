@@ -206,6 +206,7 @@ const styles = StyleSheet.create({
     TInput: {
         fontSize: 18,
         width: '100%',
+        color: '#FFFFFF'
     },
     InputsForgotPassword: {
         flex: 1,
