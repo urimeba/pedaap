@@ -1,5 +1,5 @@
-from Apps.Productos.models import Producto, CategoriaProducto, RangoPrecioProducto
-from Apps.Productos.serializers import ProductoSerializer, CategoriaProductoSerializer, RangoPrecioProductoSerializer
+from Apps.Productos.models import Producto, CategoriaProducto
+from Apps.Productos.serializers import ProductoSerializer, CategoriaProductoSerializer
 from rest_framework import viewsets
 
 # Create your views here.
@@ -10,7 +10,3 @@ class ProductoViewSet(viewsets.ModelViewSet):
 class CategoriaProductoViewSet(viewsets.ModelViewSet):
     queryset = CategoriaProducto.objects.all()
     serializer_class = CategoriaProductoSerializer
-
-class RangoPrecioProductoViewSet(viewsets.ModelViewSet):
-    queryset = RangoPrecioProducto.objects.all()
-    serializer_class = RangoPrecioProductoSerializer

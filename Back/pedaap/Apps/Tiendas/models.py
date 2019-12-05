@@ -20,6 +20,7 @@ class Tienda(models.Model):
 class TiendaProducto(models.Model):
     tienda = models.ForeignKey('Tienda', on_delete=models.CASCADE)
     producto = models.ForeignKey('Productos.Producto', on_delete=models.CASCADE)
+    costo = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     
 
 
