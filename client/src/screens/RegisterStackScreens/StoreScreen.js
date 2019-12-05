@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Circle from '../../components/CircleTwo';
+import CircleTwo from '../../components/CircleTwo';
 
 export default (props) => {
     //Data
@@ -71,7 +71,7 @@ export default (props) => {
                     style={styles.flat} 
                     data={dataS}
                     renderItem={({item}) => (
-                        <Circle 
+                        <CircleTwo
                             data={item}
                             selected={!!selected.get(item.id)}
                             onSelect={onSelect}

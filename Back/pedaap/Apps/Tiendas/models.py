@@ -15,6 +15,7 @@ class Tienda(models.Model):
     horaApertura = models.TimeField()
     horaCierre = models.TimeField()
     estado = models.CharField(max_length=1)
+    icono = models.CharField(max_length=100)
 
 class TiendaProducto(models.Model):
     tienda = models.ForeignKey('Tienda', on_delete=models.CASCADE)
