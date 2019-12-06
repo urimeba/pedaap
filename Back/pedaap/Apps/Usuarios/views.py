@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 from twilio.rest import Client
 from django.conf import settings
 from Apps.Usuarios.models import User, UserTiendas, UserCategorias
+from Apps.Tiendas.models import Tienda
 from Apps.Usuarios.serializers import UserSerializer, GroupSerializer, UserTiendasSerializer, UserCategoriasSerializer
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
@@ -172,6 +173,15 @@ class UserTiendasViewSet(viewsets.ModelViewSet):
     queryset = UserTiendas.objects.all()
     serializer_class = UserTiendasSerializer
 
+    @action(detail=False, methods=['post'])
+    def eliminarTienda(self, request):
+        idUser = request.data.get('idUser')
+        idTienda = request.data.get('idTienda')
+        user = User.objects.get(id=idUser)
+        tienda = Tienda.objects.get(id=idTienda)
+        UserTiendas.objects.filter(user=user,tienda=tienda).delete()
+        return Response({"Exito":"Categorias eliminadas"}, status=HTTP_200_OK)
+
 
 class UserCategoriasViewSet(viewsets.ModelViewSet):
     queryset = UserCategorias.objects.all()
@@ -182,8 +192,7 @@ class UserCategoriasViewSet(viewsets.ModelViewSet):
         idUser = request.data.get('idUser')
         idCategoria = request.data.get('idCategoria')
         user = User.objects.get(id=idUser)
-        categoria = Cata
-        # UserCategorias.objects.filter(user=user, categorias).delete()
+        UserCategorias.objects.filter(user=user).delete()
         return Response({"Exito":"Categorias eliminadas"}, status=HTTP_200_OK)
 
 class GroupsViewSet(viewsets.ModelViewSet):

@@ -107,52 +107,26 @@ export default (props) => {
         idUser = await AsyncStorage.getItem("userId");
         token = await AsyncStorage.getItem("userToken");
 
-        // for(categoria in obj){
-        //     if(obj[categoria]==true){
-        //         console.log("TRUE-----------------------------");
-        //         console.log(categoria);
-        //         url = servidor+'userCategorias/';
+        for(categoria in obj){
+            if(obj[categoria]==true){
+                console.log(categoria);
+                url = servidor+'userCategorias/';
 
-        //         axios({
-        //             method: 'POST',
-        //             url: url,
-        //             data: {user:servidor+"usuarios/"+idUser+"/", categoria: servidor+"categoriaProductos/"+categoria+"/"},
-        //             headers: {
-        //                 "content-type":"application/json",
-        //                 "Authorization": "Token "+token
-        //             }, 
-        //         }).then( res => {
-        //             console.log(res.data);
-        //         }).catch(err => {
-        //             console.log(err.response.data);
-        //         });
-
-
-        //     }else{
-        //         console.log("FALSE------------------------");
-        //         console.log(categoria);
-
-        //         url = servidor+'userCategorias/';
-
-        //         axios({
-        //             method: 'DELETE',
-        //             url: url+categoria+"/",
-        //             data: {},
-        //             headers: {
-        //                 "content-type":"application/json",
-        //                 "Authorization": "Token "+token
-        //             }, 
-        //         }).then( res => {
-        //             console.log(res.data);
-        //         }).catch(err => {
-        //             console.log(err.response.data);
-        //         });
-                
-        //     }
-        // }
-
-        
-
+                axios({
+                    method: 'POST',
+                    url: url,
+                    data: {user:servidor+"usuarios/"+idUser+"/", categoria: servidor+"categoriaProductos/"+categoria+"/"},
+                    headers: {
+                        "content-type":"application/json",
+                        "Authorization": "Token "+token
+                    }, 
+                }).then( res => {
+                    console.log(res.data);
+                }).catch(err => {
+                    console.log(err.response.data);
+                });
+            }
+        }
         goNext();
     }
 
