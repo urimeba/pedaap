@@ -47,10 +47,10 @@ def login(request):
         return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado), "tiendas":str(tiendas), "categorias":str(categorias)}, status=HTTP_200_OK)
     else:
         to = user.telefono
-        # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-        # client.messages.create(
-        #     body='Codigo de verificación: ' + str(user.codigo),
-        #     to=to, from_=settings.TWILIO_PHONE_NUMBER)
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        client.messages.create(
+            body='Codigo de verificación: ' + str(user.codigo),
+            to=to, from_=settings.TWILIO_PHONE_NUMBER)
         return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado), "tiendas":str(tiendas), "categorias":str(categorias)}, status=HTTP_200_OK)
 
 
@@ -96,7 +96,7 @@ def registro(request):
                 user.verificado=verificado
                 user.save()
 
-                # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+                client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
                 # validation_request = client.validation_requests.create(
                 #                     friendly_name=str(user.username),
@@ -107,9 +107,9 @@ def registro(request):
 
 
                 to = user.telefono
-                # client.messages.create(
-                #     body='Codigo de verificación: ' + str(user.codigo),
-                #     to=to, from_=settings.TWILIO_PHONE_NUMBER)
+                client.messages.create(
+                    body='Codigo de verificación: ' + str(user.codigo),
+                    to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
                 token, created = Token.objects.get_or_create(user=user)
 
