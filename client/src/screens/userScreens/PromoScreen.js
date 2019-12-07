@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-    SafeAreaView,
     View,
     FlatList,
     StyleSheet,
@@ -9,92 +8,9 @@ import {
     TextInput,
     TouchableOpacity,
     AsyncStorage,
+    ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-const datos=[
-    {
-        id: '1',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo Juriquilla',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    }, 
-    {
-        id: '2',
-       nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 1',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    }, 
-    {
-        id: '3',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 2',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-    {
-        id: '4',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 3',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-    {
-        id: '5',
-       nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 4',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-    {
-        id: '6',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 5',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-    {
-        id: '7',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 6',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-    {
-        id: '8',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 7',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-    {
-        id: '9',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 8',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-];
 
 const estable=[
     {
@@ -126,6 +42,8 @@ export default class App extends Component{
             establecimieniemtos: false,
             filter:false,
             datos: [],
+            establecimientos: [],
+            loading: true,
         };
     }
 
@@ -150,7 +68,9 @@ export default class App extends Component{
 
     async componentDidMount() {
         url = await AsyncStorage.getItem("server")+'promociones/';
+        url2 = await AsyncStorage.getItem("server")+'tiendas/';
         token = await AsyncStorage.getItem('userToken');
+
         fetch(url, {
             method: 'GET',
             mode: 'cors',
@@ -164,54 +84,61 @@ export default class App extends Component{
             this.setState({
                 datos: responseJson.results
             });
+            fetch(url2, {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token '+token, 
+                }
+            })
+            .then(response => response.json())
+            .then((responseJson)=>{
+                this.setState({
+                    establecimientos: responseJson.results,
+                    loading: false
+                });
+            })
+            .catch(error=>console.error(error))
         })
         .catch(error=>console.error(error))
     }
 
-    // componentDidMount(){
-    //     return fetch('https://facebook.github.io/react-native/movies.json')
-    //     .then((response) => response.json())
-    //     .then((responseJson) => {
+    caja=({item})=>{
+        let fechaSplit = item.fechaVencimiento.split("-");
+        let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
+        return(
+            <TouchableOpacity 
+                onPress={() => this.props.navigation.navigate('Promotion', {
+                    datos: item, 
+                    id: item.id,
+                    nombre: item.descripcion,
+                    lugar: item.lugar,//pendiente checar
+                    vigencia: item.fechaVencimiento,
+                    categoria: item.categoria,//pendiente checar
+                    descripcion: item.descripcion,
+                    direccion: item.direccion//pendiente checar
+                })}
+                style={styles.caja}
+            >
+                <View style={styles.imgCaja}>
+                    <Image/>
+                </View>
+                <View style={styles.datosCaja}>
+                    <Text style={styles.titulo}>{item.descripcion}</Text>
+                    {item.costo == '0.00' &&(
+                        <Text style={styles.titulo}>Promoción</Text>
+                    )}
+                    {item.costo != '0.00' &&(
+                        <Text style={styles.titulo}>${item.costo}</Text>
+                    )}
+                    <Text style={styles.titulo}>Vigencia: {fechaFormat}</Text>
+                </View>
+            </TouchableOpacity>
+        );
+    }
 
-    //     this.setState({
-    //         isLoading: false,
-    //         dataSource: responseJson.movies,
-    //     }, function(){
-
-    //     });
-
-    //     })
-    //     .catch((error) =>{
-    //     console.error(error);
-    //     });
-    // }
-
-    caja=({item})=>(
-        <TouchableOpacity 
-            onPress={() => this.props.navigation.navigate('Promotion', {
-                datos: item, 
-                id: item.id,
-                nombre: item.nombre,
-                lugar: item.lugar,
-                vigencia: item.vigencia,
-                categoria: item.categoria,
-                descripcion: item.descripcion,
-                direccion: item.direccion
-            })}
-            style={styles.caja}
-        >
-            <View style={styles.imgCaja}>
-                <Image/>
-            </View>
-            <View style={styles.datosCaja}>
-                <Text style={styles.titulo}>{item.titulo}</Text>
-                <Text style={styles.titulo}>{item.lugar}</Text>
-                <Text style={styles.titulo}>{item.vigencia}</Text>
-            </View>
-        </TouchableOpacity>
-    )
-
-    caja2= ({item})=>(
+    caja2=({item})=>(
         <TouchableOpacity style={styles.caja}>
             <View style={styles.imgCaja}>
                 <Image/>
@@ -224,84 +151,75 @@ export default class App extends Component{
     )
 
     render(){
-        return (
-            <View style={styles.todo}>
-                {console.log(this.state.datos)}
-                <View style={styles.container}>
-                    <View style={styles.arriba}>
-                        <View style={styles.textoP}>
-                            <Text style={styles.tituloP}>Promociones</Text>
-                            <Icon name="bell-outline" size={22} color={'#707070'} style={styles.iconB} />
+        if(!this.state.loading){
+            return (
+                <View style={styles.todo}>
+                    {console.log(this.state.establecimieniemtos)}
+                    <View style={styles.container}>
+                        <View style={styles.arriba}>
+                            <View style={styles.textoP}>
+                                <Text style={styles.tituloP}>Promociones</Text>
+                                <Icon name="bell-outline" size={22} color={'#707070'} style={styles.iconB} />
+                            </View>
+                            <View style={styles.botones}>
+                                <TextInput 
+                                    style={styles.TInput}
+                                    placeholder="Buscar"
+                                    placeholderTextColor="#848482"
+                                />
+                                <TouchableOpacity style={styles.iconF}
+                                    onPress={this._filtro}
+                                >
+                                    {this.state.filter===false &&(
+                                        <Icon name="swap-vertical" size={24} color={'#707070'} />
+                                    )}
+                                    {this.state.filter===true &&(
+                                        <Icon name="swap-vertical" size={24} color={'#71C0F2'} />
+                                    )}
+                                </TouchableOpacity>
+                                <TouchableOpacity 
+                                    style={styles.iconE}  
+                                    onPress={this._estable}
+                                >
+                                    <Icon name="store" size={24} color={'#DE4C63'}/>
+                                </TouchableOpacity>
+                                <TouchableOpacity 
+                                    style={styles.iconA}
+                                    onPress={() => this.props.navigation.navigate('New')}
+                                >
+                                    <Icon name="plus" size={24} color={'#FEDB6B'}  />
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                        <View style={styles.botones}>
-                            <TextInput 
-                                style={styles.TInput}
-                                placeholder="Buscar"
-                                placeholderTextColor="#848482"
+                        {this.state.establecimieniemtos===false && (
+                            <FlatList
+                                style={styles.flat}
+                                data={this.state.datos}
+                                renderItem={this.caja}
+                                keyExtractor={(item) => item.id.toString()}
                             />
-                            <TouchableOpacity style={styles.iconF}
-                                onPress={this._filtro}
-                            >
-                                {this.state.filter===false &&(
-                                    <Icon name="swap-vertical" size={24} color={'#707070'} />
-                                )}
-                                {this.state.filter===true &&(
-                                    <Icon name="swap-vertical" size={24} color={'#71C0F2'} />
-                                )}
-                            </TouchableOpacity>
-                            <TouchableOpacity 
-                                style={styles.iconE}  
-                                onPress={this._estable}
-                            >
-                                <Icon name="store" size={24} color={'#DE4C63'}/>
-                            </TouchableOpacity>
-                            <TouchableOpacity 
-                                style={styles.iconA}
-                                onPress={() => this.props.navigation.navigate('New')}
-                            >
-                                <Icon name="plus" size={24} color={'#FEDB6B'}  />
-                            </TouchableOpacity>
-                        </View>
+                        )}
+                        {this.state.establecimieniemtos===true && (
+                            <FlatList
+                                style={styles.flat}
+                                data={estable}
+                                renderItem={this.caja2}
+                                keyExtractor={item => item.id}
+                            />
+                        )}
                     </View>
-                    {this.state.establecimieniemtos===false && (
-                        <FlatList
-                            style={styles.flat}
-                            data={datos}
-                            renderItem={this.caja}
-                            keyExtractor={item => item.id}
-                        />
-                    )}
-                    {this.state.establecimieniemtos===true && (
-                        <FlatList
-                            style={styles.flat}
-                            data={estable}
-                            renderItem={this.caja2}
-                            keyExtractor={item => item.id}
-                        />
-                    )}
                 </View>
-            </View>
-        );
+            );
+        }else{
+            return(
+                <View style={styles.indicador}>
+                    <ActivityIndicator size="large" color="#DE4C63"/>
+                </View>
+            );
+        }
     }   
 }
 
-function Cajas({data}){
-    console.log(data)
-    return (
-        <TouchableOpacity onPress={() => props.navigation.navigate('Login', {datos: data})} style={styles.caja}>
-            <View style={styles.imgCaja}>
-                <Image/>
-            </View>
-            <View style={styles.datosCaja}>
-                <Text style={styles.titulo}>{data.titulo}</Text>
-                <Text style={styles.titulo}>{data.lugar}</Text>
-                <Text style={styles.titulo}>{data.vigencia}</Text>
-            </View>
-        </TouchableOpacity>
-    );
-}
-
-console.log(datos[0].vigencia)
 const styles = StyleSheet.create({
     todo:{
         flex: 1,
@@ -419,5 +337,10 @@ const styles = StyleSheet.create({
         // backgroundColor: 'pink',
         marginLeft: 10,
         padding: 10,
+    },
+    indicador:{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: 'center',
     }
 });

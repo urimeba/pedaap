@@ -9,26 +9,31 @@ import UserTabs from './UserTabNavigator';
 import AdminTabs from './AdminTabNavigator';
 import SignupStack from './SignupStack';
 
-export default createAppContainer(createSwitchNavigator({
-    SignupPref: {
-        screen: SignupStack
+export default createAppContainer(createSwitchNavigator(
+    {
+        Login: {
+            screen: LoginScreen
+        },
+        Signup:{
+            screen: SignupScreen
+        },
+        Forgot:{
+            screen: ForgotScreen
+        },
+        User: {
+            screen: UserTabs
+        },
+        Admin: {
+            screen: AdminTabs
+        },
+        SignupPref: {
+            screen: SignupStack
+        },
+        Confirm: {
+            screen: ConfirmScreen
+        },
     },
-    Login: {
-        screen: LoginScreen
-    },
-    Signup:{
-        screen: SignupScreen
-    },
-    Forgot:{
-        screen: ForgotScreen
-    },
-    User: {
-        screen: UserTabs
-    },
-    Admin: {
-        screen: AdminTabs
-    },
-    Confirm: {
-        screen: ConfirmScreen
-    },
-}));
+    {
+        initialRouteName: 'User',
+    }
+));
