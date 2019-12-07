@@ -19,9 +19,11 @@ export default (props) => {
     React.useEffect(() => {
         async function _prefLis() {
             url = await AsyncStorage.getItem("server")+'categoriaProductos/';
+            // AsyncStorage.setItem('userId',"1")
             token = await AsyncStorage.getItem('userToken');
 
             try {
+                console.log(token)
                 let request = await fetch(url, {
                     method: 'GET',
                     mode: 'cors',
@@ -34,7 +36,7 @@ export default (props) => {
                 console.log(resp.results);
                 setDataP(resp.results);
             } catch (error) {
-                console.error(error);
+                console.log(error);
             }
             /*
                 * Posible error de AXIOS con REACT NATIVE o EXPO con peticiones GET

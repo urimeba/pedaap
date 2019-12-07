@@ -78,6 +78,7 @@ export default (props) => {
 
                 urlUser = servidor+"usuarios/"+idUser+"/";
                 urlTienda = servidor+"tiendas/"+categoria+"/";
+                console.log(urlUser)
 
                 axios({
                     method: 'POST',
