@@ -11,6 +11,7 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 const estable=[
     {
@@ -67,41 +68,62 @@ export default class App extends Component{
     }
 
     async componentDidMount() {
-        url = await AsyncStorage.getItem("server")+'promociones/';
-        url2 = await AsyncStorage.getItem("server")+'tiendas/';
+        // url = await AsyncStorage.getItem("server")+'promociones/';
+        // url2 = await AsyncStorage.getItem("server")+'tiendas/';
+        // token = await AsyncStorage.getItem('userToken');
+
+        // fetch(url, {
+        //     method: 'GET',
+        //     mode: 'cors',
+        //     credentials: 'include',
+        //     headers: {
+        //         'Authorization': 'Token '+token, 
+        //     }
+        // })
+        // .then(response => response.json())
+        // .then((responseJson)=>{
+        //     this.setState({
+        //         datos: responseJson.results
+        //     });
+        //     fetch(url2, {
+        //         method: 'GET',
+        //         mode: 'cors',
+        //         credentials: 'include',
+        //         headers: {
+        //             'Authorization': 'Token '+token, 
+        //         }
+        //     })
+        //     .then(response => response.json())
+        //     .then((responseJson)=>{
+        //         this.setState({
+        //             establecimientos: responseJson.results,
+        //             loading: false
+        //         });
+        //     })
+        //     .catch(error=>console.error(error))
+        // })
+        // .catch(error=>console.error(error))
+
+        url = await AsyncStorage.getItem("server")+"promociones/getPromos/";
         token = await AsyncStorage.getItem('userToken');
 
-        fetch(url, {
+        axios({
             method: 'GET',
-            mode: 'cors',
-            credentials: 'include',
+            url: url,
+            data: {},
             headers: {
-                'Authorization': 'Token '+token, 
-            }
-        })
-        .then(response => response.json())
-        .then((responseJson)=>{
+                "content-type":"application/json",
+                "Authorization":"Token "+token
+            }, 
+        }).then( res => {
+            // PROMOCIONES
+            console.log(res.data);
+        }).catch(err => {
             this.setState({
-                datos: responseJson.results
+                error1: false,
+                error2: true,
             });
-            fetch(url2, {
-                method: 'GET',
-                mode: 'cors',
-                credentials: 'include',
-                headers: {
-                    'Authorization': 'Token '+token, 
-                }
-            })
-            .then(response => response.json())
-            .then((responseJson)=>{
-                this.setState({
-                    establecimientos: responseJson.results,
-                    loading: false
-                });
-            })
-            .catch(error=>console.error(error))
-        })
-        .catch(error=>console.error(error))
+        });
     }
 
     caja=({item})=>{

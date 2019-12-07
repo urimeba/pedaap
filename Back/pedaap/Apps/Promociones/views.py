@@ -4,7 +4,6 @@ from rest_framework import viewsets
 from Apps.Usuarios.models import User, UserTiendas, UserCategorias
 from Apps.Tiendas.models import Tienda, TiendaProducto
 from Apps.Productos.models import Producto, CategoriaProducto
-from Apps.Promociones.models import Promociones
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import (
@@ -49,18 +48,38 @@ class PromocionesViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(promociones, many=True)
         return Response(serializer.data)
 
+    @action(detail=False)
+    def getPromos(self, request):
+        promociones = Promociones.objects.all()
+        # print(promociones)
+
+        dic = {}
+
+        for p in promociones:
+            dic[p.id]={'id':p.id, "nombre":p.descripcion, 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion}
+            # print(p.id)
+            # print(p.descripcion)
+            # print(p.productoTienda.tienda.nombre)
+            # print(p.fechaVencimiento)
+            # print(p.productoTienda.producto.categoria.nombre)
+            # print(p.descripcion)
+            # print(p.productoTienda.tienda.direccion)
+
+        print(dic)
 
 
-
-        # recent_libros = libro.objects.all().order_by('-titulo')
-        #
-        # page = self.paginate_queryset(recent_libros)
+        # page = self.paginate_queryset(promociones)
         # if page is not None:
         #     serializer = self.get_serializer(page, many=True)
         #     return self.get_paginated_response(serializer.data)
         #
-        # serializer = self.get_serializer(recent_libros, many=True)
+        # serializer = self.get_serializer(promociones, many=True)
         # return Response(serializer.data)
+        return Response({"Datos": str(dic)}, status=HTTP_200_OK)
+
+
+
+
 
 
         # return Response({"Exito":"Categorias eliminadas"}, status=HTTP_200_OK)
