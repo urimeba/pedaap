@@ -65,7 +65,7 @@ class PromocionesViewSet(viewsets.ModelViewSet):
             # print(p.descripcion)
             # print(p.productoTienda.tienda.direccion)
 
-        print(dic)
+        # print(dic)
 
 
         # page = self.paginate_queryset(promociones)

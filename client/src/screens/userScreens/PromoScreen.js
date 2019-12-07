@@ -116,8 +116,8 @@ export default class App extends Component{
                 "Authorization":"Token "+token
             }, 
         }).then( res => {
-            // PROMOCIONES
-            console.log(res.data);
+            // PROMOCIONESs
+            // console.log(res.data);
         }).catch(err => {
             this.setState({
                 error1: false,

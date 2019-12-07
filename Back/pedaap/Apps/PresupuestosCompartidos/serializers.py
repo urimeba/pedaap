@@ -4,7 +4,7 @@ from rest_framework import serializers
 class PresupuestosCompartidoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PresupuestoCompartido
-        fields=['id', 'usuarioPropietario', 'monto']
+        fields=['id', 'usuarioPropietario', 'monto', 'codigo']
 
 class UsuariosPresupuestoCompartidoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
