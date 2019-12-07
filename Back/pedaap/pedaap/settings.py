@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'Apps.Tiendas',
     'Apps.Usuarios',
     'Apps.Notificaciones',
+    'Apps.Juegos',
     'django_twilio',
     'phonenumber_field',
     'rest_framework',

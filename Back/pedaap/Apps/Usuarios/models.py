@@ -7,7 +7,7 @@ def random_string():
     return random.randrange(100000, 999999)
 
 class User(AbstractUser):
-    telefono  = models.CharField(max_length=14, unique=True)
+    telefono  = models.CharField(max_length=14, unique=True, default=1)
     verificado = models.CharField(max_length=1, default=0)
     codigo = models.PositiveIntegerField(default = random_string)
 

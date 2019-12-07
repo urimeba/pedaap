@@ -9,6 +9,7 @@ import {
     AsyncStorage,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 import CircleTwo from '../../components/CircleTwo';
 
@@ -53,12 +54,90 @@ export default (props) => {
     );
 
     //Send Data to API
-    const sendData = (s) => () => {
+    const sendData = (s) => async() => {
+
+        servidor = await AsyncStorage.getItem("server")
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+        
+
         let obj = Object.create(null);
         for (let [k,v] of s) {
             obj[k] = v;
         }
+
+        tamaño = Object.keys(obj).length;
+        console.log(tamaño);
         console.log(JSON.stringify(obj));
+
+
+        for(categoria in obj){
+            if(obj[categoria]==true){
+                console.log(categoria);
+                url = servidor+'userTiendas/';
+
+                urlUser = servidor+"usuarios/"+idUser+"/";
+                urlTienda = servidor+"tiendas/"+categoria+"/";
+
+                axios({
+                    method: 'POST',
+                    url: url,
+                    data: {user:urlUser, tienda: urlTienda},
+                    headers: {
+                        "content-type":"application/json",
+                        "Authorization": "Token "+token
+                    }, 
+                }).then( res => {
+                    console.log(res.data);
+                }).catch(err => {
+                    console.log(err.response.data);
+                });
+            }else{
+                url = servidor+'userTiendas/eliminarTienda/';
+
+                axios({
+                    method: 'POST',
+                    url: url,
+                    data: {idUser: idUser, idTienda:categoria},
+                    headers: {
+                        "content-type":"application/json",
+                        "Authorization": "Token "+token
+                    }, 
+                }).then( res => {
+                    console.log(res.data);
+                }).catch(err => {
+                    console.log(err.response.data);
+                });
+
+            }
+        }
+
+        props.navigation.navigate('User');
+    }
+
+    _eliminarCategorias = async() =>{
+
+        servidor = await AsyncStorage.getItem("server")
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+        url = servidor+'userCategorias/eliminarCategoria/';
+
+        axios({
+            method: 'POST',
+            url: url,
+            data: {idUser:idUser},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": "Token "+token
+            }, 
+        }).then( res => {
+            console.log(res.data);
+        }).catch(err => {
+            console.log(err.response.data);
+        });
+
+        props.navigation.goBack()
+
     }
 
     return (
@@ -85,7 +164,7 @@ export default (props) => {
             <View style={styles.next}>
                 <TouchableOpacity 
                     style={styles.back} 
-                    onPress={() => props.navigation.goBack()}
+                    onPress={_eliminarCategorias}
                 >   
                     <Icon name="keyboard-backspace" size={40} color={'#707070'} />
                 </TouchableOpacity>

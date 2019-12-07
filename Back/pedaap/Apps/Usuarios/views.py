@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 from twilio.rest import Client
 from django.conf import settings
 from Apps.Usuarios.models import User, UserTiendas, UserCategorias
+from Apps.Tiendas.models import Tienda
 from Apps.Usuarios.serializers import UserSerializer, GroupSerializer, UserTiendasSerializer, UserCategoriasSerializer
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
@@ -18,6 +19,7 @@ from rest_framework.status import (
 )
 from django.core.mail import send_mail
 from django.conf import settings
+from rest_framework.decorators import action
 
 # Create your views here.
 @csrf_exempt
@@ -45,10 +47,10 @@ def login(request):
         return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado), "tiendas":str(tiendas), "categorias":str(categorias)}, status=HTTP_200_OK)
     else:
         to = user.telefono
-        # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-        # client.messages.create(
-        #     body='Codigo de verificación: ' + str(user.codigo),
-        #     to=to, from_=settings.TWILIO_PHONE_NUMBER)
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        client.messages.create(
+            body='Codigo de verificación: ' + str(user.codigo),
+            to=to, from_=settings.TWILIO_PHONE_NUMBER)
         return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado), "tiendas":str(tiendas), "categorias":str(categorias)}, status=HTTP_200_OK)
 
 
@@ -94,7 +96,7 @@ def registro(request):
                 user.verificado=verificado
                 user.save()
 
-                # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+                client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
                 # validation_request = client.validation_requests.create(
                 #                     friendly_name=str(user.username),
@@ -105,9 +107,9 @@ def registro(request):
 
 
                 to = user.telefono
-                # client.messages.create(
-                #     body='Codigo de verificación: ' + str(user.codigo),
-                #     to=to, from_=settings.TWILIO_PHONE_NUMBER)
+                client.messages.create(
+                    body='Codigo de verificación: ' + str(user.codigo),
+                    to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
                 token, created = Token.objects.get_or_create(user=user)
 
@@ -144,8 +146,6 @@ def verificar(request):
     else:
         return Response(status=HTTP_400_BAD_REQUEST)
 
-
-
 # @csrf_exempt
 @api_view(["POST"])
 # @permission_classes((AllowAny,))
@@ -165,14 +165,6 @@ def enviar_correo(request):
     return Response({"Exito":"Correo enviado correctamente"}, status=HTTP_200_OK)
 
 
-
-
-
-
-
-
-
-
 class UsuariosViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -181,11 +173,27 @@ class UserTiendasViewSet(viewsets.ModelViewSet):
     queryset = UserTiendas.objects.all()
     serializer_class = UserTiendasSerializer
 
+    @action(detail=False, methods=['post'])
+    def eliminarTienda(self, request):
+        idUser = request.data.get('idUser')
+        idTienda = request.data.get('idTienda')
+        user = User.objects.get(id=idUser)
+        tienda = Tienda.objects.get(id=idTienda)
+        UserTiendas.objects.filter(user=user,tienda=tienda).delete()
+        return Response({"Exito":"Categorias eliminadas"}, status=HTTP_200_OK)
+
 
 class UserCategoriasViewSet(viewsets.ModelViewSet):
     queryset = UserCategorias.objects.all()
     serializer_class = UserCategoriasSerializer
 
+    @action(detail=False, methods=['post'])
+    def eliminarCategoria(self, request):
+        idUser = request.data.get('idUser')
+        idCategoria = request.data.get('idCategoria')
+        user = User.objects.get(id=idUser)
+        UserCategorias.objects.filter(user=user).delete()
+        return Response({"Exito":"Categorias eliminadas"}, status=HTTP_200_OK)
 
 class GroupsViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
