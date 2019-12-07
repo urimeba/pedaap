@@ -1,6 +1,15 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity} from 'react-native';
-import Constants from 'expo-constants';
+import {
+    SafeAreaView,
+    View,
+    FlatList,
+    StyleSheet,
+    Text,
+    Image,
+    TextInput,
+    TouchableOpacity,
+    AsyncStorage,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const datos=[
@@ -112,16 +121,14 @@ const estable=[
 
 export default class App extends Component{
     constructor(props) {
-            super(props);
-            this.state={
-                establecimieniemtos: false,
-                filter:false
-            };
+        super(props);
+        this.state={
+            establecimieniemtos: false,
+            filter:false,
+            datos: [],
+        };
     }
 
-    // _vista = async()=>{
-    //     props.navigation.navigate('Promotion', {datos: data})}
-    // }
     _estable=()=>{
         if(this.state.establecimieniemtos===false){
             this.setState({establecimieniemtos:true})
@@ -140,17 +147,59 @@ export default class App extends Component{
             this.setState({filter:false})
         }
     }
-    caja= ({item})=>(
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('Promotion', {
-            datos: item, 
-            id: item.id,
-            nombre: item.nombre,
-            lugar: item.lugar,
-            vigencia: item.vigencia,
-            categoria: item.categoria,
-            descripcion: item.descripcion,
-            direccion: item.direccion
-             })} style={styles.caja}>
+
+    async componentDidMount() {
+        url = await AsyncStorage.getItem("server")+'promociones/';
+        token = await AsyncStorage.getItem('userToken');
+        fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token '+token, 
+            }
+        })
+        .then(response => response.json())
+        .then((responseJson)=>{
+            this.setState({
+                datos: responseJson.results
+            });
+        })
+        .catch(error=>console.error(error))
+    }
+
+    // componentDidMount(){
+    //     return fetch('https://facebook.github.io/react-native/movies.json')
+    //     .then((response) => response.json())
+    //     .then((responseJson) => {
+
+    //     this.setState({
+    //         isLoading: false,
+    //         dataSource: responseJson.movies,
+    //     }, function(){
+
+    //     });
+
+    //     })
+    //     .catch((error) =>{
+    //     console.error(error);
+    //     });
+    // }
+
+    caja=({item})=>(
+        <TouchableOpacity 
+            onPress={() => this.props.navigation.navigate('Promotion', {
+                datos: item, 
+                id: item.id,
+                nombre: item.nombre,
+                lugar: item.lugar,
+                vigencia: item.vigencia,
+                categoria: item.categoria,
+                descripcion: item.descripcion,
+                direccion: item.direccion
+            })}
+            style={styles.caja}
+        >
             <View style={styles.imgCaja}>
                 <Image/>
             </View>
@@ -175,66 +224,65 @@ export default class App extends Component{
     )
 
     render(){
-    return (
-        <View style={styles.todo}>
-            <View style={styles.container}>
-                <View style={styles.arriba}>
-                    <View style={styles.textoP}>
-                        <Text style={styles.tituloP}>Promociones</Text>
-                        <Icon name="bell-outline" size={22} color={'#707070'} style={styles.iconB} />
+        return (
+            <View style={styles.todo}>
+                {console.log(this.state.datos)}
+                <View style={styles.container}>
+                    <View style={styles.arriba}>
+                        <View style={styles.textoP}>
+                            <Text style={styles.tituloP}>Promociones</Text>
+                            <Icon name="bell-outline" size={22} color={'#707070'} style={styles.iconB} />
+                        </View>
+                        <View style={styles.botones}>
+                            <TextInput 
+                                style={styles.TInput}
+                                placeholder="Buscar"
+                                placeholderTextColor="#848482"
+                            />
+                            <TouchableOpacity style={styles.iconF}
+                                onPress={this._filtro}
+                            >
+                                {this.state.filter===false &&(
+                                    <Icon name="swap-vertical" size={24} color={'#707070'} />
+                                )}
+                                {this.state.filter===true &&(
+                                    <Icon name="swap-vertical" size={24} color={'#71C0F2'} />
+                                )}
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                style={styles.iconE}  
+                                onPress={this._estable}
+                            >
+                                <Icon name="store" size={24} color={'#DE4C63'}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                style={styles.iconA}
+                                onPress={() => this.props.navigation.navigate('New')}
+                            >
+                                <Icon name="plus" size={24} color={'#FEDB6B'}  />
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    <View style={styles.botones}>
-                        <TextInput 
-                            style={styles.TInput}
-                            placeholder="Buscar"
-                            placeholderTextColor="#848482"
+                    {this.state.establecimieniemtos===false && (
+                        <FlatList
+                            style={styles.flat}
+                            data={datos}
+                            renderItem={this.caja}
+                            keyExtractor={item => item.id}
                         />
-                        <TouchableOpacity style={styles.iconF}
-                            onPress={this._filtro}
-                        >
-                             {this.state.filter===false &&(
-                                 <Icon name="swap-vertical" size={24} color={'#707070'} />
-                            )}
-                             {this.state.filter===true &&(
-                                 <Icon name="swap-vertical" size={24} color={'#71C0F2'} />
-                            )}
-                            
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            style={styles.iconE}  
-                            onPress={this._estable}>
-                             <Icon name="store" size={24} color={'#DE4C63'}
-                             />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.iconA} onPress={() => this.props.navigation.navigate('New')}>
-                            <Icon name="plus" size={24} color={'#FEDB6B'}  />
-                        </TouchableOpacity>
-                    </View>
+                    )}
+                    {this.state.establecimieniemtos===true && (
+                        <FlatList
+                            style={styles.flat}
+                            data={estable}
+                            renderItem={this.caja2}
+                            keyExtractor={item => item.id}
+                        />
+                    )}
                 </View>
-                {this.state.establecimieniemtos===false && (
-                    <FlatList
-                    style={styles.flat}
-                    data={datos}
-                    renderItem={this.caja}
-                    keyExtractor={item => item.id}
-                />
-                )}
-                {this.state.establecimieniemtos===true && (
-                    <FlatList
-                    style={styles.flat}
-                    data={estable}
-                    renderItem={this.caja2}
-                    keyExtractor={item => item.id}
-                />
-                )}
-                
             </View>
-        </View>
-        
-    );
-}
-
-    
+        );
+    }   
 }
 
 function Cajas({data}){
@@ -252,9 +300,6 @@ function Cajas({data}){
         </TouchableOpacity>
     );
 }
-
-
-
 
 console.log(datos[0].vigencia)
 const styles = StyleSheet.create({
@@ -338,14 +383,14 @@ const styles = StyleSheet.create({
         width:'90%',
         height: 100,
         borderRadius: 10,
-       shadowColor: "#000",
+        shadowColor: "#000",
         shadowOffset: {
-               width: 0,
-               height: 2,
-           },
-           shadowOpacity: 0.25,
-           shadowRadius: 3.84,
-           elevation: 5,
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
         padding: 8,
         marginLeft:'5%',
         marginTop: 20,
