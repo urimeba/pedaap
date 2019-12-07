@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage, Alert} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
@@ -89,8 +89,42 @@ export default class App extends Component{
         });
     }
 
-    _eliminar=(id)=>{
-        console.log(id)
+    _eliminar=(id, aportador)=>{
+        // console.log(id);
+
+        Alert.alert(
+            'Confirmar',
+            '¿Deseas eliminar a '+aportador+" de este presupuesto?",
+            [
+              {
+                text: 'Cancelar', onPress: () => console.log('Cancel Pressed'), style: 'cancel',
+              },
+
+              {text: 'OK', onPress: () => this._deleteUser(id)},
+            ],
+            {cancelable: false},
+          );
+
+    }
+
+    _deleteUser= async(id) =>{
+        url = await AsyncStorage.getItem("server");
+        token = await AsyncStorage.getItem("userToken");
+        // console.log(id, url);
+        axios({
+            method: 'DELETE',
+            url: url+"usuariosCompartido/"+id+"/",
+            data: {},
+            headers: {
+                "content-type":"application/json",
+                "Authorization":"Token "+ token
+            }, 
+        }).then( res => {
+            console.log(res.data);
+        }).catch(err => {
+            console.log(err)
+        });
+
     }
 
     _combo = () => {
@@ -107,7 +141,7 @@ export default class App extends Component{
                 <Text style={styles.aporte}>{item.aporte}</Text>
             </View>
             <View style={styles.cerrar}>
-                <TouchableOpacity style={styles.btnCerrar} onPress={() => this._eliminar(id)}>
+                <TouchableOpacity style={styles.btnCerrar} onPress={() => this._eliminar(item.id, item.nombre)}>
                     <Icon name="close" size={24} color={'#D5D5D5'}/>
                 </TouchableOpacity>
             </View>
