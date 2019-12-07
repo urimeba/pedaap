@@ -85,7 +85,7 @@ export default (props) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.title}>
-                <Text style={styles.titleWhite}>Selecciona el tipo de evento</Text>
+                <Text style={styles.titleWhite}>Selecciona el numero de personas</Text>
             </View>
             <View style={styles.flatContainer}>
                 <FlatList 
@@ -123,11 +123,13 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         backgroundColor: '#1E1E1E',
+        padding:20
     },
     title:{
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        textAlign:'center'
     },
     flatContainer:{
         flex: 6,
@@ -162,6 +164,7 @@ const styles = StyleSheet.create({
     titleWhite:{
         color: '#FFFFFF',
         fontSize: 26,
+        textAlign:'center'
     },
     white:{
         color: '#FFFFFF',

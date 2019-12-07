@@ -29,7 +29,7 @@ _unirme=()=>{
         this.setState({error2:false})
         this.setState({succes:true})
         // this.props.navigation.navigate('GameRoom2',)
-        this.props.navigation.navigate('Game')
+        this.props.navigation.navigate('GameRoom2')
         
     }else{
         this.setState({error1:true})

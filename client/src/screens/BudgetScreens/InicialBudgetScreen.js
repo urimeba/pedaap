@@ -83,7 +83,7 @@ const dataP = [
     );
 
     const goNext = () => {
-        props.navigation.navigate('ComboBudget');
+        props.navigation.navigate('ShareBudget');
     }
 
     return (

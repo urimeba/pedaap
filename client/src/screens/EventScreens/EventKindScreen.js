@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         backgroundColor: '#1E1E1E',
+        padding:20
     },
     title:{
         flex: 1,
@@ -162,6 +163,7 @@ const styles = StyleSheet.create({
     titleWhite:{
         color: '#FFFFFF',
         fontSize: 26,
+        textAlign:'center'
     },
     white:{
         color: '#FFFFFF',
