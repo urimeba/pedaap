@@ -2,39 +2,48 @@ import React, {Component} from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity,Alert, ScrollView} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-export default class App extends Component{
+const code={codigo:'A'}
+export default class Join extends Component{
     constructor(props){
         super(props);
         this.state={
             cod:'',
+            codigo:'',
             error1:false,//no existe el codigo
             error2:false,//campo vacio
             succes:false ,// se encontro el codigo
-        }
+        };
     }
-_unirme= async()=>{
+
+
+_unirme=()=>{
     // Alert.alert(this.state.codigo)
-    if(this.state.cod===""){
+    if(this.state.codigo===""){
         this.setState({error2:true})
-        this.setState=({error1:false})
-        this.setState=({succes:false})
+        this.setState({error1:false})
+        this.setState({succes:false})
         return false
         // Alert.alert('vacio')
-    }else if(this.state.cod!='AA'){
-        this.setState=({error1:true})
-        this.setState=({error2:false})
-        this.setState=({succes:false})
+    }else if(this.state.codigo==code.codigo){
+         this.setState({error1:false})
+        this.setState({error2:false})
+        this.setState({succes:true})
+        this.props.navigation.navigate('AportBudget',)
+        
+    }else{
+        this.setState({error1:true})
+        this.setState({error2:false})
+        this.setState({succes:false})
         // Alert.alert('no codigo')
          return false
-    }else{
         // Alert.alert('yes')
-        this.setState=({error1:false})
-        this.setState=({error2:false})
-        this.setState=({succes:true})
-        this.props.navigation.navigate('AportBudget')
     }
 }
+
+    ontext=(codigo)=>{
+        this.setState({codigo})
+    }
+
 
     render(){
         return(
@@ -45,13 +54,14 @@ _unirme= async()=>{
                         style={styles.nombreE}
                         placeholder="Codigo"
                         placeholderTextColor = "#848482"
-                        onChangeText={(cod) => this.setState({cod})}
+                        onChangeText={this.ontext}
+                        value={this.state.codigo}
                     />
                 </View>
-                {this.state.error1===true &&(
+                {this.state.error1=== true &&(
                     <Text style={styles.error}>No existe ese código de presupuesto</Text>
                 )}
-                {this.state.error2===true &&(
+                {this.state.error2=== true &&(
                      <Text style={styles.warning}>Completa el campo</Text>
                 )}
                 <TouchableOpacity

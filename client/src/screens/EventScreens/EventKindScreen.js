@@ -1,7 +1,14 @@
-import React, {Component} from 'react';
-import { View, FlatList, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import Constants from 'expo-constants';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React from 'react';
+import {
+    FlatList,
+    StyleSheet,
+    View,
+    Text,
+    SafeAreaView,
+    TouchableOpacity,
+    AsyncStorage,
+} from 'react-native';
+// import axios from 'axios';
 
 export default class App extends Component{
     constructor(props){
@@ -39,6 +46,10 @@ export default class App extends Component{
             </TouchableOpacity>
         );
     }
+    
+    goNext = () => {
+        props.navigation.navigate('NumAsis');
+    }
 
 
     render(){
@@ -51,6 +62,91 @@ export default class App extends Component{
                 />
             </View>
         )
-    }
-    
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.title}>
+                <Text style={styles.titleWhite}>Selecciona el tipo de evento</Text>
+            </View>
+            <View style={styles.flatContainer}>
+                <FlatList 
+                    style={styles.flat} 
+                    data={dataP}
+                    renderItem={({item}) => (
+                        <Circle 
+                            data={item}
+                            selected={!!selected.get(item.id)}
+                            onSelect={onSelect}
+                        />
+                    )}
+                    keyExtractor={item => item.id}
+                    extraData={selected}
+                    numColumns={3}
+                />
+            </View>
+            <View style={styles.next}>
+                <View style={{flex: 1}}></View>
+                <View style={styles.viewContinue}>
+                    <TouchableOpacity 
+                        style={styles.continue} 
+                        onPress={sendData(selected)}
+                        // onPress={() => props.navigation.navigate('Stores')}
+                    >
+                        <Text style={styles.white}>Continuar</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </SafeAreaView>
+    );
 }
+
+const styles = StyleSheet.create({
+    container:{
+        flex: 1,
+        backgroundColor: '#1E1E1E',
+        padding:20
+    },
+    title:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    flatContainer:{
+        flex: 6,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    flat:{
+        flex: 1,
+        flexDirection: 'column',
+        width: '100%',
+        height: '100%',
+    },
+    next:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    viewContinue:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    continue:{
+        borderRadius: 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '50%',
+        width: '70%',
+        backgroundColor: '#393939',
+    },
+    titleWhite:{
+        color: '#FFFFFF',
+        fontSize: 26,
+        textAlign:'center'
+    },
+    white:{
+        color: '#FFFFFF',
+        fontSize: 18
+    }
+});

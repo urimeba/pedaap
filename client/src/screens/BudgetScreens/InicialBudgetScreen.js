@@ -5,17 +5,78 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Asset } from 'expo-asset';
 import axios from 'axios';
 
-export default class App extends Component{
-    constructor(props){
-        super(props);
-        this.state={
-            presupuesto:0,
-        }
-    }
+import Circle from '../../components/Circle';
 
-    _back=()=>{
-        // Alert.alert('back')
-        this.props.navigation.goBack()
+export default (props) => {
+    
+    // const [dataP, setDataP] = React.useState([]);
+
+    
+const dataP = [
+    {
+        id: '1',
+        name: 'Vodka'
+    },
+    {
+        id: '2',
+        name: 'Tequila'
+    },
+    {
+        id: '3',
+        name: 'Vodka'
+    },
+    {
+        id: '4',
+        name: 'Tequila'
+    },
+    {
+        id: '5',
+        name: 'Tequila'
+    },
+    {
+        id: '6',
+        name: 'Vodka'
+    },
+];
+
+    // React.useEffect(() => {
+    //     async function _prefLis() {
+    //         url = await AsyncStorage.getItem("server")+'categoriaProductos/';
+    //         token = await AsyncStorage.getItem('userToken');
+
+    //         try {
+    //             let request = await fetch(url, {
+    //                 method: 'GET',
+    //                 mode: 'cors',
+    //                 credentials: 'include',
+    //                 headers: {
+    //                     'Authorization': 'Token '+token, 
+    //                 }
+    //             });
+    //             let resp = await request.json();
+    //             setDataP(resp.results);
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //     }
+    //     _prefLis();
+    // }, [setDataP]);
+
+    //Cirulos
+    const [selected, setSelected] = React.useState(new Map());
+
+    const onSelect = React.useCallback(
+        (id) => {
+            const newSelected = new Map(selected);
+            newSelected.set(id, !selected.get(id));
+
+            setSelected(newSelected);
+        },
+        [selected]
+    );
+
+    const goNext = () => {
+        props.navigation.navigate('ShareBudget');
     }
     _next=async()=>{
         // Alert.alert('back')
@@ -63,9 +124,8 @@ export default class App extends Component{
         
     }
 
-    render(){
-        return(
-            <View style={styles.todo}>
+    return (
+       <View style={styles.todo}>
                 <View style={styles.presup}>
                     <Text style={styles.tituloPres}>Ingresa el presupuesto inicial</Text>
                     <TextInput 
@@ -77,21 +137,32 @@ export default class App extends Component{
                         onChangeText={(presupuesto) => this.setState({ presupuesto })}
                     />
                 </View>
-                <View style={styles.abajoNegro}>
+                <ScrollView style={styles.abajoNegro}>
                     <Text style={styles.tituloNegro}>¿Que vas a necesitar?</Text>
-                    <View>
-                        <Text>Circulos</Text>
-                    </View>
+                        <View style={styles.flatContainer}>
+                            <FlatList 
+                                style={styles.flat} 
+                                data={dataP} 
+                                renderItem={({item}) => (
+                                    <Circle 
+                                        data={item}
+                                        selected={!!selected.get(item.id)}
+                                        onSelect={onSelect}
+                                    />
+                                )}
+                                keyExtractor={item => item.id}
+                                extraData={selected}
+                                numColumns={3}
+                            />
+                        </View>
                     <TouchableOpacity 
                         style={styles.InputsNavEnter}
-                        onPress={this._next}>
+                        onPress={goNext}>
                         <Text style={[styles.TextColorOne, styles.TextButton]}>Crear</Text>
                     </TouchableOpacity>
-                </View>
+                </ScrollView>
             </View>
-        )
-    }
-    
+    );
 }
 
 const styles = StyleSheet.create({
@@ -145,10 +216,12 @@ const styles = StyleSheet.create({
        borderRadius: 35,
         justifyContent: 'center',
         alignItems: 'center',
+        alignSelf:'center',
         height:40,
         width: 90,
         backgroundColor: '#393939',
-        marginTop: 30
+        marginTop: 15,
+        marginBottom:20
     },
     TextColorOne: {
         fontSize: 18,
@@ -173,7 +246,7 @@ const styles = StyleSheet.create({
         alignContent:'center',
         alignItems:'center',
         width: '100%',
-        height: '40%',
+        height: '30%',
         paddingRight: 40,
         paddingLeft: 40,
     },
@@ -182,12 +255,12 @@ const styles = StyleSheet.create({
         fontSize: 25,
     },
     abajoNegro:{
-        flex:1,
-        alignContent:'center',
-        alignItems:'center',
+        flex:2,
+        // alignContent:'center',
+        // alignItems:'center',
         // justifyContent:'center',
         width: '100%',
-        height:'70%',
+        height:'80%',
         marginTop: 20,
         borderTopRightRadius: 40,
         borderTopLeftRadius: 40,
@@ -197,6 +270,18 @@ const styles = StyleSheet.create({
     tituloNegro:{
         textAlign:'center',
         color:'white',
-        fontSize:20
-    }
+        fontSize:20,
+        marginBottom: 10
+    },
+     flatContainer:{
+        flex: 6,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    flat:{
+        flex: 1,
+        flexDirection: 'column',
+        width: '100%',
+        height: '100%',
+    },
 })
