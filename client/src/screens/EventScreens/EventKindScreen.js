@@ -6,7 +6,6 @@ import {
     Text,
     SafeAreaView,
     TouchableOpacity,
-    AsyncStorage,
 } from 'react-native';
 // import axios from 'axios';
 
@@ -47,56 +46,40 @@ export default class App extends Component{
         );
     }
     
-    goNext = () => {
-        props.navigation.navigate('NumAsis');
+    _goNext = () => {
+        this.props.navigation.navigate('NumAsis');
     }
 
 
     render(){
-        return(
-            <View>
-                <FlatList
-                    data={this.state.datos}
-                    renderItem={this._renderList}
-                    keyExtractor={item => item.id.toString()}
-                />
-            </View>
-        )
-    return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.title}>
-                <Text style={styles.titleWhite}>Selecciona el tipo de evento</Text>
-            </View>
-            <View style={styles.flatContainer}>
-                <FlatList 
-                    style={styles.flat} 
-                    data={dataP}
-                    renderItem={({item}) => (
-                        <Circle 
-                            data={item}
-                            selected={!!selected.get(item.id)}
-                            onSelect={onSelect}
-                        />
-                    )}
-                    keyExtractor={item => item.id}
-                    extraData={selected}
-                    numColumns={3}
-                />
-            </View>
-            <View style={styles.next}>
-                <View style={{flex: 1}}></View>
-                <View style={styles.viewContinue}>
-                    <TouchableOpacity 
-                        style={styles.continue} 
-                        onPress={sendData(selected)}
-                        // onPress={() => props.navigation.navigate('Stores')}
-                    >
-                        <Text style={styles.white}>Continuar</Text>
-                    </TouchableOpacity>
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={styles.title}>
+                    <Text style={styles.titleWhite}>Selecciona el tipo de evento</Text>
                 </View>
-            </View>
-        </SafeAreaView>
-    );
+                <View style={styles.flatContainer}>
+                    <FlatList 
+                        style={styles.flat} 
+                        data={this.state.datos}
+                        renderItem={this._renderList}
+                        keyExtractor={item => item.id.toString()}
+                        numColumns={3}
+                    />
+                </View>
+                <View style={styles.next}>
+                    <View style={{flex: 1}}></View>
+                    <View style={styles.viewContinue}>
+                        <TouchableOpacity 
+                            style={styles.continue} 
+                            onPress={this._goNext()}
+                        >
+                            <Text style={styles.white}>Continuar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </SafeAreaView>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
