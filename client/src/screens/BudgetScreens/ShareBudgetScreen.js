@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage, Alert} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
-const datos=[
+let datos=[
     {
         id:'1',
         nombre:'Aixa',
@@ -58,7 +59,71 @@ export default class App extends Component{
 
         }
     }
-    _eliminar=()=>{
+
+    componentDidMount(){
+        this._getInfo();
+      }
+
+    _getInfo = async() =>{
+        // console.log("HOLA-----");
+        // console.log(JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID')));
+        id = JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID'));
+        url = await AsyncStorage.getItem("server");
+        token = await AsyncStorage.getItem("userToken");
+        // console.log(id, url);
+
+        axios({
+            method: 'POST',
+            url: url+"usuariosCompartido/getUsuariosCompartido/",
+            data: {id:id},
+            headers: {
+                "content-type":"application/json",
+                "Authorization":"Token "+ token
+            }, 
+        }).then( res => {
+            console.log(res.data.datos);
+            data = JSON.parse(res.data.datos);
+            datos.push(data);
+        }).catch(err => {
+            console.log(err)
+        });
+    }
+
+    _eliminar=(id, aportador)=>{
+        // console.log(id);
+
+        Alert.alert(
+            'Confirmar',
+            '¿Deseas eliminar a '+aportador+" de este presupuesto?",
+            [
+              {
+                text: 'Cancelar', onPress: () => console.log('Cancel Pressed'), style: 'cancel',
+              },
+
+              {text: 'OK', onPress: () => this._deleteUser(id)},
+            ],
+            {cancelable: false},
+          );
+
+    }
+
+    _deleteUser= async(id) =>{
+        url = await AsyncStorage.getItem("server");
+        token = await AsyncStorage.getItem("userToken");
+        // console.log(id, url);
+        axios({
+            method: 'DELETE',
+            url: url+"usuariosCompartido/"+id+"/",
+            data: {},
+            headers: {
+                "content-type":"application/json",
+                "Authorization":"Token "+ token
+            }, 
+        }).then( res => {
+            console.log(res.data);
+        }).catch(err => {
+            console.log(err)
+        });
 
     }
 
@@ -76,7 +141,7 @@ export default class App extends Component{
                 <Text style={styles.aporte}>{item.aporte}</Text>
             </View>
             <View style={styles.cerrar}>
-                <TouchableOpacity style={styles.btnCerrar} onPress={this._eliminar}>
+                <TouchableOpacity style={styles.btnCerrar} onPress={() => this._eliminar(item.id, item.nombre)}>
                     <Icon name="close" size={24} color={'#D5D5D5'}/>
                 </TouchableOpacity>
             </View>
@@ -88,14 +153,14 @@ export default class App extends Component{
             <ScrollView style={styles.todo}>
                 <View style={styles.presupuesto}>
                     <Text style={styles.textoPresup}>Presupuesto</Text>
-                    <Text style={styles.BoxPresup}>{JSON.stringify(this.props.navigation.getParam('presupuesto', 'dato'))}</Text>
+                    <Text style={styles.BoxPresup}>{JSON.stringify(this.props.navigation.getParam('monto', 'NO-MONTO'))}</Text>
                 </View>
                 <TouchableOpacity style={styles.verCombos} onPress={this._combo}>
                     <Text style={styles.verCombosText}>Ver combos</Text>
                 </TouchableOpacity>
                 <View style={styles.codigoC}>
                     <Text style={styles.titulo1}>Comparte tu código</Text>
-                    <Text style={styles.codigo}>CMY83N</Text>
+                    <Text style={styles.codigo}>{JSON.stringify(this.props.navigation.getParam('codigo', 'NO-CODE'))}</Text>
                 </View>
                 <View style={styles.aportadores}>
                     <Text style={styles.titulAporta}>Aportadores</Text>

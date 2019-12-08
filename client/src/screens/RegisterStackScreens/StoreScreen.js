@@ -1,53 +1,46 @@
 import React from 'react';
-import { FlatList, StyleSheet, View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import {
+    FlatList,
+    StyleSheet,
+    View,
+    Text,
+    SafeAreaView,
+    TouchableOpacity,
+    AsyncStorage,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
-import Circle from '../../components/Circle';
-
-const p = [
-    {
-        id: '1',
-        name: 'Oxxo'
-    },
-    {
-        id: '2',
-        name: 'Fresko'
-    },
-    {
-        id: '3',
-        name: 'Oxxo'
-    },
-    {
-        id: '4',
-        name: 'Fresko'
-    },
-    {
-        id: '5',
-        name: 'Fresko'
-    },
-    {
-        id: '6',
-        name: 'Oxxo'
-    },
-    {
-        id: '7',
-        name: 'Fresko'
-    },
-    {
-        id: '8',
-        name: 'Oxxo'
-    },
-    {
-        id: '9',
-        name: 'Fresko'
-    },
-    {
-        id: '10',
-        name: 'Fresko'
-    }
-];
+import CircleTwo from '../../components/CircleTwo';
 
 export default (props) => {
+    //Data
+    const [dataS, setDataS] = React.useState([]);
+
+    React.useEffect(() => {
+        async function _prefLis() {
+            url = await AsyncStorage.getItem("server")+'tiendas/';
+            token = await AsyncStorage.getItem('userToken');
+
+            try {
+                let request = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Token '+token, 
+                    }
+                });
+                let resp = await request.json();
+                setDataS(resp.results);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        _prefLis();
+    }, [setDataS]);
+
+    //Circulos
     const [selected, setSelected] = React.useState(new Map());
 
     const onSelect = React.useCallback(
@@ -60,6 +53,94 @@ export default (props) => {
         [selected],
     );
 
+    //Send Data to API
+    const sendData = (s) => async() => {
+
+        servidor = await AsyncStorage.getItem("server")
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+        
+
+        let obj = Object.create(null);
+        for (let [k,v] of s) {
+            obj[k] = v;
+        }
+
+        tamaño = Object.keys(obj).length;
+        console.log(tamaño);
+        console.log(JSON.stringify(obj));
+
+
+        for(categoria in obj){
+            if(obj[categoria]==true){
+                console.log(categoria);
+                url = servidor+'userTiendas/';
+
+                urlUser = servidor+"usuarios/"+idUser+"/";
+                urlTienda = servidor+"tiendas/"+categoria+"/";
+                console.log(urlUser)
+
+                axios({
+                    method: 'POST',
+                    url: url,
+                    data: {user:urlUser, tienda: urlTienda},
+                    headers: {
+                        "content-type":"application/json",
+                        "Authorization": "Token "+token
+                    }, 
+                }).then( res => {
+                    console.log(res.data);
+                }).catch(err => {
+                    console.log(err.response.data);
+                });
+            }else{
+                url = servidor+'userTiendas/eliminarTienda/';
+
+                axios({
+                    method: 'POST',
+                    url: url,
+                    data: {idUser: idUser, idTienda:categoria},
+                    headers: {
+                        "content-type":"application/json",
+                        "Authorization": "Token "+token
+                    }, 
+                }).then( res => {
+                    console.log(res.data);
+                }).catch(err => {
+                    console.log(err.response.data);
+                });
+
+            }
+        }
+
+        props.navigation.navigate('User');
+    }
+
+    _eliminarCategorias = async() =>{
+
+        servidor = await AsyncStorage.getItem("server")
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+        url = servidor+'userCategorias/eliminarCategoria/';
+
+        axios({
+            method: 'POST',
+            url: url,
+            data: {idUser:idUser},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": "Token "+token
+            }, 
+        }).then( res => {
+            console.log(res.data);
+        }).catch(err => {
+            console.log(err.response.data);
+        });
+
+        props.navigation.goBack()
+
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.title}>
@@ -68,9 +149,9 @@ export default (props) => {
             <View style={styles.flatContainer}>
                 <FlatList 
                     style={styles.flat} 
-                    data={p} 
+                    data={dataS}
                     renderItem={({item}) => (
-                        <Circle 
+                        <CircleTwo
                             data={item}
                             selected={!!selected.get(item.id)}
                             onSelect={onSelect}
@@ -84,14 +165,14 @@ export default (props) => {
             <View style={styles.next}>
                 <TouchableOpacity 
                     style={styles.back} 
-                    onPress={() => props.navigation.goBack()}
+                    onPress={_eliminarCategorias}
                 >   
                     <Icon name="keyboard-backspace" size={40} color={'#707070'} />
                 </TouchableOpacity>
                 <View style={styles.viewContinue}>
                     <TouchableOpacity 
                         style={styles.continue} 
-                        onPress={() => props.navigation.navigate('User')}
+                        onPress={sendData(selected)}
                     >
                     <Text style={styles.white}>Continuar</Text>
                     </TouchableOpacity>

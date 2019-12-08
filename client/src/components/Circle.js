@@ -13,11 +13,11 @@ export default Circle = ({data, selected, onSelect}) => {
                         {backgroundColor: selected ? '#FFFFFF' : '#393939'}
                     ]}          
                 >
-                    <Icon name="bell-outline" size={50} color={'#707070'} />
+                    <Icon name={data.icono} size={50} color={'#707070'} />
                 </TouchableOpacity>
             </View>
             <View style={styles.bottomBox}>
-                <Text style={styles.bottomBoxText}>{data.name}</Text>
+                <Text style={styles.bottomBoxText}>{data.nombre}</Text>
             </View>
         </View>
     );
@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 5,
+        textAlign: 'center',
     },
     bottomBoxText:{
         color: '#FFFFFF',

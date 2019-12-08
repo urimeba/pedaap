@@ -7,33 +7,33 @@ import SignupScreen from '../screens/SignupScreen';
 import ForgotScreen from '../screens/ForgotScreen';
 import UserTabs from './UserTabNavigator';
 import AdminTabs from './AdminTabNavigator';
-import PromotionScreen from '../screens/userScreens/PromotionScreen';
 import SignupStack from './SignupStack';
-import PromotionStack from './PromotionStack';
 
-export default createAppContainer(createSwitchNavigator({
-    Login: {
-        screen: LoginScreen
+export default createAppContainer(createSwitchNavigator(
+    {
+        Login: {
+            screen: LoginScreen
+        },
+        Signup:{
+            screen: SignupScreen
+        },
+        Forgot:{
+            screen: ForgotScreen
+        },
+        User: {
+            screen: UserTabs
+        },
+        Admin: {
+            screen: AdminTabs
+        },
+        SignupPref: {
+            screen: SignupStack
+        },
+        Confirm: {
+            screen: ConfirmScreen
+        },
     },
-    Signup:{
-        screen: SignupScreen
-    },
-    Forgot:{
-        screen: ForgotScreen
-    },
-    User: {
-        screen: UserTabs
-    },
-    Admin: {
-        screen: AdminTabs
-    },
-    Confirm: {
-        screen: ConfirmScreen
-    },
-    // Promotion: {
-    //     screen: PromotionStack
-    // },
-    SignupPref: {
-        screen: SignupStack
+    {
+        initialRouteName: 'User',
     }
-}));
+));

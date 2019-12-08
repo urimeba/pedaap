@@ -1,16 +1,9 @@
-import React from 'react';
-import {
-    FlatList,
-    StyleSheet,
-    View,
-    Text,
-    SafeAreaView,
-    TouchableOpacity,
-    AsyncStorage,
-    TextInput,
-    ScrollView
-} from 'react-native';
-// import axios from 'axios';
+import React, {Component} from 'react';
+import { SafeAreaView, View,Alert, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
+import Constants from 'expo-constants';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Asset } from 'expo-asset';
+import axios from 'axios';
 
 import Circle from '../../components/Circle';
 
@@ -85,6 +78,51 @@ const dataP = [
     const goNext = () => {
         props.navigation.navigate('ShareBudget');
     }
+    _next=async()=>{
+        // Alert.alert('back')
+        url = await AsyncStorage.getItem("server");
+        token = await AsyncStorage.getItem("userToken");
+        idUser = await AsyncStorage.getItem("userId");
+        // console.log(this.state.presupuesto)
+
+
+        if(isNaN(this.state.presupuesto)){
+            // console.log(false)
+            Alert.alert("Error","Ingresa un numero válido");
+        }else{
+            if(this.state.presupuesto>0){
+                // console.log(true)
+                axios({
+                    method: 'POST',
+                    url: url+"compartidos/",
+                    data: {usuarioPropietario:url+"usuarios/"+idUser+"/", monto:this.state.presupuesto},
+                    headers: {
+                        "content-type":"application/json",
+                        "Authorization":"Token "+ token
+                    }, 
+                }).then( res => {
+                    console.log(res.data.id, res.data.monto, res.data.codigo);
+                    this.props.navigation.navigate('ShareBudget',{idPresupuesto: res.data.id, monto: res.data.monto, codigo:res.data.codigo })
+                }).catch(err => {
+                    console.log(err)
+                });
+            }
+            else{
+                // console.log("Igual a 0")
+                Alert.alert("Error","Debes ingresar un número mayor a 0");
+            }
+            
+
+            
+
+        }
+
+        
+
+
+
+        
+    }
 
     return (
        <View style={styles.todo}>
@@ -95,7 +133,8 @@ const dataP = [
                         placeholder="$200"
                         keyboardType = 'numeric'
                         placeholderTextColor="#848482"
-                        // onChangeText={(presupuesto) => this.setState({ presupuesto })}
+                        maxLength={6}
+                        onChangeText={(presupuesto) => this.setState({ presupuesto })}
                     />
                 </View>
                 <ScrollView style={styles.abajoNegro}>

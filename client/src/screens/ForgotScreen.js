@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Alert} from 'react-native';
+import { 
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    Image,
+    TextInput,
+    KeyboardAvoidingView
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-// import {validate} from 'validate.js';
-import ValidationComponent from 'react-native-form-validator/index';
-// import validate from 'vali'
 
 export default class FormTest extends Component{
     constructor(props){
@@ -12,43 +17,45 @@ export default class FormTest extends Component{
             email:'',
             error1: false, //campos
             error2: false, //email valido
-            errr3: false, // no encontrado
-        }
+            error3: false, // no encontrado
+        };
         // this._correo= this._correo.bind(this)
     }
 
-
-
-    _correo=async()=>{
-
+    _correo = async() => {
         let text = this.state.email;
-        if(text===""){
+        if(text === ""){
             this.setState({
-                erro1: true
-            })
+                error1: true,
+                error2: false,
+                error3: false,
+            });
         }else{
-                let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-                if (reg.test(text) === false) {
-                    // console.warn("Invalid email")
-                    this.setState({
-                        email: text,
-                        error2: true,
-                    })
-                    return false;
-                } else {
-                    this.setState({
-                        email: text,
-                        error1: false
-                    })
-                    console.log("Email is Correct");
-                    this.props.navigation.navigate('Login')
-                }
+            let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            if (reg.test(text) === false) {
+                this.setState({
+                    email: text,
+                    error2: true,
+                    error1: false,
+                    error3: false,
+                });
+                return false;
+            } else {
+                this.setState({
+                    email: text,
+                    error1: false,
+                    error2: false,
+                    error3: false,
+                });
+                console.log("Email is Correct");
+                this.props.navigation.navigate('Login');
+            }
         }
-        
     }
+
     render(){
         return (
-            <View style={styles.container}>
+            <KeyboardAvoidingView style={styles.container} behavior="position" enabled>
                 <View style={styles.Image}>
                     <Image
                         style={{width:'100%', height:'100%', borderBottomLeftRadius: 60,}}
@@ -61,48 +68,53 @@ export default class FormTest extends Component{
                     </View>
                     <View style={styles.InputsUser}>
                         <View style={styles.TInput1}>
-                            <Icon name="at" size={24} color={'#FAFAFA'} style={styles.icon} />
-                            <TextInput 
-                                style={styles.TInput}
-                                placeholder="|  Correo"
-                                placeholderTextColor="#848482"
-                                onChangeText={(email) => this.setState({ email })}
-                                value={this.state.email}
-                            />
+                            <View style={styles.TInput1Icon}>
+                                <Icon name="at" size={24} color={'#FAFAFA'} />
+                            </View>
+                            <View style={styles.TInput1Input}>
+                                <TextInput 
+                                    style={styles.TInput}
+                                    placeholder="|  Correo"
+                                    placeholderTextColor="#848482"
+                                    onChangeText={(email) => this.setState({ email })}
+                                    value={this.state.email}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.ErrorView}>
+                        {this.state.error1 === true && (
+                            <Text style={styles.warning}>*Completa el campo</Text>
+                        )}
+                        {this.state.error2 === true && (
+                            <Text style={styles.warning}>*El correo no es valido</Text>
+                        )}
+                        {this.state.error3 === true && (
+                            <Text style={styles.error}>*El correo no esta registrado</Text>
+                        )}
+                    </View>
+                    <View style={styles.InputsNav}>
+                        <TouchableOpacity 
+                            style={styles.InputsNavSignup} 
+                            onPress={() => this.props.navigation.navigate('Login')}
+                        >
+                            <Text style={styles.TextColorOne}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <View style={styles.InputsNavEnter}>
+                            <TouchableOpacity 
+                                style={styles.InputsNavEnterButton} 
+                                onPress={this._correo}
+                            >
+                                <Text style={[styles.TextColorOne, styles.TextButton]}>Confirmar</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
-                 {this.state.error1 === true && (
-                    <Text style={styles.warning}>Completa el campo</Text>
-                )}
-                 {this.state.error2 === true && (
-                    <Text style={styles.warning}>El correo no es valido</Text>
-                )}
-                 {this.state.error3 === true && (
-                    <Text style={styles.error}>El correo no esta registrado</Text>
-                )}
-               <View style={styles.InputsNav}>
-                    <TouchableOpacity 
-                        style={styles.InputsNavSignup} 
-                        onPress={() => this.props.navigation.navigate('Login')}
-                    >
-                        <Text style={styles.TextColorOne}>Cancelar</Text>
-                    </TouchableOpacity>
-                    <View style={styles.InputsNavEnter}>
-                        <TouchableOpacity 
-                            style={styles.InputsNavEnterButton} 
-                            onPress={this._correo}
-                        >
-                            <Text style={[styles.TextColorOne, styles.TextButton]}>Confirmar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
-         );
+            </KeyboardAvoidingView>
+        );
         
     }
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -115,8 +127,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 60,
     },
     Inputs: {
-        height: '25%',
-        marginTop: '20%',
+        height: '65%',
         // backgroundColor:'red'
     },
     InputsTitle: {
@@ -125,41 +136,39 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     InputsUser: {
-        flex: 1,
+        flex: 2,
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-        height: '40%',
-        // backgroundColor:'purple',
-        paddingTop: '4%',
-        paddingBottom: '4%',
-        marginTop: '10%',
     },
     TInput: {
-        flex: 1,
-        width: '80%',
-        height: '80%',
-        backgroundColor: '#393939',
-        borderRadius: 35,
-        // paddingLeft: '%',
-        paddingTop: '2%',
-        marginTop: '2%',
-        paddingBottom: '2%',
         fontSize: 18,
-        color: '#FAFAFA',
-        // backgroundColor:'blue',
+        width: '100%',
+        color: '#FFFFFF'
     },
     TInput1: {
-        flex: 1,
         flexDirection: 'row',
         width: '80%',
-        height: 40,
-        // backgroundColor:'pink',
+        height: 60,
         backgroundColor: '#393939',
         borderRadius: 35,
-        paddingLeft: '4%',
         fontSize: 18,
         color: '#FAFAFA',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    TInput1Icon:{
+        flex: 2,
+        height: '100%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    TInput1Input: {
+        flex: 9,
+        height: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     TextColorOne: {
         fontSize: 18,
@@ -168,15 +177,6 @@ const styles = StyleSheet.create({
     TextButton: {
         fontSize: 18,
         color: '#FAFAFA',
-    },
-    icon: {
-        // flex:1,
-        justifyContent: 'center',
-        padding: '3%',
-        width: '15%',
-        height: '55%',
-        // backgroundColor: 'pink',
-        marginTop: '5%',
     },
     InputsNavEnter: {
         flex: 1,
@@ -187,29 +187,32 @@ const styles = StyleSheet.create({
         borderRadius: 35,
         justifyContent: 'center',
         alignItems: 'center',
-        height: '15%',
-        width: '70%',
+        height: '30%',
+        width: '75%',
         backgroundColor: '#393939',
     },
-       InputsNav: {
-           flex: 2,
-           flexDirection: 'row',
-           justifyContent: 'center',
-           alignItems: 'center',
-       },
-        InputsNavSignup: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-         warning:{
+    InputsNav: {
+        flex: 2,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    InputsNavSignup: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    ErrorView: {
+        flex: 1,
+        justifyContent:'center',
+        alignItems: 'center',
+    },
+    warning: {
         color:'#FEDB6B',
-        fontSize: 16,
-        marginLeft: 120,
+        fontSize: 18,
     },
     error:{
         color:'#DE4C63',
-        fontSize: 16,
-        marginLeft: 70,
+        fontSize: 18,
     },
 });

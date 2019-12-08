@@ -1,6 +1,17 @@
 import React, {Component} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Alert } from 'react-native';
+import { 
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    TextInput,
+    Image,
+    Alert,
+    KeyboardAvoidingView,
+    AsyncStorage 
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 export default class App extends Component{
     constructor(props){
@@ -14,30 +25,57 @@ export default class App extends Component{
             error1: false, //campos
             error2: false, //correo
             error3: false, //contra
-        }
+        };
     }
 
-    _confirm = async()=>{
+    _registrar = async(props)=>{
+        url = await AsyncStorage.getItem("server")+'registro/'
+        // console.log(this.state.usuario, this.state.correo, this.state.contra, this.state.verContra, this.state.tel)
+
+        axios({
+          method: 'POST',
+          url: url,
+          data: {usuario:this.state.usuario, password: this.state.contra, correo: this.state.correo, telefono: this.state.tel, },
+          headers: {
+            "content-type":"application/json",
+          },
+    
+          }).then( res => {
+                // console.log(res.data);
+                // Alert.alert("Correcto", "Registro correcto");
+                AsyncStorage.setItem("userToken",res.data.token);
+                AsyncStorage.setItem("userId",res.data.id);
+                this.props.navigation.navigate("Confirm");
+          }).catch(err => {
+            Alert.alert("Error", err.response.data.Error);
+          });
+    }
+    
+    _confirm = async() => {
         let text = this.state.correo;
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        console.log(JSON.stringify(this.state.correo))
+        console.log(JSON.stringify(this.state.correo));
+
         if (this.state.usuario== "" || this.state.contra=="" || this.state.tel =="" || this.state.verContra=="" || this.state.correo== "") {
-              this.setState({error1:true})
-              this.setState({error2:false})
-              this.setState({error3:false})
-        }else{
+            this.setState({
+                error1:true,
+                error2:false,
+                error3:false,
+            });
+        } else {
             if (this.state.contra != this.state.verContra) {
-                this.setState({error3:true})
-                this.setState({error2:false})
-                this.setState({error1:false})
+                this.setState({
+                    error3:true,
+                    error2:false,
+                    error1:false,
+                });
             } else if (reg.test(text) === false) {
-                // console.warn("Invalid email")
                 this.setState({
                     email: text,
                     error2: true,
                     error1: false,
                     error3:false
-                })
+                });
                 return false;
             }else{
                 this.setState({
@@ -45,21 +83,17 @@ export default class App extends Component{
                     error1: false,
                     error1: false,
                     error3:false
-                })
+                });
                 console.log("Email is Correct");
-                this.props.navigation.navigate('Confirm',{tel: this.tel})
+                this._registrar()
+                // this.props.navigation.navigate('Confirm',{tel: this.tel})
             }
-            // if (JSON.stringify(this.state.correo).contains("@")) {
-            //     Alert.alert("correo")
-            //     this.props.navigation.navigate('Confirm',{tel: this.tel})
-
-            // }
         }
     }
 
     render() {
         return (
-            <View style={styles.container}>
+            <KeyboardAvoidingView style={styles.container} behavior="position" enabled>
                 <View style={styles.Image}>
                     <Image
                         style={{ width: '100%', height: '100%', borderBottomLeftRadius: 60, }}
@@ -72,76 +106,102 @@ export default class App extends Component{
                     </View>
                     <View style={styles.InputsUser}>
                         <View style={styles.TInput1}>
-                            <Icon name="account" size={24} color={'#FAFAFA'} style={styles.icon} />
-                            <TextInput
-                                style={styles.TInput}
-                                placeholder="|  Usuario"
-                                placeholderTextColor="#848482"
-                                onChangeText={(usuario) => this.setState({ usuario })}
-                            />
+                            <View style={styles.TInput1Icon}>
+                                <Icon name="account" size={24} color={'#FAFAFA'} />
+                            </View>
+                            <View style={styles.TInput1Input}>
+                                <TextInput
+                                    style={styles.TInput}
+                                    placeholder="|  Usuario"
+                                    placeholderTextColor="#848482"
+                                    onChangeText={(usuario) => this.setState({ usuario })}
+                                    autoCapitalize='none'
+                                />
+                            </View>
                         </View>
                     </View>
-                    <View style={styles.InputEmail}>
+                    <View style={styles.InputsUser}>
                         <View style={styles.TInput1}>
-                            <Icon name="at" size={24} color={'#FAFAFA'} style={styles.icon} />
-                            <TextInput
-                                style={styles.TInput}
-                                placeholder="|  Correo"
-                                placeholderTextColor="#848482"
-                                autoCapitalize='none'
-                                keyboardType='email-address'
-                                 onChangeText={(correo) => this.setState({ correo })}
-                            />
+                            <View style={styles.TInput1Icon}>
+                                <Icon name="at" size={24} color={'#FAFAFA'} />
+                            </View>
+                            <View style={styles.TInput1Input}>
+                                <TextInput
+                                    style={styles.TInput}
+                                    placeholder="|  Correo"
+                                    placeholderTextColor="#848482"
+                                    autoCapitalize='none'
+                                    keyboardType='email-address'
+                                    onChangeText={(correo) => this.setState({ correo })}
+                                    autoCapitalize='none'
+                                />
+                            </View>
                         </View>
                     </View>
-                    <View style={styles.InputPhone}>
+                    <View style={styles.InputsUser}>
                         <View style={styles.TInput1}>
-                            <Icon name="phone" size={24} color={'#FAFAFA'} style={styles.icon} />
-                            <TextInput
-                                style={styles.TInput}
-                                placeholder="|  Telefono"
-                                placeholderTextColor="#848482"
-                                keyboardType='numeric'
-                                maxLength={10}
-                                onChangeText={(tel) => this.setState({ tel })}
-                            />
+                            <View style={styles.TInput1Icon}>
+                                <Icon name="phone" size={24} color={'#FAFAFA'} />
+                            </View>
+                            <View style={styles.TInput1Input}>
+                                <TextInput
+                                    style={styles.TInput}
+                                    placeholder="|  Telefono"
+                                    placeholderTextColor="#848482"
+                                    keyboardType='numeric'
+                                    maxLength={10}
+                                    onChangeText={(tel) => this.setState({ tel })}
+                                />
+                            </View>
                         </View>
                     </View>
-                    <View style={styles.InputPassword}>
+                    <View style={styles.InputsUser}>
                         <View style={styles.TInput1}>
-                            <Icon name="lock" size={24} color={'#FAFAFA'} style={styles.icon} />
-                            <TextInput
-                                style={styles.TInput}
-                                placeholder="|  Contraseña"
-                                placeholderTextColor="#848482"
-                                secureTextEntry={true}
-                                onChangeText={(contra) => this.setState({ contra })}
+                            <View style={styles.TInput1Icon}>
+                                <Icon name="lock" size={24} color={'#FAFAFA'} />                            
+                            </View>
+                            <View style={styles.TInput1Input}>
+                                <TextInput
+                                    style={styles.TInput}
+                                    placeholder="|  Contraseña"
+                                    placeholderTextColor="#848482"
+                                    secureTextEntry={true}
+                                    onChangeText={(contra) => this.setState({ contra })}
+                                    autoCapitalize='none'
 
-                            />
+                                />
+                            </View>
                         </View>
                     </View>
-                    <View style={styles.InputPassword}>
+                    <View style={styles.InputsUser}>
                         <View style={styles.TInput1}>
-                            <Icon name="lock" size={24} color={'#FAFAFA'} style={styles.icon} />
-                            <TextInput
-                                style={styles.TInput}
-                                placeholder="|  Confirmar contrseña"
-                                placeholderTextColor="#848482"
-                                secureTextEntry={true}
-                                onChangeText={(verContra) => this.setState({ verContra })}
+                            <View style={styles.TInput1Icon}>
+                                <Icon name="lock" size={24} color={'#FAFAFA'} />
+                            </View>
+                            <View style={styles.TInput1Input}>
+                                <TextInput
+                                    style={styles.TInput}
+                                    placeholder="|  Confirmar contrseña"
+                                    placeholderTextColor="#848482"
+                                    secureTextEntry={true}
+                                    onChangeText={(verContra) => this.setState({ verContra })}
+                                    autoCapitalize='none'
 
-                            />
+                                />
+                            </View>
                         </View>
                     </View>
-                    {this.state.error1=== true && (
-                        <Text style={styles.warning}>Completa los campos</Text>
-                    )}
-                    {this.state.error2=== true && (
-                        <Text style={styles.warning}>El correo no es valido</Text>
-                    )}
-                    {this.state.error3=== true && (
-                        <Text style={styles.error}>Las contraseñas no coinciden</Text>
-                    )}
+                    <View style={styles.ErrorView}>
+                        {this.state.error1=== true && (
+                            <Text style={styles.warning}>*Completa los campos</Text>
+                        )}
+                        {this.state.error2=== true && (
+                            <Text style={styles.warning}>*El correo no es valido</Text>
+                        )}
+                        {this.state.error3=== true && (
+                            <Text style={styles.error}>*Las contraseñas no coinciden</Text>
+                        )}
+                    </View>
                     <View style={styles.InputsNav}>
                         <TouchableOpacity
                             style={styles.InputsNavSignup}
@@ -159,13 +219,10 @@ export default class App extends Component{
                         </View>
                     </View>
                 </View>
-            </View>
+            </KeyboardAvoidingView>
         );
     }
-
 }
-
-
 
 const styles = StyleSheet.create({
     container: {
@@ -173,12 +230,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#1E1E1E',
     },
     Image: {
-        height: '35%',
+        height: '25%',
         backgroundColor: '#FFFFFF',
         borderBottomLeftRadius: 60,
     },
     Inputs: {
-        height: '65%',
+        height: '75%',
     },
     InputsTitle: {
         flex: 1,
@@ -186,68 +243,39 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     InputsUser: {
-        flex: 1,
+        flex: 2,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingTop:'2%',
-        paddingBottom:'2%',
-        width:'100%',
-        height:'25%',
-        // backgroundColor:'yellow',
-    
-    },
-    InputEmail: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingTop:'2%',
-        paddingBottom:'2%',
-        width:'100%',
-        height:'25%',
-        // backgroundColor:'yellow',
-    },
-    InputPhone: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingTop:'2%',
-        paddingBottom:'2%',
-        width:'100%',
-        height:'25%',
-        // backgroundColor:'yellow',
-    },
-    InputPassword: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingTop:'2%',
-        paddingBottom:'2%',
-        width:'100%',
-        height:'25%',
-        // backgroundColor:'yellow',
+        width: '100%',
     },
     TInput: {
-        width: '80%',
-        height: '80%',
-        backgroundColor: '#393939',
-        borderRadius: 35,
-        // paddingLeft: '8%',
         fontSize: 18,
-        color: '#FAFAFA',
-        paddingTop:'2%',
-
+        width: '100%',
+        color: '#FFFFFF'
     },
     TInput1: {
-        flex: 1,
         flexDirection: 'row',
         width: '80%',
-        height: 40,
-        // backgroundColor:'pink',
+        height: 60,
         backgroundColor: '#393939',
         borderRadius: 35,
-        paddingLeft: '4%',
         fontSize: 18,
         color: '#FAFAFA',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    TInput1Icon:{
+        flex: 2,
+        height: '100%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    TInput1Input: {
+        flex: 9,
+        height: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     InputsPassword: {
         flex: 1,
@@ -291,23 +319,17 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#FAFAFA',
     },
-     icon: {
-         // flex:1,
-         justifyContent: 'center',
-         padding: '3%',
-         width: '15%',
-         height: '100%',
-        //  backgroundColor: 'pink',
-         marginTop: '1%',
-     },
      warning:{
         color:'#FEDB6B',
-        fontSize: 16,
-        marginLeft: 120,
+        fontSize: 18,
     },
     error:{
         color:'#DE4C63',
-        fontSize: 16,
-        marginLeft: 70,
+        fontSize: 18,
+    },
+    ErrorView: {
+        flex: 1,
+        justifyContent:'center',
+        alignItems: 'center',
     },
 });
