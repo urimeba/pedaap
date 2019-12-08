@@ -72,8 +72,11 @@ export default class App extends Component{
                     <Text style={styles.textTitulo}>Te has unido a la sala de juego</Text>
                 </View>
                 <View style={styles.cajaCodigo}>
-                    <Text style={styles.codigo}>Espera qu el juego empiece</Text>
+                    <Text style={styles.codigo}>Espera que el juego empiece</Text>
                 </View>
+                <View style={styles.tituloJ}>
+                        <Text style={styles.textJuga}>Creador</Text>
+                    </View>
                 <View style={styles.caja}>
                     <View style={styles.imgCaja}>
                         <Image/>
@@ -81,6 +84,7 @@ export default class App extends Component{
                     <View style={styles.datosCaja}>
                         <Text style={styles.nombre}>Juan Perez</Text>
                     </View>
+                    <View style={styles.cerrar}></View>
                 </View>
                 <View style={styles.tituloJugadores}>
                     <View style={styles.tituloJ}>
@@ -114,9 +118,11 @@ const styles= StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         alignContent:'center',
-        backgroundColor:'red',
+        // backgroundColor:'red',
         textAlign:'center',
-        width:'100%'
+        width:'100%',
+        marginTop:20,
+        marginBottom:20
     },
     textTitulo:{
         textAlign:'center',
@@ -125,31 +131,36 @@ const styles= StyleSheet.create({
     },
     cajaCodigo:{
         flex:1,
+        justifyContent:'center',
         alignContent:'center',
         alignContent:'center',
         width:'100%',
-        textAlign:'left',
-        backgroundColor:'blue'
+        textAlign:'center',
+        // backgroundColor:'blue'
     },
     tituloCodigo:{
         fontSize:20
     },
     codigo:{
         fontSize:20,
-        color:'#71C0F2'
+        color:'#71C0F2',
+        textAlign:'center'
     },
     tituloJugadores:{
         flex:1,
-        flexDirection:'row'
+        flexDirection:'row',
+        marginTop:20
 
     },
     tituloJ:{
         flex:1,
-        textAlign:'left'
+        textAlign:'left',
+        marginTop:20
 
     },
     textJuga:{
-        textAlign:'left'
+        textAlign:'left',
+        fontSize:20
 
     },
     botonJ:{
@@ -167,7 +178,7 @@ const styles= StyleSheet.create({
     },
     flat:{
         flex:6,
-        backgroundColor:'purple'
+        // backgroundColor:'purple'
     },
      caja:{
         justifyContent:'center',
