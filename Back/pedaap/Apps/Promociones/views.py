@@ -56,7 +56,7 @@ class PromocionesViewSet(viewsets.ModelViewSet):
         dic = {}
 
         for p in promociones:
-            dic[p.id]={'id':p.id, "nombre":p.descripcion, 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion}
+            dic[str(p.id)]={'id':p.id, "nombre":p.descripcion, 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo)}
             # print(p.id)
             # print(p.descripcion)
             # print(p.productoTienda.tienda.nombre)

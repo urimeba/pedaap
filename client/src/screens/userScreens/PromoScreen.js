@@ -13,29 +13,6 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 
-const estable=[
-    {
-        id:'1',
-        nombre:'Oxxo',
-        direccion:'centro'
-    },
-    {
-        id:'2',
-        nombre:'Oxxovv',
-        direccion:'centro'
-    },
-    {
-        id:'3',
-        nombre:'Oxxoww',
-        direccion:'centro'
-    },
-    {
-        id:'4',
-        nombre:'Oxxoqq',
-        direccion:'centro'
-    },
-]
-
 export default class App extends Component{
     constructor(props) {
         super(props);
@@ -44,7 +21,7 @@ export default class App extends Component{
             filter:false,
             datos: [],
             establecimientos: [],
-            loading: false,
+            loading: true,
         };
     }
 
@@ -55,7 +32,6 @@ export default class App extends Component{
         if(this.state.establecimieniemtos===true){
             this.setState({establecimieniemtos:false})
         }
-        
     }
 
     _filtro=()=>{
@@ -68,78 +44,86 @@ export default class App extends Component{
     }
 
     async componentDidMount() {
-        // url = await AsyncStorage.getItem("server")+'promociones/';
-        // url2 = await AsyncStorage.getItem("server")+'tiendas/';
-        // token = await AsyncStorage.getItem('userToken');
-
-        // fetch(url, {
-        //     method: 'GET',
-        //     mode: 'cors',
-        //     credentials: 'include',
-        //     headers: {
-        //         'Authorization': 'Token '+token, 
-        //     }
-        // })
-        // .then(response => response.json())
-        // .then((responseJson)=>{
-        //     this.setState({
-        //         datos: responseJson.results
-        //     });
-        //     fetch(url2, {
-        //         method: 'GET',
-        //         mode: 'cors',
-        //         credentials: 'include',
-        //         headers: {
-        //             'Authorization': 'Token '+token, 
-        //         }
-        //     })
-        //     .then(response => response.json())
-        //     .then((responseJson)=>{
-        //         this.setState({
-        //             establecimientos: responseJson.results,
-        //             loading: false
-        //         });
-        //     })
-        //     .catch(error=>console.error(error))
-        // })
-        // .catch(error=>console.error(error))
-
         url = await AsyncStorage.getItem("server")+"promociones/getPromos/";
         token = await AsyncStorage.getItem('userToken');
+        url2 = await AsyncStorage.getItem("server")+"tiendas/";
 
-        axios({
-            method: 'GET',
-            url: url,
-            data: {},
-            headers: {
-                "content-type":"application/json",
-                "Authorization":"Token "+token
-            }, 
-        }).then( res => {
-            // PROMOCIONESs
-            // console.log(res.data);
-        }).catch(err => {
+        // axios({
+        //     method: 'GET',
+        //     url: url,
+        //     data: {},
+        //     headers: {
+        //         "content-type":"application/json",
+        //         "Authorization":"Token dfdce0d7017730f1ce446333b458f6c7f4b22157"
+        //     }, 
+        // }).then( res => {
+        //     // PROMOCIONESs
+        //     console.log(res.Datos);
+        // }).catch(err => console.log(err));
+
+        fetch(url, {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token dfdce0d7017730f1ce446333b458f6c7f4b22157',
+                }
+            }
+        )
+        .then(response => response.json())
+        .then((responseJson)=>{
+            let j = responseJson.Datos.replace(/'/g,'"');
+            let json_data = JSON.parse(j);
+            let data = [];
+            // console.log(json_data[1]);
+
+            for(var i in json_data){
+                data.push(json_data[i]);
+            }
+
+            console.log(data);
+
             this.setState({
-                error1: false,
-                error2: true,
+                datos: data,
             });
-        });
+
+            fetch(url2, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Token dfdce0d7017730f1ce446333b458f6c7f4b22157',
+                    }
+                }
+            )
+            .then(response => response.json())
+            .then((responseJson)=>{
+                console.log(responseJson.results);
+                this.setState({
+                    establecimientos: responseJson.results,
+                    loading: false,
+                });
+            })
+            .catch(error=>console.log(error))
+        })
+        .catch(error=>console.log(error))
     }
 
     caja=({item})=>{
-        let fechaSplit = item.fechaVencimiento.split("-");
+        let fechaSplit = item.vigencia.split("-");
         let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
         return(
             <TouchableOpacity 
                 onPress={() => this.props.navigation.navigate('Promotion', {
-                    datos: item, 
+                    datos: item,
                     id: item.id,
-                    nombre: item.descripcion,
-                    lugar: item.lugar,//pendiente checar
-                    vigencia: item.fechaVencimiento,
-                    categoria: item.categoria,//pendiente checar
+                    nombre: item.nombre,
+                    lugar: item.lugar,
+                    vigencia: item.vigencia,
+                    categoria: item.categoria,
                     descripcion: item.descripcion,
-                    direccion: item.direccion//pendiente checar
+                    direccion: item.direccion,
+                    costo: item.costo,
                 })}
                 style={styles.caja}
             >
@@ -147,7 +131,7 @@ export default class App extends Component{
                     <Image/>
                 </View>
                 <View style={styles.datosCaja}>
-                    <Text style={styles.titulo}>{item.descripcion}</Text>
+                    <Text style={styles.titulo}>{item.nombre}</Text>
                     {item.costo == '0.00' &&(
                         <Text style={styles.titulo}>Promoción</Text>
                     )}
@@ -167,7 +151,7 @@ export default class App extends Component{
             </View>
             <View style={styles.datosCaja}>
                 <Text style={styles.titulo}>{item.nombre}</Text>
-                <Text style={styles.titulo}>{item.lugar}</Text>
+                <Text style={styles.titulo}>{item.direccion}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -218,15 +202,15 @@ export default class App extends Component{
                                 style={styles.flat}
                                 data={this.state.datos}
                                 renderItem={this.caja}
-                                keyExtractor={(item) => item.id.toString()}
+                                keyExtractor={item => item.id.toString()}
                             />
                         )}
                         {this.state.establecimieniemtos===true && (
                             <FlatList
                                 style={styles.flat}
-                                data={estable}
+                                data={this.state.establecimientos}
                                 renderItem={this.caja2}
-                                keyExtractor={item => item.id}
+                                keyExtractor={item => item.id.toString()}
                             />
                         )}
                     </View>
