@@ -49,10 +49,6 @@ export default class App extends Component{
         }
     }
 
-    _iniciar=()=>{
-        this.props.navigation.navigate('Game')
-    }
-
         caja= ({item})=>(
         <View style={styles.caja}>
             <View style={styles.imgCaja}>
@@ -73,21 +69,28 @@ export default class App extends Component{
         return(
             <ScrollView style={styles.todo}>
                 <View style={styles.titulo}>
-                    <Text style={styles.textTitulo}>Se ha creado la sala de juego</Text>
+                    <Text style={styles.textTitulo}>Te has unido a la sala de juego</Text>
                 </View>
                 <View style={styles.cajaCodigo}>
-                    <Text style={styles.tituloCodigo}>Comparte tu código</Text>
-                    <Text style={styles.codigo}>CY678900</Text>
+                    <Text style={styles.codigo}>Espera que el juego empiece</Text>
+                </View>
+                <View style={styles.tituloJ}>
+                        <Text style={styles.textJuga}>Creador</Text>
+                    </View>
+                <View style={styles.caja}>
+                    <View style={styles.imgCaja}>
+                        <Image/>
+                    </View>
+                    <View style={styles.datosCaja}>
+                        <Text style={styles.nombre}>Juan Perez</Text>
+                    </View>
+                    <View style={styles.cerrar}></View>
                 </View>
                 <View style={styles.tituloJugadores}>
                     <View style={styles.tituloJ}>
                         <Text style={styles.textJuga}>Jugadores</Text>
                     </View>
                     <View style={styles.botonJ}>
-                        <TouchableOpacity style={styles.btnJuga}
-                        onPress={this._iniciar}>
-                            <Text style={styles.textbtn}>Iniciar partida</Text>
-                        </TouchableOpacity>
                     </View>
                 </View>
                  <FlatList
@@ -111,15 +114,15 @@ const styles= StyleSheet.create({
         padding:10
     },
     titulo:{
-        flex:5,
+        flex:2,
         justifyContent:'center',
         alignItems:'center',
         alignContent:'center',
-        marginTop:20,
-        marginBottom:20,
         // backgroundColor:'red',
         textAlign:'center',
-        width:'100%'
+        width:'100%',
+        marginTop:20,
+        marginBottom:20
     },
     textTitulo:{
         textAlign:'center',
@@ -127,61 +130,54 @@ const styles= StyleSheet.create({
         width:'100%'
     },
     cajaCodigo:{
-        flex:5,
+        flex:1,
+        justifyContent:'center',
         alignContent:'center',
         alignContent:'center',
         width:'100%',
-        textAlign:'left',
-        // backgroundColor:'blue',
-        marginTop:20,
-        marginBottom:20
+        textAlign:'center',
+        // backgroundColor:'blue'
     },
     tituloCodigo:{
         fontSize:20
     },
     codigo:{
-        fontSize:25,
+        fontSize:20,
         color:'#71C0F2',
-        marginTop:20
+        textAlign:'center'
     },
     tituloJugadores:{
         flex:1,
-        flexDirection:'row'
+        flexDirection:'row',
+        marginTop:20
 
     },
     tituloJ:{
         flex:1,
-        textAlign:'left'
+        textAlign:'left',
+        marginTop:20
 
     },
     textJuga:{
         textAlign:'left',
-        fontSize:18
+        fontSize:20
 
     },
     botonJ:{
         flex:2,
-        // justifyContent:'center',
+        justifyContent:'center',
         alignItems:'center',
         alignContent:'center'
     },
     btnJuga:{
-        
-        justifyContent:'center',
-        alignContent:'center',
-        alignItems:'center',
-        width: 130,
-        height:30,
-        marginLeft:60,
+        width:100,
+        height:40,
         borderRadius:10,
         backgroundColor:'#FEDB6B'
 
     },
-    textbtn:{
-        fontSize:18
-    },
     flat:{
-        flex:4,
+        flex:6,
         // backgroundColor:'purple'
     },
      caja:{

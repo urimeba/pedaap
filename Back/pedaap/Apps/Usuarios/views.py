@@ -48,9 +48,9 @@ def login(request):
     else:
         to = user.telefono
         client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-        client.messages.create(
-            body='Codigo de verificación: ' + str(user.codigo),
-            to=to, from_=settings.TWILIO_PHONE_NUMBER)
+        # client.messages.create(
+        #     body='Codigo de verificación: ' + str(user.codigo),
+        #     to=to, from_=settings.TWILIO_PHONE_NUMBER)
         return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado), "tiendas":str(tiendas), "categorias":str(categorias)}, status=HTTP_200_OK)
 
 
