@@ -13,28 +13,29 @@ export default class App extends Component{
     }
 
     _create=async(props)=>{
-        // console.log("AAA")
-        // url = await AsyncStorage.getItem("server");
-        // token =  await AsyncStorage.setItem("userToken");
-        // idUser =  await AsyncStorage.setItem("userId");
+        url = await AsyncStorage.getItem("server");
+        token =  await AsyncStorage.getItem("userToken");
+        idUser =  await AsyncStorage.getItem("userId");
+        url2 = url+"usuarios/"+idUser+"/";
 
-        // console.log(url);
-        console.log("A")
+        // console.log(url2);
 
-        // axios({
-        //     method: 'POST',
-        //     url: url+"salas/",
-        //     data: {creadador:idUser, participantes:1},
-        //     headers: {
-        //         "content-type":"application/json",
-        //     }, 
-        // }).then( res => {
-        //     console.log(res.data);
-        // }).catch(err => {
-        //     console.log(err)
-        // });
+        axios({
+            method: 'POST',
+            url: url+"salas/",
+            data: {creador:url2, participantes:1},
+            headers: {
+                "content-type":"application/json",
+                "Authorization":"Token " +token
+            }, 
+        }).then( res => {
+            console.log(res.data);
+            this.props.navigation.navigate('GameRoom', {idSala:res.data.id, codigo:res.data.codigo, participantes:res.data.participantes})
+        }).catch(err => {
+            console.log(err)
+        });
 
-        // this.props.navigation.navigate('GameRoom')
+        
     }
 
     _join=async()=>{

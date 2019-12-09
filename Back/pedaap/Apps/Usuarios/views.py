@@ -193,6 +193,78 @@ class UsuariosViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    @action(detail=False, methods=['post'])
+    def actualizarDatos(self, request):
+        username = request.data.get('username')
+        nombre = request.data.get('nombre')
+        apellido = request.data.get('apellido')
+        correo = request.data.get('correo')
+        telefono = request.data.get('telefono')
+        pass1 = request.data.get('pass1')
+        pass2 = request.data.get('pass2')
+
+        print(username, nombre, apellido, correo, telefono, pass1, pass2)
+
+        usuario = User.objects.get(username=username)
+
+        try:
+            # pass
+            tel = int(telefono)
+
+        except Exception as e:
+            # raise
+            return Response({'Error':'Favor de ingresar un teléfono válido'}, status=HTTP_400_BAD_REQUEST)
+
+        try:
+            telefono="+52"+telefono
+            print(telefono)
+            usuario2 = User.objects.get(email=correo)
+            print(usuario2)
+            if(usuario!=usuario2):
+                return Response({'Error':'El correo ya esta siendo usado'}, status=HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            # raise
+            print(e)
+            # return Response({'Error':'El correo ya esta siendo usado'}, status=HTTP_400_BAD_REQUEST)
+
+        try:
+            usuario3 = User.objects.get(telefono=telefono)
+            print(usuario3)
+            if(usuario!=usuario3):
+                return Response({'Error':'El telefono ya esta siendo usado'}, status=HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            # raise
+            print(e)
+            # return Response({'Error':'El correo ya esta siendo usado'}, status=HTTP_400_BAD_REQUEST)
+
+
+        if(len(telefono)>13 or len(telefono)<13):
+            print(len(telefono))
+            return Response({'Error':'Favor de ingresar un teléfono válido'}, status=HTTP_400_BAD_REQUEST)
+        if(pass1=="" and pass2==""):
+            usuario.first_name = nombre
+            usuario.last_name = apellido
+            usuario.email = correo
+            usuario.telefono = telefono
+            usuario.save()
+            return Response({"Exito":"Datos actualizados"}, status=HTTP_200_OK)
+        elif (pass1==pass2):
+            if(len(pass1)<6):
+                return Response({'Error':'La contraseña debe tener 6 caracteres o mas'}, status=HTTP_400_BAD_REQUEST)
+            usuario.first_name = nombre
+            usuario.last_name = apellido
+            usuario.email = correo
+            usuario.telefono = telefono
+            usuario.set_password(pass1)
+            usuario.save()
+            return Response({"Exito":"Datos actualizados"}, status=HTTP_200_OK)
+        else:
+            return Response({"Error":"Las contraseñas no coinciden"}, status=HTTP_400_BAD_REQUEST)
+
+
+
+
+
 class UserTiendasViewSet(viewsets.ModelViewSet):
     queryset = UserTiendas.objects.all()
     serializer_class = UserTiendasSerializer

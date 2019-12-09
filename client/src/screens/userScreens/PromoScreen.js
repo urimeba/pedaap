@@ -106,9 +106,9 @@ export default class App extends Component{
                     loading: false,
                 });
             })
-            .catch(error=>console.log(error))
+            // .catch(error=>console.log(error))
         })
-        .catch(error=>console.log(error))
+        // .catch(error=>console.log(error))
     }
 
     caja=({item})=>{
@@ -162,7 +162,7 @@ export default class App extends Component{
         if(!this.state.loading){
             return (
                 <View style={styles.todo}>
-                    {console.log(this.state.establecimieniemtos)}
+                    {/* {console.log(this.state.establecimieniemtos)} */}
                     <View style={styles.container}>
                         <View style={styles.arriba}>
                             <View style={styles.textoP}>
