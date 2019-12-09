@@ -135,11 +135,11 @@ export default class App extends Component{
                     datos: item, 
                     id: item.id,
                     nombre: item.descripcion,
-                    lugar: item.lugar,//pendiente checar
-                    vigencia: item.fechaVencimiento,
-                    categoria: item.categoria,//pendiente checar
-                    descripcion: item.descripcion,
-                    direccion: item.direccion//pendiente checar
+                    descripcion: item.descripcion,//pendiente checar
+                    inicio: item.fechaInicio,
+                    vencimiento: item.fechaVencimiento,//pendiente checar
+                    costo: item.costo,
+                    foto:item.foto
                 })}
                 style={styles.caja}
             >

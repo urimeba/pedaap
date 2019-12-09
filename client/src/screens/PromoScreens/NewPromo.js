@@ -9,11 +9,11 @@ const datos=[
     {
         id: '1',
         nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo Juriquilla',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
+        establecimiento: 'Oxxo Juriquilla',
+        inicio: '2019-12-10',
+        costo: '$20',
         descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
+        vencimiento: '2019-12-20'
     }
 ];
 
@@ -30,12 +30,12 @@ export default class App extends Component{
                 error2: false, //error al mandarlos
                 succes: true, //todo bien
 
-                lugar:'',
+                establecimiento:'',
                 nombre: '',
-                categoria:'',
+                costo:'',
                 descrip:'',
-                vigencia:'',
-                direccion:'',
+                inicio:'',
+                vencimiento:'',
 
 
                  modalVisible: false,
@@ -49,7 +49,7 @@ export default class App extends Component{
     _enviar =async () => {
         // console.log("kfnvfnk")
         // console.log(this.state)
-        if (this.state.lugar =="" || this.state.nombre =="" || this.state.categoria =="" || this.state.descrip == "" || this.state.vigencia == "" || this.state.direccion == "") {
+        if (this.state.establecimiento =="" || this.state.nombre =="" || this.state.costo =="" || this.state.descrip == "" || this.state.inicio == "" || this.state.vencimiento == "") {
             this.setState({error1:true})
             this.setState({error2:false})
             this.setState({succes:false})
@@ -218,9 +218,9 @@ export default class App extends Component{
                                 <Text style={styles.titulo1}>categoría</Text>
                                 <View style={styles.inputs}>
                                     <TextInput style={styles.titulo2}
-                                        placeholder="Categoria"
+                                        placeholder="Costo"
                                         placeholderTextColor="#848482"
-                                        onChangeText={(categoria) => this.setState({ categoria })}
+                                        onChangeText={(costo) => this.setState({ costo })}
                                     ></TextInput>
                                 </View>
                                 <Text style={styles.titulo1}>Descripción</Text>
@@ -230,28 +230,28 @@ export default class App extends Component{
                                         placeholderTextColor="#848482"
                                         onChangeText={(descrip) => this.setState({ descrip })}></TextInput>
                                 </View>
-                                <Text style={styles.titulo1}>Vigencia</Text>
+                                <Text style={styles.titulo1}>Fecha de inicio</Text>
                                 <View style={styles.inputs}>
                                     <TextInput style={styles.titulo2}
-                                        placeholder="Vigencia"
+                                        placeholder="2019-12-10"
                                         placeholderTextColor="#848482"
-                                        onChangeText={(vigencia) => this.setState({ vigencia })}
+                                        onChangeText={(inicio) => this.setState({ inicio })}
                                     ></TextInput>
                                 </View>
-                                <Text style={styles.titulo1}>Direccion</Text>
-                                <View style={styles.grande}>
+                                <Text style={styles.titulo1}>Fecha de vencimiento</Text>
+                                <View style={styles.inputs}>
                                     <TextInput multiline style={styles.titulo2} 
-                                        placeholder="Direccion"
+                                        placeholder = "2019-12-20"
                                         placeholderTextColor="#848482"
-                                        onChangeText={(direccion) => this.setState({ direccion })}
+                                        onChangeText={(vencimiento) => this.setState({ vencimiento })}
                                     ></TextInput>
                                 </View>
-                                <Text style={styles.titulo1}>Lugar</Text>
+                                <Text style={styles.titulo1}>Establecimiento</Text>
                                 <View style={styles.inputs}>
                                     <TextInput style={styles.titulo2} 
-                                        placeholder="Lugar"
+                                        placeholder="Establecimiento"
                                         placeholderTextColor="#848482"
-                                        onChangeText={(lugar) => this.setState({ lugar })}
+                                        onChangeText={(establecimiento) => this.setState({ establecimiento })}
                                     ></TextInput>
                                 </View>
                             </View>
@@ -276,7 +276,7 @@ export default class App extends Component{
 
 
     
-// console.log(datos[0].vigencia)
+// console.log(datos[0].inicio)
 
 
 const styles = StyleSheet.create({
