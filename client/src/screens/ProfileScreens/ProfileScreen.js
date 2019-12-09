@@ -1,9 +1,21 @@
 import React, {Component} from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage, Alert} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity,Platform, ScrollView} from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 
+const datos=[{
+    id:'1',
+    nombre:'aixa',
+    correo:'aixa@mail.com',
+    telefono:'9511817723'
+}]
+
+const behavior = process.env.NODE_ENV === 'production' ? 'padding' : undefined;
 export default class App extends Component{
     constructor(props){
         super(props);
@@ -20,6 +32,8 @@ export default class App extends Component{
             newPass2:""
 
 
+            image:null,
+            uri:''
         }
     }
 
@@ -153,17 +167,85 @@ export default class App extends Component{
     
 
 
+    _editarPref=()=>{
+        this.props.navigation.navigate('Prefer')
+    }
+
+    _cerrarSesion=()=>{
+        this.props.navigation.navigate('Login')
+    }
+
+// ------------------------------------------Imagen--------------
+componentDidMount() {
+    this.getPermissionAsync();
+    console.log('hi');
+  }
+
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+    }
+  }
+
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1
+    });
+
+    this.setState({uri:result.uri})
+
+    console.log(result);
+    console.log(this.state.uri);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  };
+
+    
+// ------------------------------------------Imagen--------------
+
+
     render(){
         return(
             <ScrollView style={styles.todo}>
             {this.state.edit ? (
                 <View>
-                    <View style={styles.arriba}>
-                        <View style={styles.imgA}>
-                            <Image/>
-                        </View>
-                    </View>
-                    <View style={styles.datos}>
+                 <KeyboardAwareScrollView
+                    keyboardVerticalOffset={30}
+                    behavior={Platform.OS === "ios" ? 'padding' : 'height'}
+                    enableOnAndroid={true}
+                    style={{width:'100%'}}
+                    // resetScrollToCoords={{ x: 0, y: 0 }}
+                    contentContainerStyle={{flexGrow:1}}
+                    scrollEnabled={true}
+                    >
+                        {this.state.image!=null?
+                        (
+                             <View style={styles.arriba}>
+                                <TouchableOpacity 
+                                onPress={this._pickImage}
+                                style={styles.imgA}>
+                                    <Image style={{flex:1,borderRadius:100}} source={{uri:this.state.image}} />
+                                </TouchableOpacity>
+                            </View>
+                        ):(
+                             <View style={styles.arriba}>
+                                <TouchableOpacity 
+                                onPress={this._pickImage}
+                                style={styles.imgA}>
+                                    <Image />
+                                </TouchableOpacity>
+                            </View>
+                        ) }
+                   
+                    <View style={styles.datos2}>
                         <Text style={{textAlign:'left'}}>Usuario</Text>
                         <TextInput style={styles.inputData} editable={false} value={this.state.username}  />
                         <Text style={{textAlign:'left'}}>Correo</Text>
@@ -179,7 +261,7 @@ export default class App extends Component{
                         <Text style={{textAlign:'left'}}>Confirmación de contraseña</Text>
                         <TextInput style={styles.inputData} secureTextEntry={true} onChangeText={(newPass2) => this.setState({newPass2})} />
                     </View>
-                    <View style={styles.botones}>
+                    <View style={styles.botones2}>
                         <View style={styles.botonesA}>
                             <TouchableOpacity style={styles.editI}
                             onPress={this._saveChanges}>
@@ -187,14 +269,26 @@ export default class App extends Component{
                             </TouchableOpacity>
                         </View>
                     </View>
+                </KeyboardAwareScrollView>
             </View>
             ):(
                 <View>
-                    <View style={styles.arriba}>
-                        <View style={styles.imgA}>
-                            <Image/>
-                        </View>
-                    </View>
+                     {this.state.image!=null?
+                        (
+                             <View style={styles.arriba}>
+                                <TouchableOpacity 
+                                style={styles.imgA}>
+                                    <Image style={{flex:1,borderRadius:100}} source={{uri:this.state.image}} />
+                                </TouchableOpacity>
+                            </View>
+                        ):(
+                             <View style={styles.arriba}>
+                                <TouchableOpacity 
+                                style={styles.imgA}>
+                                    <Image />
+                                </TouchableOpacity>
+                            </View>
+                        ) }
                     <View style={styles.datos}>
                         <Text style={{textAlign:'left'}}>Usuario</Text>
                         <View style={styles.inputData}>
@@ -226,12 +320,16 @@ export default class App extends Component{
                             onPress={()=>{this.setState({edit:true})}}>
                                 <Text>Editar información</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.editP}>
+                            <TouchableOpacity 
+                            onPress={this._editarPref}
+                            style={styles.editP}>
                                 <Text>Editar preferencias</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.botonesC}>
-                            <TouchableOpacity style={styles.cerrarS}>
+                            <TouchableOpacity 
+                            onPress={this._cerrarSesion}
+                            style={styles.cerrarS}>
                                 <Text>Cerrar sesión</Text>
                             </TouchableOpacity>
                         </View>
@@ -274,6 +372,16 @@ const styles = StyleSheet.create({
         alignItems:'center',
         // backgroundColor:'violet'
     },
+    datos2:{
+        flex:4,
+        justifyContent:'center',
+        alignItems:'center',
+        alignContent:'center',
+        textAlign:'center',
+        fontSize:18,
+        paddingLeft:20
+        // backgroundColor:'violet'
+    },
     inputData:{
         flex:1,
         justifyContent:'center',
@@ -285,6 +393,8 @@ const styles = StyleSheet.create({
         marginBottom:10,
         height: 50,
         padding:10,
+        textAlign:'center',
+        fontSize:18,
         // backgroundColor:'#FAFAFA'
         backgroundColor: '#F0F0F0'
     },
@@ -302,9 +412,27 @@ const styles = StyleSheet.create({
         marginBottom:40,
         // backgroundColor:'magenta'
     },
+    botones2:{
+        flex:2,
+        justifyContent:'center',
+        alignItems:'center',
+        alignContent:'center',
+        width:'100%',
+        marginTop:20,
+        marginBottom:40,
+        // backgroundColor:'magenta'
+    },
     botonesA:{
         flex:1,
         flexDirection:'row' ,
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+    botonesA2:{
+        flex:1,
+        justifyContent:'center',
+        alignContent:'center',
+        alignItems:'center',
         paddingLeft: 10,
         paddingRight: 10,
     },
@@ -326,6 +454,17 @@ const styles = StyleSheet.create({
     },
     editI:{
         flex:1,
+        justifyContent:'center',
+        alignItems:'center',
+        alignContent:'center',
+        backgroundColor:'#FEDB6B',
+        borderRadius:10,
+        width:'60%',
+        height:30,
+        marginRight:5,
+    },
+    editI2:{
+        // flex:1,
         justifyContent:'center',
         alignItems:'center',
         alignContent:'center',
