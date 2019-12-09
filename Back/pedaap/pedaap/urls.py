@@ -24,6 +24,7 @@ from Apps.Promociones import views as views_promociones
 from Apps.Restaurantes import views as views_restaurantes
 from Apps.Presupuestos import views as views_presupuestos
 from Apps.PresupuestosCompartidos import views as views_compartidos
+from Apps.Juegos import views as views_juego
 
 router = routers.DefaultRouter()
 router.register(r'usuarios', views_usuarios.UsuariosViewSet)
@@ -45,6 +46,10 @@ router.register(r'usuariosCompartido', views_compartidos.UsuariosPresupuestoComp
 router.register(r'notificaciones', views_notificacion.NotificacionViewSet)
 router.register(r'userTiendas', views_usuarios.UserTiendasViewSet)
 router.register(r'userCategorias', views_usuarios.UserCategoriasViewSet)
+router.register(r'salas', views_juego.SalaViewSet)
+router.register(r'preguntas', views_juego.PreguntasViewSet)
+router.register(r'respuestas', views_juego.RespuestasSerializerViewSet)
+router.register(r'respuestasPreguntas', views_juego.PreguntasRespuestasViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
