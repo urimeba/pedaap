@@ -48,6 +48,8 @@ export default class App extends Component{
         token = await AsyncStorage.getItem('userToken');
         url2 = await AsyncStorage.getItem("server")+"tiendas/";
 
+        // console.log(token)
+
         // axios({
         //     method: 'GET',
         //     url: url,
@@ -66,7 +68,7 @@ export default class App extends Component{
                 mode: 'cors',
                 credentials: 'include',
                 headers: {
-                    'Authorization': 'Token dfdce0d7017730f1ce446333b458f6c7f4b22157',
+                    'Authorization': 'Token '+token,
                 }
             }
         )
@@ -81,7 +83,7 @@ export default class App extends Component{
                 data.push(json_data[i]);
             }
 
-            console.log(data);
+            // console.log(data);
 
             this.setState({
                 datos: data,
@@ -92,13 +94,13 @@ export default class App extends Component{
                     mode: 'cors',
                     credentials: 'include',
                     headers: {
-                        'Authorization': 'Token dfdce0d7017730f1ce446333b458f6c7f4b22157',
+                        'Authorization': 'Token '+token,
                     }
                 }
             )
             .then(response => response.json())
             .then((responseJson)=>{
-                console.log(responseJson.results);
+                // console.log(responseJson.results);
                 this.setState({
                     establecimientos: responseJson.results,
                     loading: false,

@@ -6,6 +6,7 @@ from Apps.Tiendas.models import Tienda, TiendaProducto
 from Apps.Productos.models import Producto, CategoriaProducto
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.db.models import Q
 from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
@@ -17,10 +18,10 @@ class PromocionesViewSet(viewsets.ModelViewSet):
     queryset = Promociones.objects.all()
     serializer_class = PromocionesSerializer
 
-    @action(detail=False)
+    @action(detail=False, methods=['post'])
     def tiendasFav(self, request):
-        # idUser = request.data.get('idUser')
-        idUser = int("4")
+        idUser = request.data.get('idUser')
+        # idUser = int("4")
 
         user = User.objects.get(id=idUser)
         # print(user.username)
@@ -77,9 +78,24 @@ class PromocionesViewSet(viewsets.ModelViewSet):
         # return Response(serializer.data)
         return Response({"Datos": str(dic)}, status=HTTP_200_OK)
 
+    @action(detail=False, methods=['post'])
+    def busqueda(self, request):
+        clave = request.data.get("clave")
+        # print(clave)
 
+        promociones = Promociones.objects.filter( Q(descripcion__icontains=clave) | Q(productoTienda__tienda__nombre__icontains=clave) | Q(productoTienda__tienda__direccion__icontains=clave) | Q(productoTienda__producto__descripcion__icontains=clave)  | Q(productoTienda__tienda__direccion__icontains=clave) | Q(productoTienda__producto__categoria__nombre__icontains=clave) | Q(productoTienda__producto__categoria__descripcion__icontains=clave)  )
+        # print(promociones)
 
+        dic = {}
 
+        for p in promociones:
+            dic[str(p.id)]={'id':p.id, "nombre":p.descripcion, 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo)}
 
+        # page = self.paginate_queryset(promociones)
+        # if page is not None:
+        #     serializer = self.get_serializer(page, many=True)
+        #     return self.get_paginated_response(serializer.data)
 
-        # return Response({"Exito":"Categorias eliminadas"}, status=HTTP_200_OK)
+        # serializer = self.get_serializer(promociones, many=True)
+        # return Response(serializer.data)
+        return Response({"Datos": str(dic)}, status=HTTP_200_OK)

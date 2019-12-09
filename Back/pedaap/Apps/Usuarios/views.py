@@ -28,8 +28,10 @@ from rest_framework.decorators import action
 def login(request):
     username = request.data.get("username")
     password = request.data.get("password")
+
     if username is None or password is None:
         return Response({'Error':'Favor de completar los campos'}, status=HTTP_400_BAD_REQUEST)
+
     user = authenticate(username=username, password=password)
     if not user:
         return Response({"Error":"Credenciales no validas"}, status=HTTP_404_NOT_FOUND)
@@ -39,18 +41,21 @@ def login(request):
     tiendas = UserTiendas.objects.filter(user=user)
     tiendas = tiendas.count()
 
-
     categorias = UserCategorias.objects.filter(user=user)
     categorias = categorias.count()
 
-    if user.verificado==1:
+    # print(user.verificado)
+
+    if int(user.verificado)==1:
+        # print("VERIFICADO")
         return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado), "tiendas":str(tiendas), "categorias":str(categorias)}, status=HTTP_200_OK)
     else:
+        # print("NO VERIFICADO")
         to = user.telefono
         client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-        # client.messages.create(
-        #     body='Codigo de verificación: ' + str(user.codigo),
-        #     to=to, from_=settings.TWILIO_PHONE_NUMBER)
+        client.messages.create(
+            body='Codigo de verificación: ' + str(user.codigo),
+            to=to, from_=settings.TWILIO_PHONE_NUMBER)
         return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado), "tiendas":str(tiendas), "categorias":str(categorias)}, status=HTTP_200_OK)
 
 
