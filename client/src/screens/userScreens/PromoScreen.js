@@ -101,7 +101,7 @@ export default class App extends Component{
                 data.push(json_data[i]);
             }
 
-            console.log(data);
+            // console.log(data);
 
             this.setState({
                 datos: data,
