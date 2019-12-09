@@ -35,11 +35,40 @@ export default class App extends Component{
     }
 
     _filtro=()=>{
-        if(this.state.filter===false){
-            this.setState({filter:true})
-        }
-        if(this.state.filter===true){
-            this.setState({filter:false})
+        if(this.state.establecimieniemtos===true){
+            if(this.state.filter===false){
+                let sortData = this.state.establecimientos;
+                sortData.sort((a, b) => ((a.nombre === b.nombre) ? 0 : ((a.nombre > b.nombre) ? 1 : -1)));
+                this.setState({
+                    establecimientos: sortData,
+                    filter:true
+                })
+            }
+            if(this.state.filter===true){
+                let sortData = this.state.establecimientos;
+                sortData.sort((a, b) => ((b.nombre === a.nombre) ? 0 : ((b.nombre > a.nombre) ? 1 : -1)));
+                this.setState({
+                    establecimientos: sortData,
+                    filter:false
+                })
+            }
+        }else{
+            if(this.state.filter===false){
+                let sortData = this.state.datos;
+                sortData.sort((a, b) => parseFloat(a.costo) - parseFloat(b.costo));
+                this.setState({
+                    datos: sortData,
+                    filter:true
+                })
+            }
+            if(this.state.filter===true){
+                let sortData = this.state.datos;
+                sortData.sort((a, b) => parseFloat(b.costo) - parseFloat(a.costo));
+                this.setState({
+                    datos: sortData,
+                    filter:false
+                })
+            }
         }
     }
 
@@ -187,13 +216,24 @@ export default class App extends Component{
                                     style={styles.iconE}  
                                     onPress={this._estable}
                                 >
-                                    <Icon name="store" size={24} color={'#DE4C63'}/>
+                                    {this.state.establecimieniemtos===false &&(
+                                        <Icon name="store" size={24} color={'#707070'}/>
+                                    )}
+                                    {this.state.establecimieniemtos===true &&(
+                                        <Icon name="store" size={24} color={'#DE4C63'}/>
+                                    )}
                                 </TouchableOpacity>
                                 <TouchableOpacity 
                                     style={styles.iconA}
                                     onPress={() => this.props.navigation.navigate('New')}
                                 >
-                                    <Icon name="plus" size={24} color={'#FEDB6B'}  />
+                                    {this.state.establecimieniemtos===false &&(
+                                        <Icon name="plus" size={24} color={'#FEDB6B'}  />
+                                    )}
+                                    {this.state.establecimieniemtos===true &&(
+                                        <Icon name="plus" size={24} color={'#FAFAFA'}  />
+                                    )}
+                                    
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -203,6 +243,7 @@ export default class App extends Component{
                                 data={this.state.datos}
                                 renderItem={this.caja}
                                 keyExtractor={item => item.id.toString()}
+                                extraData={this.state}
                             />
                         )}
                         {this.state.establecimieniemtos===true && (
@@ -211,6 +252,7 @@ export default class App extends Component{
                                 data={this.state.establecimientos}
                                 renderItem={this.caja2}
                                 keyExtractor={item => item.id.toString()}
+                                extraData={this.state}
                             />
                         )}
                     </View>
