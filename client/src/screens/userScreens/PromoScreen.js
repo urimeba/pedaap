@@ -22,6 +22,7 @@ export default class App extends Component{
             datos: [],
             establecimientos: [],
             loading: true,
+            clave: '',
         };
     }
 
@@ -70,6 +71,44 @@ export default class App extends Component{
                 })
             }
         }
+    }
+
+    _busqueda=async(value)=>{
+        this.setState({
+            clave: value,
+        });
+
+        url = await AsyncStorage.getItem("server")+'promociones/busqueda/'
+        token = await AsyncStorage.getItem('userToken');
+
+        axios({
+            method: 'POST',
+            url: url,
+            data: {"clave":this.state.clave},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": 'Token '+token
+
+            }, 
+        }).then(res => {
+            // console.log(res.data.Datos)
+            let j = res.data.Datos.replace(/'/g,'"');
+            let json_data = JSON.parse(j);
+            let data = [];
+            // console.log(json_data);
+
+            for(var i in json_data){
+                data.push(json_data[i]);
+            }
+
+            console.log(data);
+
+            this.setState({
+                datos: data,
+            });
+        }).catch(err => {
+            console.log(err);
+        })
     }
 
     async componentDidMount() {
@@ -191,7 +230,6 @@ export default class App extends Component{
         if(!this.state.loading){
             return (
                 <View style={styles.todo}>
-                    {console.log(this.state.establecimieniemtos)}
                     <View style={styles.container}>
                         <View style={styles.arriba}>
                             <View style={styles.textoP}>
@@ -203,6 +241,7 @@ export default class App extends Component{
                                     style={styles.TInput}
                                     placeholder="Buscar"
                                     placeholderTextColor="#848482"
+                                    onChangeText={(value)=>this._busqueda(value)}
                                 />
                                 <TouchableOpacity style={styles.iconF}
                                     onPress={this._filtro}
