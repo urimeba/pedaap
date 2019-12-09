@@ -16,11 +16,11 @@ const EventStack = createStackNavigator(
         EventK: {
             screen: EventKind,
         },
-        Need:{
-            screen:Need,
-        },
         NumAsis:{
             screen:NumAsis,
+        },
+        Need:{
+            screen:Need,
         },
         Product:{
             screen: Product,

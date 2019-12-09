@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     AsyncStorage,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import axios from 'axios';
 
 export default class App extends Component{
@@ -16,34 +17,35 @@ export default class App extends Component{
         this.state={
             selectedItem: null,
             datos: [
-                {id: 1, text: 'opcion 1'},
-                {id: 2, text: 'opcion 2'},
-                {id: 3, text: 'opcion 3'},
-                {id: 4, text: 'opcion 4'},
-                {id: 5, text: 'opcion 5'},
+                {id: '1', text: 'opcion 1'},
+                {id: '2', text: 'opcion 2'},
+                {id: '3', text: 'opcion 3'},
+                {id: '4', text: 'opcion 4'},
+                {id: '5', text: 'opcion 5'},
             ]
         }
     }
 
     async _choosen(selectedItem) {
-        await this.setState({ selectedItem });
+        await this.setState({ selectedItem: selectedItem });
         console.log(this.state.selectedItem);
     }
       
-    _renderList = ({ item }) => {
-        const isSelected = (this.state.selectedItem === item.id);
-        const backgroundColor = isSelected ? "#000000" : "#ffffff";
-        
+    _renderList = ({ item }) => {        
         return (
-            <TouchableOpacity
-            onPress={() => this._choosen(item.id)}
-            underlayColor={"#ffffff"}
-            >
-                <View style={{ padding: 10, flexDirection: 'row' }}>
-                    <View style={{ backgroundColor, width: 5, height: 25 }}></View>
-                    <Text style={{ marginLeft: 10, fontSize: 20 }}>{item.text}</Text>
+            <View style={styles.dataBox}>
+                <View style={styles.topBox}>
+                    <TouchableOpacity
+                        onPress={() => this._choosen(item.id)}
+                        style={styles.circle}          
+                    >
+                        <Icon name={'plus'} size={50} color={'#707070'} />
+                    </TouchableOpacity>
                 </View>
-            </TouchableOpacity>
+                <View style={styles.bottomBox}>
+                    <Text style={styles.bottomBoxText}>{item.text}</Text>
+                </View>
+            </View>
         );
     }
     
@@ -71,7 +73,7 @@ export default class App extends Component{
                     <View style={styles.viewContinue}>
                         <TouchableOpacity 
                             style={styles.continue} 
-                            onPress={this._goNext()}
+                            onPress={() => this._goNext}
                         >
                             <Text style={styles.white}>Continuar</Text>
                         </TouchableOpacity>
@@ -132,5 +134,33 @@ const styles = StyleSheet.create({
     white:{
         color: '#FFFFFF',
         fontSize: 18
-    }
+    },
+    dataBox:{
+        flex: 1,
+        marginBottom: 15,
+    },
+    topBox:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    circle:{
+        backgroundColor: '#393939',
+        height: 100,
+        width: 100,
+        borderRadius: 400,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    bottomBox:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 5,
+        textAlign: 'center',
+    },
+    bottomBoxText:{
+        color: '#FFFFFF',
+        fontSize: 18,
+    },
 });
