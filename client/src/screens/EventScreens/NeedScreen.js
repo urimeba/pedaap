@@ -59,7 +59,6 @@ export default (props) => {
 
 
     const [selected, setSelected] = React.useState(new Map());
-
     const onSelect = React.useCallback(
         (id) => {
             const newSelected = new Map(selected);

@@ -22,6 +22,7 @@ export default class App extends Component{
             datos: [],
             establecimientos: [],
             loading: true,
+            clave: '',
         };
     }
 
@@ -35,12 +36,79 @@ export default class App extends Component{
     }
 
     _filtro=()=>{
-        if(this.state.filter===false){
-            this.setState({filter:true})
+        if(this.state.establecimieniemtos===true){
+            if(this.state.filter===false){
+                let sortData = this.state.establecimientos;
+                sortData.sort((a, b) => ((a.nombre === b.nombre) ? 0 : ((a.nombre > b.nombre) ? 1 : -1)));
+                this.setState({
+                    establecimientos: sortData,
+                    filter:true
+                })
+            }
+            if(this.state.filter===true){
+                let sortData = this.state.establecimientos;
+                sortData.sort((a, b) => ((b.nombre === a.nombre) ? 0 : ((b.nombre > a.nombre) ? 1 : -1)));
+                this.setState({
+                    establecimientos: sortData,
+                    filter:false
+                })
+            }
+        }else{
+            if(this.state.filter===false){
+                let sortData = this.state.datos;
+                sortData.sort((a, b) => parseFloat(a.costo) - parseFloat(b.costo));
+                this.setState({
+                    datos: sortData,
+                    filter:true
+                })
+            }
+            if(this.state.filter===true){
+                let sortData = this.state.datos;
+                sortData.sort((a, b) => parseFloat(b.costo) - parseFloat(a.costo));
+                this.setState({
+                    datos: sortData,
+                    filter:false
+                })
+            }
         }
-        if(this.state.filter===true){
-            this.setState({filter:false})
-        }
+    }
+
+    _busqueda=async(value)=>{
+        this.setState({
+            clave: value,
+        });
+
+        url = await AsyncStorage.getItem("server")+'promociones/busqueda/'
+        token = await AsyncStorage.getItem('userToken');
+
+        axios({
+            method: 'POST',
+            url: url,
+            data: {"clave":this.state.clave},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": 'Token '+token
+
+            }, 
+        }).then(res => {
+            // console.log(res.data.Datos)
+            let j = res.data.Datos.replace(/'/g,'"');
+            let json_data = JSON.parse(j);
+            let data = [];
+            // console.log(json_data);
+
+            for(var i in json_data){
+                data.push(json_data[i]);
+            }
+
+            // console.log(data);
+
+            this.setState({
+                datos: data,
+            });
+        }).catch(err => {
+            console.log(err);
+        })
     }
 
     async componentDidMount() {
@@ -162,7 +230,6 @@ export default class App extends Component{
         if(!this.state.loading){
             return (
                 <View style={styles.todo}>
-                    {/* {console.log(this.state.establecimieniemtos)} */}
                     <View style={styles.container}>
                         <View style={styles.arriba}>
                             <View style={styles.textoP}>
@@ -174,6 +241,7 @@ export default class App extends Component{
                                     style={styles.TInput}
                                     placeholder="Buscar"
                                     placeholderTextColor="#848482"
+                                    onChangeText={(value)=>this._busqueda(value)}
                                 />
                                 <TouchableOpacity style={styles.iconF}
                                     onPress={this._filtro}
@@ -189,13 +257,24 @@ export default class App extends Component{
                                     style={styles.iconE}  
                                     onPress={this._estable}
                                 >
-                                    <Icon name="store" size={24} color={'#DE4C63'}/>
+                                    {this.state.establecimieniemtos===false &&(
+                                        <Icon name="store" size={24} color={'#707070'}/>
+                                    )}
+                                    {this.state.establecimieniemtos===true &&(
+                                        <Icon name="store" size={24} color={'#DE4C63'}/>
+                                    )}
                                 </TouchableOpacity>
                                 <TouchableOpacity 
                                     style={styles.iconA}
                                     onPress={() => this.props.navigation.navigate('New')}
                                 >
-                                    <Icon name="plus" size={24} color={'#FEDB6B'}  />
+                                    {this.state.establecimieniemtos===false &&(
+                                        <Icon name="plus" size={24} color={'#FEDB6B'}  />
+                                    )}
+                                    {this.state.establecimieniemtos===true &&(
+                                        <Icon name="plus" size={24} color={'#FAFAFA'}  />
+                                    )}
+                                    
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -205,6 +284,7 @@ export default class App extends Component{
                                 data={this.state.datos}
                                 renderItem={this.caja}
                                 keyExtractor={item => item.id.toString()}
+                                extraData={this.state}
                             />
                         )}
                         {this.state.establecimieniemtos===true && (
@@ -213,6 +293,7 @@ export default class App extends Component{
                                 data={this.state.establecimientos}
                                 renderItem={this.caja2}
                                 keyExtractor={item => item.id.toString()}
+                                extraData={this.state}
                             />
                         )}
                     </View>
