@@ -7,23 +7,23 @@ import {
     SafeAreaView,
     TouchableOpacity,
     AsyncStorage,
+    Alert
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 
-import Circle from '../../components/Circle';
+import CircleTwo from '../../components/CircleTwo';
 
 export default (props) => {
     //Data
-    const [dataP, setDataP] = React.useState([]);
+    const [dataS, setDataS] = React.useState([]);
 
     React.useEffect(() => {
         async function _prefLis() {
-            url = await AsyncStorage.getItem("server")+'categoriaProductos/';
-            // AsyncStorage.setItem('userId',"1")
+            url = await AsyncStorage.getItem("server")+'tiendas/';
             token = await AsyncStorage.getItem('userToken');
 
             try {
-                console.log(token)
                 let request = await fetch(url, {
                     method: 'GET',
                     mode: 'cors',
@@ -33,36 +33,15 @@ export default (props) => {
                     }
                 });
                 let resp = await request.json();
-                console.log(resp.results);
-                setDataP(resp.results);
+                setDataS(resp.results);
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
-            /*
-                * Posible error de AXIOS con REACT NATIVE o EXPO con peticiones GET
-                * Investigacion futura es necesaria
-            */
-            // axios({
-            //     method: 'get',
-            //     url: url,
-            //     data: {},
-            //     headers: {
-            //         // "content-type": "application/json",
-            //         'Authorization': 'Token '+token,
-            //         'Access-Control-Allow-Origin': '*',
-            //     }, 
-            // }).then(res => {
-            //     console.log(res.data);
-            //     console.log(res);
-            //     setDataP(res.data);
-            // }).catch(err => {
-            //     console.error(err);
-            // });
         }
         _prefLis();
-    }, [setDataP]);
+    }, [setDataS]);
 
-    //Cirulos
+    //Circulos
     const [selected, setSelected] = React.useState(new Map());
 
     const onSelect = React.useCallback(
@@ -72,52 +51,40 @@ export default (props) => {
 
             setSelected(newSelected);
         },
-        [selected]
-    );
-
-    // function onSelect(id) {
-    //     const newSelected = new Map(selected);
-    //     newSelected.set(id, !selected.get(id));
-
-    //     setSelected(newSelected);
-    // }
-
-    /*
-    const onContinue = React.useCallback(
-        //Filter & Map
-        () => {
-            console.log(Array.from(selected.entries()));
-        },
         [selected],
     );
-    */
 
-    //Send Data
+    //Send Data to API
     const sendData = (s) => async() => {
-        // console.log(Array.from(selected.entries()));
-        /*
-            Se convierte el MAP en un JSON que se puede enviar a la API
-        */
+
+        servidor = await AsyncStorage.getItem("server")
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+        
+
         let obj = Object.create(null);
         for (let [k,v] of s) {
             obj[k] = v;
         }
+
+        tamaño = Object.keys(obj).length;
+        console.log(tamaño);
         console.log(JSON.stringify(obj));
 
-        servidor = await AsyncStorage.getItem("server")
-        
-        idUser = await AsyncStorage.getItem("userId");
-        token = await AsyncStorage.getItem("userToken");
 
         for(categoria in obj){
             if(obj[categoria]==true){
                 console.log(categoria);
-                url = servidor+'userCategorias/';
+                url = servidor+'userTiendas/';
+
+                urlUser = servidor+"usuarios/"+idUser+"/";
+                urlTienda = servidor+"tiendas/"+categoria+"/";
+                console.log(urlUser)
 
                 axios({
                     method: 'POST',
                     url: url,
-                    data: {user:servidor+"usuarios/"+idUser+"/", categoria: servidor+"categoriaProductos/"+categoria+"/"},
+                    data: {user:urlUser, tienda: urlTienda},
                     headers: {
                         "content-type":"application/json",
                         "Authorization": "Token "+token
@@ -127,26 +94,66 @@ export default (props) => {
                 }).catch(err => {
                     console.log(err.response.data);
                 });
+            }else{
+                url = servidor+'userTiendas/eliminarTienda/';
+
+                axios({
+                    method: 'POST',
+                    url: url,
+                    data: {idUser: idUser, idTienda:categoria},
+                    headers: {
+                        "content-type":"application/json",
+                        "Authorization": "Token "+token
+                    }, 
+                }).then( res => {
+                    console.log(res.data);
+                }).catch(err => {
+                    console.log(err.response.data);
+                });
+
             }
         }
-        goNext();
+        Alert.alert('Preferencias actualizadas')
+
+        props.navigation.navigate('Profile');
     }
 
-    const goNext = () => {
-        props.navigation.navigate('PreferStore');
+    _eliminarCategorias = async() =>{
+
+        servidor = await AsyncStorage.getItem("server")
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+        url = servidor+'userCategorias/eliminarCategoria/';
+
+        axios({
+            method: 'POST',
+            url: url,
+            data: {idUser:idUser},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": "Token "+token
+            }, 
+        }).then( res => {
+            console.log(res.data);
+        }).catch(err => {
+            console.log(err.response.data);
+        });
+
+        props.navigation.goBack()
+
     }
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.title}>
-                <Text style={styles.titleWhite}>Selecciona tus gustos</Text>
+                <Text style={styles.titleWhite}>Selecciona tus establecimientos preferidos</Text>
             </View>
             <View style={styles.flatContainer}>
                 <FlatList 
                     style={styles.flat} 
-                    data={dataP}
+                    data={dataS}
                     renderItem={({item}) => (
-                        <Circle 
+                        <CircleTwo
                             data={item}
                             selected={!!selected.get(item.id)}
                             onSelect={onSelect}
@@ -158,14 +165,18 @@ export default (props) => {
                 />
             </View>
             <View style={styles.next}>
-                <View style={{flex: 1}}></View>
+                <TouchableOpacity 
+                    style={styles.back} 
+                    onPress={_eliminarCategorias}
+                >   
+                    <Icon name="keyboard-backspace" size={40} color={'#707070'} />
+                </TouchableOpacity>
                 <View style={styles.viewContinue}>
                     <TouchableOpacity 
                         style={styles.continue} 
                         onPress={sendData(selected)}
-                        // onPress={() => props.navigation.navigate('Stores')}
                     >
-                        <Text style={styles.white}>Continuar</Text>
+                    <Text style={styles.white}>Aceptar</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -213,9 +224,15 @@ const styles = StyleSheet.create({
         width: '70%',
         backgroundColor: '#393939',
     },
+    back:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     titleWhite:{
         color: '#FFFFFF',
         fontSize: 26,
+        textAlign: 'center',
     },
     white:{
         color: '#FFFFFF',
