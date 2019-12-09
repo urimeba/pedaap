@@ -58,15 +58,17 @@ def login(request):
 @api_view(["POST"])
 @permission_classes((AllowAny,))
 def registro(request):
+
     username = request.data.get("usuario")
     password = request.data.get("password")
     email = request.data.get("correo")
     number = request.data.get("telefono")
     verificado = 0
 
-    print(username, password, email, number)
+    # print(username, password, email, number)
+    # print(len(number))
 
-    if username=="" or password=="" or email=="" or number=="":
+    if username==None or password==None or email==None or number==None:
         print("a")
         return Response({"Error":"Favor de completar todos los campos"}, status=HTTP_400_BAD_REQUEST)
     elif 6>len(username):
@@ -75,46 +77,63 @@ def registro(request):
     elif 6>len(password):
         print("c")
         return Response({"Error":"Favor de usar una contraseña con mas de 6 caracteres"}, status=HTTP_400_BAD_REQUEST)
-    elif 10>len(number):
+    elif 10!=len(number) :
+        print("d")
         return Response({"Error":"Favor de ingresar un teléfono válido"}, status=HTTP_400_BAD_REQUEST)
 
-        try:
-            number = int(number)
-            number = "+52" + str(number)
-        except Exception as e:
-            raise
-            return Response({"Error":"Favor de ingresar un teléfono válido"}, status=HTTP_400_BAD_REQUEST)
+    try:
+        number = int(number)
+        number = "+52" + str(number)
+    except Exception as e:
+        # raise
+        print("EXCEPT 1")
+        print(e)
+        return Response({"Error":"Favor de ingresar un teléfono válido"}, status=HTTP_400_BAD_REQUEST)
 
     else:
-
         try:
-            user, created = User.objects.get_or_create(username=username, telefono=number, email=email )
-            if created:
-                user.set_password(password)
-                user.email=email
-                user.telefono=number
-                user.verificado=verificado
-                user.save()
+                try:
 
-                client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-
-                # validation_request = client.validation_requests.create(
-                #                     friendly_name=str(user.username),
-                #                     phone_number='+14158675310'
-                #                 )
-                #
-                # print(validation_request.friendly_name)
+                    user, created = User.objects.get_or_create(username=username, telefono=number, email=email )
+                    print(number)
 
 
-                to = user.telefono
-                client.messages.create(
-                    body='Codigo de verificación: ' + str(user.codigo),
-                    to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
-                token, created = Token.objects.get_or_create(user=user)
+                    try:
+                        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+                        to = number
+                        client.messages.create(
+                            body='Codigo de verificación: ' + str(user.codigo),
+                            to=to, from_=settings.TWILIO_PHONE_NUMBER)
+                    except Exception as e:
+                        # raise
+                        print("EXCEPT TWILIO")
+                        print(e)
+                        return Response({"Error":"Favor de ingresar un teléfono válido"}, status=HTTP_400_BAD_REQUEST)
 
-                return Response({"Registrado": "Usuario registrado exitosamente", "token":token.key, "id":str(user.id)}, status=HTTP_200_OK)
+
+                    print(created)
+
+                    if created:
+                        user.set_password(password)
+                        user.email=email
+                        user.telefono=number
+                        user.verificado=verificado
+                        user.save()
+                        token, created = Token.objects.get_or_create(user=user)
+                        return Response({"Registrado": "Usuario registrado exitosamente", "token":token.key, "id":str(user.id)}, status=HTTP_200_OK)
+                    else:
+                        return Response({"Error": "El usuario, telefono o correo ya han sido usados "}, status=HTTP_400_BAD_REQUEST)
+                except Exception as e:
+                    # raise
+                    print("EXCEPT 2")
+                    print(e)
+                    return Response({"Error": "El usuario, telefono o correo ya han sido usados "}, status=HTTP_400_BAD_REQUEST)
+
         except Exception as e:
+            # print("except")
+            print(e)
+            print("EXCEPT 3")
             return Response({"Error": "El usuario, telefono o correo ya han sido usados "}, status=HTTP_400_BAD_REQUEST)
 
 # @csrf_exempt
