@@ -37,7 +37,27 @@ export default class App extends Component{
         token = await AsyncStorage.getItem("userToken");
         idUsuario = await AsyncStorage.getItem("userId");
 
-
+        fetch((url+"usuarios/"+idUsuario+"/"), {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token '+token,
+                }
+            }
+        )
+        .then(response => response.json())
+        .then((responseJson)=>{
+            console.log(responseJson);
+            this.setState({
+                nombre:responseJson.first_name, 
+                apellido:responseJson.last_name,
+                username:responseJson.username,
+                correo:responseJson.email,
+                telefono:responseJson.telefono
+            })
+        })
+        .catch(error=>console.log(error))
 
         // axios({
         //     method: 'GET',

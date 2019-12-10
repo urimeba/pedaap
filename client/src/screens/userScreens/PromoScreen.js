@@ -174,9 +174,9 @@ export default class App extends Component{
                     loading: false,
                 });
             })
-            // .catch(error=>console.log(error))
+            .catch(error=>console.log(error))
         })
-        // .catch(error=>console.log(error))
+        .catch(error=>console.log(error))
     }
 
     caja=({item})=>{

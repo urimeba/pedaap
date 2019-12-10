@@ -101,12 +101,12 @@ const styles = StyleSheet.create({
         flex: 4,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'green',
         width: '100%'
     },
     text1:{
         fontSize:25,
         textAlign:'center',
+        width: '90%'
     },
     nombreE:{
         width:'80%',
