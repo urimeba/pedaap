@@ -16,11 +16,15 @@ export default class Confirm extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            codigo: ''
+            codigo: '',
+            error1:false,//codigo
+            error2:false,//falla
+            error3:false,//vacio
         };
     }   
 
     _verify = async(props)=>{
+        if(this.state.codigo==""){this.setState({error3:true,error1:false,error2:false})}
         url = await AsyncStorage.getItem("server")+'verificar/';
         token = await AsyncStorage.getItem("userToken");
         idUser = await AsyncStorage.getItem("userId");
@@ -46,7 +50,8 @@ export default class Confirm extends Component{
         }).catch(err => {
             // console.log("Error");
             // console.log(err);
-            Alert.alert("Datos incorrectos", "Verifica tu codigo");
+            this.setState({error1:true, error2:false, error3:false})
+            // Alert.alert("Datos incorrectos", "Verifica tu codigo");
         });
     }
 
@@ -70,7 +75,8 @@ export default class Confirm extends Component{
           }).catch(err => {
             // console.log("Error");
             // console.log(err);
-            Alert.alert("Error", "Algo ha fallado. Intenta nuevamente.");
+             this.setState({error2:true, error1:false, error3:false})
+            // Alert.alert("Error", "Algo ha fallado. Intenta nuevamente.");
           });
     }
 
@@ -104,6 +110,17 @@ export default class Confirm extends Component{
                         </View>
                     </View>
                 </View>
+                 <View style={styles.ErrorView}>
+                        {this.state.error1=== true && (
+                            <Text style={styles.error}>*Verifica tu codigo</Text>
+                        )}
+                        {this.state.error2=== true && (
+                            <Text style={styles.error}>*Algo ha fallado. Intenta nuevamente.</Text>
+                        )}
+                        {this.state.error3=== true && (
+                            <Text style={styles.warning}>*Completa el campo.</Text>
+                        )}
+                    </View>
                 <View style={styles.InputsNavEnter}>
                     <TouchableOpacity 
                         style={styles.InputsNavEnterButton} 
@@ -194,4 +211,17 @@ const styles = StyleSheet.create({
             width: '40%',
             backgroundColor: '#393939',
         },
+          warning: {
+                  color: '#FEDB6B',
+                  fontSize: 18,
+              },
+              error: {
+                  color: '#DE4C63',
+                  fontSize: 18,
+              },
+              ErrorView: {
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+              },
 });

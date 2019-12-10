@@ -213,10 +213,10 @@ export default class App extends Component{
                 animationType="slide"
                 transparent={true}
                 // transparent={false}
-                style={{width: 80, height: 80, backgroundColor: 'pink'}}
+                style={{width: 80, height: 80, backgroundColor: 'white'}}
                 visible={this.state.modalVisible}
                 onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
+                    // Alert.alert('Modal has been closed.');
                     this.setState({modalVisible:false})
                 }}>
                 <View style = {styles.modal} >
@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
         // flex:1,
         marginTop: 25,
         width:'100%',
-        height: '12%',
+        height: '10%',
         paddingLeft: 10,
         paddingRight: 10,
         // backgroundColor: '#FAFAFA',
@@ -501,23 +501,25 @@ const styles = StyleSheet.create({
         // backgroundColor:'blue'
     },
     container: {
-        // flex: 4,
-        alignItems: 'center',
-        flexDirection:'column',
-        justifyContent: 'center',
-        backgroundColor:'#FAFAFA',
-        // marginTop: '20%',
-        height: '100%',
-        width:'100%',
-    },
-    container: {
-        // flex: 4,
+        flex: 1,
         // alignItems: 'center',
         // flexDirection:'column',
         // justifyContent: 'center',
         backgroundColor:'#FAFAFA',
+        // backgroundColor:'purple',
         // marginTop: '20%',
-        height: '100%',
+        height: 500,
+        width:'100%',
+    },
+    container2: {
+        // flex: 4,
+        // alignItems: 'center',
+        // flexDirection:'column',
+        // justifyContent: 'center',
+        // backgroundColor:'blue',
+        // backgroundColor:'#FAFAFA',
+        // marginTop: '20%',
+        height: 400,
         width:'100%',
     },
     titulo:{
@@ -532,7 +534,7 @@ const styles = StyleSheet.create({
         // flex:4,
         flexDirection: 'column',
         width:'100%',
-        height: 1500,
+        height: 1000,
         // height: '100%',
         paddingLeft: '5%',
         paddingRight: '5%',
@@ -568,7 +570,7 @@ const styles = StyleSheet.create({
         // justifyContent:'center',
         alignContent:'center',
         width:'100%',
-        height: '100%',
+        height: 500,
         // backgroundColor: 'pink',
         // marginLeft: 10,
         // padding: 10,
@@ -624,7 +626,8 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         width: '100%',
-        height: 100,
+        height: 30,
+        marginBottom:20
         // backgroundColor:'purple',
         // marginTop: 20
     },
@@ -633,12 +636,12 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignContent:'center',
         alignItems:'center',
-        width: 70,
-        height: 40,
-        backgroundColor: 'blue',
+        backgroundColor: '#FEDB6B',
+        width: 80,
+        height: 30,
         color: 'white',
         fontSize: 18,
-        borderRadius: 5,
+        borderRadius: 10,
         textAlign:'center',
         padding:5
     },
