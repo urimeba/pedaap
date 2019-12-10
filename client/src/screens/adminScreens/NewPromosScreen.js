@@ -139,7 +139,8 @@ export default class App extends Component{
                     inicio: item.fechaInicio,
                     vencimiento: item.fechaVencimiento,//pendiente checar
                     costo: item.costo,
-                    foto:item.foto
+                    foto:item.foto,
+                    kind: 'new'
                 })}
                 style={styles.caja}
             >
@@ -184,6 +185,12 @@ export default class App extends Component{
                                 <Icon name="bell-outline" size={22} color={'#707070'} style={styles.iconB} />
                             </View>
                             <View style={styles.botones}>
+                                <TouchableOpacity 
+                                    style={styles.iconE}  
+                                    onPress={() => this.props.navigation.navigate('Acepted')}
+                                >
+                                    <Text style={{color:'white'}}>Promociones aceptadas</Text>
+                                </TouchableOpacity>
                                 <TouchableOpacity style={styles.iconF}
                                     onPress={this._filtro}
                                 >
@@ -195,14 +202,8 @@ export default class App extends Component{
                                     )}
                                 </TouchableOpacity>
                                 <TouchableOpacity 
-                                    style={styles.iconE}  
-                                    onPress={this._estable}
-                                >
-                                    <Icon name="store" size={24} color={'#DE4C63'}/>
-                                </TouchableOpacity>
-                                <TouchableOpacity 
                                     style={styles.iconA}
-                                    onPress={() => this.props.navigation.navigate('New')}
+                                    onPress={() => this.props.navigation.navigate('AddPromo')}
                                 >
                                     <Icon name="plus" size={24} color={'#FEDB6B'}  />
                                 </TouchableOpacity>
@@ -243,7 +244,7 @@ const styles = StyleSheet.create({
     },
     arriba:{
         // flex:1,
-        marginTop: 25,
+        // marginTop: 25,
         width:'100%',
         height: '16%',
         paddingLeft: 10,
@@ -265,8 +266,15 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
     iconE:{
-       marginLeft: '5%',
-       marginTop: 12.5
+        justifyContent:'center',
+        alignContent:'center',
+        alignItems:'center',
+    //    marginLeft: '5%',
+       marginTop: 10,
+       backgroundColor:'#6930BF',
+       width: 170,
+       height:30,
+       borderRadius:10,
     },
     iconA:{
         marginLeft: '5%',
