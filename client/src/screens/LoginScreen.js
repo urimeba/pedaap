@@ -130,11 +130,11 @@ export default class App extends Component{
                         )}
                     </View>
                     <View style={styles.InputsForgotPassword}>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             onPress={() => this.props.navigation.navigate('Forgot')}
                         >
                             <Text style={styles.TextColorOne}>¿Olvidaste tu contraseña?</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                     <View style={styles.InputsNav}>
                         <TouchableOpacity 
