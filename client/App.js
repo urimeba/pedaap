@@ -20,7 +20,7 @@ export default class App extends Component {
     }
     
     _initdata = async() =>{
-      AsyncStorage.setItem("server", "http://148.220.210.33:8000/")
+      AsyncStorage.setItem("server", "http://192.168.100.34:8000/")
       AsyncStorage.getItem("server").then((obj)=>{
         this.state.server = obj
         this.forceUpdate();
