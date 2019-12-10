@@ -380,7 +380,7 @@ export default class App extends Component{
                                         onChangeText={(inicio) => this.setState({ inicio })}
                                     ></TextInput> */}
                                     <DatePicker
-                                        style={{width: '100%'}}
+                                        style={{width: '100%',backgroundColor:'#F0F0F0', borderRadius:10}}
                                         date={this.state.fechaInicio} //initial date from state
                                         mode="date" //The enum of date, datetime and time
                                         placeholder="Fecha de inicio "
@@ -412,7 +412,7 @@ export default class App extends Component{
                                         onChangeText={(vencimiento) => this.setState({ vencimiento })}
                                     ></TextInput> */}
                                     <DatePicker
-                                        style={{width: '100%'}}
+                                        style={{width: '100%',backgroundColor:'#F0F0F0', borderRadius:10}}
                                         date={this.state.fechaExpiracion} //initial date from state
                                         mode="date" //The enum of date, datetime and time
                                         placeholder="Fecha de vencimiento "

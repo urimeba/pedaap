@@ -105,7 +105,7 @@ export default class App extends Component{
     }
 
     prod=({item})=>(
-        <View>
+        <View >
             <Text style={styles.tituloCajas}>{item.nombre}</Text>
             <FlatList
                 style={styles.flat}
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     },
     titulo2:{
         flex: 1,
-        fontSize: 16,
+        fontSize: 15,
         color:'#DE4C63'
         // color: 'white'
     },
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
         flex:1,
         flexDirection: 'row',
         width:'90%',
-        height: 90,
+        height: 95,
         borderRadius: 10,
        shadowColor: "#000",
         shadowOffset: {
@@ -336,11 +336,11 @@ const styles = StyleSheet.create({
     },
     tituloCajas:{
         width:'100%',
-        height:30,
+        height:45,
         fontSize:18,
         // marginBottom:20,
-        marginTop:20,
-        padding:20
+        marginTop:10,
+        padding:10
     },
     iconA:{
         marginLeft: '5%',
