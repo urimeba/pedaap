@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
+import Logo from '../../components/StoreIcons'
 
 export default class App extends Component{
     constructor(props) {
@@ -176,9 +177,9 @@ export default class App extends Component{
                     loading: false,
                 });
             })
-            // .catch(error=>console.log(error))
+            .catch(error=>console.log(error))
         })
-        // .catch(error=>console.log(error))
+        .catch(error=>console.log(error))
     }
 
     caja=({item})=>{
@@ -219,7 +220,11 @@ export default class App extends Component{
     caja2=({item})=>(
         <TouchableOpacity style={styles.caja}>
             <View style={styles.imgCaja}>
-                <Image/>
+                <Image
+                    style={styles.pngImage}
+                    source={Logo[item.icono]}
+                    resizeMode="center"
+                />
             </View>
             <View style={styles.datosCaja}>
                 <Text style={styles.titulo}>{item.nombre}</Text>
@@ -419,7 +424,9 @@ const styles = StyleSheet.create({
         width:'10%',
         height: '100%',
         borderRadius: 10,
-        backgroundColor:'gray'
+        backgroundColor:'#F0F0F0',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     datosCaja:{
         flex:3,
@@ -433,5 +440,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: 'center',
+    },
+    pngImage:{
+        height: 50,
+        width: 50,
     }
 });

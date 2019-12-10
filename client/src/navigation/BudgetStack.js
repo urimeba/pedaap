@@ -18,6 +18,10 @@ const BudgetStack = createStackNavigator(
         },
         CreateBudget:{
             screen:CreateBudget,
+            navigationOptions: {
+                title: 'Crear presupuesto',
+                header: null
+            }
         },
         InicialBudget:{
             screen:InicialBudget,

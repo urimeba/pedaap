@@ -17,11 +17,10 @@ export default class App extends Component{
         this.state={
             selectedItem: null,
             datos: [
-                {id: '1', text: 'opcion 1'},
-                {id: '2', text: 'opcion 2'},
-                {id: '3', text: 'opcion 3'},
-                {id: '4', text: 'opcion 4'},
-                {id: '5', text: 'opcion 5'},
+                {id: '1', text: 'Hasta 10 personas', 'icono': 'dice-1'},
+                {id: '2', text: 'Hasta 30 personas', 'icono': 'dice-2'},
+                {id: '3', text: 'Hasta 50 personas', 'icono': 'dice-3'},
+                {id: '4', text: 'Más de 50 personas', 'icono': 'dice-4'},
             ]
         }
     }
@@ -39,7 +38,7 @@ export default class App extends Component{
                         onPress={() => this._choosen(item.id)}
                         style={styles.circle}          
                     >
-                        <Icon name={'plus'} size={50} color={'#707070'} />
+                        <Icon name={item.icono} size={50} color={'#707070'} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.bottomBox}>
@@ -73,7 +72,7 @@ export default class App extends Component{
                     <View style={styles.viewContinue}>
                         <TouchableOpacity 
                             style={styles.continue} 
-                            onPress={() => this._goNext}
+                            onPress={this._goNext}
                         >
                             <Text style={styles.white}>Continuar</Text>
                         </TouchableOpacity>

@@ -1,5 +1,16 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView} from 'react-native';
+import {
+    SafeAreaView,
+    View,
+    FlatList,
+    StyleSheet,
+    Text,
+    Image,
+    TextInput,
+    TouchableOpacity,
+    ScrollView,
+    KeyboardAvoidingView
+} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -20,73 +31,86 @@ export default class Event extends Component{
 
     render(){
         return(
-            <View style={styles.todo}>
-                <View style={styles.titulo1}>
-                    <Text style={styles.text1}>Ingresa el nombre de tu evento</Text>
-                    <TextInput
-                        style={styles.nombreE}
-                        placeholder="Evento"
-                        placeholderTextColor = "#848482"
-                        onChangeText={(nameE) => this.setState({ nameE })}
-                    />
+            <SafeAreaView style={{flex: 1}}>
+                <View style={styles.container}>
+                    <View style={styles.caja1}>
+                        <View style={styles.container}>
+                            <Text style={styles.text1}>Ingresa el nombre de tu evento</Text>
+                        </View>
+                        <View style={styles.container}>
+                            <TextInput
+                                style={styles.nombreE}
+                                placeholder="Evento"
+                                placeholderTextColor = "#848482"
+                                onChangeText={(nameE) => this.setState({ nameE })}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.titulo2}>
+                        <View style={styles.container}>
+                            <Text style={styles.text2}>Ingresa el presupuesto inicial</Text>
+                        </View>
+                        <View style={styles.container}>
+                            <TextInput
+                                style={styles.presu}
+                                placeholder="$300"
+                                placeholderTextColor = "#848482"
+                                keyboardType = 'numeric'
+                                onChangeText={(presu) => this.setState({ presu })}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.titulo3}>
+                        <View style={styles.container}>
+                            <TouchableOpacity
+                                style={styles.btnCrear}
+                                onPress={this._crear}
+                            >
+                                <Text style={styles.textC}>Crear</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.container}></View>
+                    </View>
                 </View>
-                <View style={styles.titulo2}>
-                    <Text style={styles.text2}>Ingresa el presupuesto inicial</Text>
-                    <TextInput
-                        style={styles.presu}
-                        placeholder="$300"
-                        placeholderTextColor = "#848482"
-                        keyboardType = 'numeric'
-                        onChangeText={(presu) => this.setState({ presu })}
-                    />
-                </View>
-                <TouchableOpacity
-                     style={styles.btnCrear}
-                     onPress={this._crear}
-                >
-                    <Text style={styles.textC}>Crear</Text>
-                </TouchableOpacity>
-            </View>
+            </SafeAreaView>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    todo:{
-        flex:1,
-        justifyContent: 'center',
-            alignContent: 'center',
-            alignItems: 'center',
-    },
-    titulo1:{
-        justifyContent:'center',
-        alignContent:'center',
-        alignItems:'center',
+    container: {
+        flex: 1,
         width: '100%',
-        height: '30%',
-        marginTop:30,
-        // backgroundColor:'purple',
-        padding: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FAFAFA',
+    },
+    caja1:{
+        flex: 3,
+        justifyContent:'center',
+        alignItems:'center',
+        width: '100%'
     },
     titulo2:{
+        flex: 2,
         justifyContent:'center',
-        alignContent:'center',
         alignItems:'center',
-        width: '100%',
-        height: '30%',
-        // marginTop:'30%',
-        // backgroundColor:'blue',
-        padding: 40,
+        width: '100%'
+    },
+    titulo3: {
+        flex: 4,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%'
     },
     text1:{
         fontSize:25,
         textAlign:'center',
-        // fontStyle:'bold',
-        marginBottom:20,
+        width: '90%'
     },
     nombreE:{
-        width:'100%',
-        height: 70,
+        width:'80%',
+        height: 60,
         backgroundColor: '#F0F0F0',
         borderRadius: 10,
         padding: 10,
@@ -95,7 +119,6 @@ const styles = StyleSheet.create({
     },
     text2:{
         fontSize: 18,
-        marginBottom: 20,
     },
     presu:{
         width:'80%',
@@ -109,9 +132,9 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        height: 30,
-        width: 90,
         backgroundColor: '#393939',
+        width: '30%',
+        height: '30%'
     },
     textC:{
         textAlign:'center',

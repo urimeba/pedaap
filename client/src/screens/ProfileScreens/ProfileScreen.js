@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage, Alert, Platform} from 'react-native';
+import { View, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage, Alert, Platform} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 
@@ -26,12 +26,8 @@ export default class App extends Component{
             username:"",
             correo:"",
             telefono:"",
-
-
             newPass:"",
             newPass2:"",
-
-
             image:null,
             uri:''
         }
@@ -42,33 +38,49 @@ export default class App extends Component{
         token = await AsyncStorage.getItem("userToken");
         idUsuario = await AsyncStorage.getItem("userId");
 
-        
-        this.getPermissionAsync();
-        // console.log('hi');
+        fetch((url+"usuarios/"+idUsuario+"/"), {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token '+token,
+                }
+            }
+        )
+        .then(response => response.json())
+        .then((responseJson)=>{
+            console.log(responseJson);
+            this.setState({
+                nombre:responseJson.first_name, 
+                apellido:responseJson.last_name,
+                username:responseJson.username,
+                correo:responseJson.email,
+                telefono:responseJson.telefono
+            })
+        })
+        .catch(error=>console.log(error))
 
-        axios({
-            method: 'GET',
-            url: url+"usuarios/"+idUsuario+"/",
-            data: {},
-            headers: {
-                "content-type":"application/json",
-                "Authorization": "Token "+ token
-            },
-        }).then( res => {
-            // console.log(res.data);
+        // axios({
+        //     method: 'GET',
+        //     url: url+"usuarios/"+idUsuario+"/",
+        //     data: {},
+        //     headers: {
+        //         "content-type":"application/json",
+        //         "Authorization": "Token "+ token
+        //     },
+        // }).then( res => {
+        //     // console.log(res.data);
 
-            tel = res.data.telefono;
-            tel = tel.substring(3, 13);
-            // tel = parseInt(tel)
+        //     tel = res.data.telefono;
+        //     tel = tel.substring(3, 13);
+        //     // tel = parseInt(tel)
 
-            // console.log(tel)
+        //     // console.log(tel)
 
-            this.setState({nombre:res.data.first_name, apellido:res.data.last_name, username: res.data.username, correo:res.data.email, telefono:tel})
-        }).catch(err => {
-            console.log(err);
-        });
-
-
+        //     this.setState({nombre:res.data.first_name, apellido:res.data.last_name, username: res.data.username, correo:res.data.email, telefono:tel})
+        // }).catch(err => {
+        //     console.log(err);
+        // });
     }
 
     _saveChanges = async() =>{
@@ -86,8 +98,6 @@ export default class App extends Component{
 
         if(pass1=="" && pass2==""){
             console.log(nombre, apellido, correo, telefono);
-
-            
 
             let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -110,21 +120,12 @@ export default class App extends Component{
                     Alert.alert("Datos guardado", "Datos correctamente actualizados");
                     this.setState({edit:false})
                     // this.setState({nombre:res.data.first_name, apellido:res.data.last_name, username: res.data.username, correo:res.data.email, telefono:tel})
-
-                   
                 }).catch(err => {
                     console.log("Error");
                     console.log(err.response.data.Error);
                     Alert.alert("Error", err.response.data.Error);
                 });
             }
-
-
-
-
-
-
-
         }else if(pass1==pass2){
             // console.log("contraseñas iguales")
             let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -159,17 +160,7 @@ export default class App extends Component{
             // console.log("contraseñas no igauales")
             Alert.alert("Error", "Las contraseñas no coinciden");
         }
-
-            //     this.setState({edit:false})
-
     }
-
-  
-
-
-
-    
-
 
     _editarPref=()=>{
         this.props.navigation.navigate('Prefer')
@@ -182,172 +173,160 @@ export default class App extends Component{
     }
 
 // ------------------------------------------Imagen--------------
-// componentDidMount() {
-//     this.getPermissionAsync();
-//     console.log('hi');
-//   }
+    // componentDidMount() {
+    //     this.getPermissionAsync();
+    //     console.log('hi');
+    // }
 
-  getPermissionAsync = async () => {
-    if (Constants.platform.ios) {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status !== 'granted') {
-        alert('Sorry, we need camera roll permissions to make this work!');
-      }
-    }
-  }
+    // getPermissionAsync = async () => {
+    //     if (Constants.platform.ios) {
+    //         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    //         if (status !== 'granted') {
+    //             alert('Sorry, we need camera roll permissions to make this work!');
+    //         }
+    //     }
+    // }
 
-  _pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1
-    });
+    // _pickImage = async () => {
+    //     let result = await ImagePicker.launchImageLibraryAsync({
+    //         mediaTypes: ImagePicker.MediaTypeOptions.All,
+    //         allowsEditing: true,
+    //         aspect: [4, 3],
+    //         quality: 1
+    //     });
 
-    this.setState({uri:result.uri})
+    //     this.setState({uri:result.uri})
 
-    console.log(result);
-    console.log(this.state.uri);
+    //     console.log(result);
+    //     console.log(this.state.uri);
 
-    if (!result.cancelled) {
-      this.setState({ image: result.uri });
-    }
-  };
-
-    
+    //     if (!result.cancelled) {
+    //         this.setState({ image: result.uri });
+    //     }
+    // };
 // ------------------------------------------Imagen--------------
-
 
     render(){
         return(
             <ScrollView style={styles.todo}>
-            {this.state.edit ? (
-                <View>
-                 <KeyboardAwareScrollView
-                    keyboardVerticalOffset={30}
-                    behavior={Platform.OS === "ios" ? 'padding' : 'height'}
-                    enableOnAndroid={true}
-                    style={{width:'100%'}}
-                    // resetScrollToCoords={{ x: 0, y: 0 }}
-                    contentContainerStyle={{flexGrow:1}}
-                    scrollEnabled={true}
-                    >
-                        {this.state.image!=null?
-                        (
-                             <View style={styles.arriba}>
-                                <TouchableOpacity 
-                                onPress={this._pickImage}
-                                style={styles.imgA}>
-                                    <Image style={{flex:1,borderRadius:100}} source={{uri:this.state.image}} />
+                {this.state.edit ? (
+                    <View>
+                    <KeyboardAwareScrollView
+                        keyboardVerticalOffset={30}
+                        behavior={Platform.OS === "ios" ? 'padding' : 'height'}
+                        enableOnAndroid={true}
+                        style={{width:'100%'}}
+                        // resetScrollToCoords={{ x: 0, y: 0 }}
+                        contentContainerStyle={{flexGrow:1}}
+                        scrollEnabled={true}
+                        >
+                            {this.state.image!=null?
+                            (
+                                <View style={styles.arriba}>
+                                    <View style={styles.imgA}>
+                                        <Icon name={'face-profile'} size={100} color={'#FAFAFA'} />
+                                    </View>
+                                </View>
+                            ):(
+                                <View style={styles.arriba}>
+                                    <View style={styles.imgA}>
+                                        <Icon name={'face-profile'} size={100} color={'#FAFAFA'} />
+                                    </View>
+                                </View>
+                            ) }
+                    
+                        <View style={styles.datos2}>
+                            <Text style={{textAlign:'left'}}>Usuario</Text>
+                            <TextInput style={styles.inputData} editable={false} value={this.state.username}  />
+                            <Text style={{textAlign:'left'}}>Correo</Text>
+                            <TextInput style={styles.inputData} value={this.state.correo} onChangeText={(correo) => this.setState({correo})} />
+                            <Text style={{textAlign:'left'}}>Telefono</Text>
+                            <TextInput style={styles.inputData} value={this.state.telefono} onChangeText={(telefono) => this.setState({telefono})}  keyboardType={"numeric"} maxLength={10} />
+                            <Text style={{textAlign:'left'}}>Nombre(s)</Text>
+                            <TextInput style={styles.inputData} value={this.state.nombre} onChangeText={(nombre) => this.setState({nombre})}  />
+                            <Text style={{textAlign:'left'}}>Apellidos(s)</Text>
+                            <TextInput style={styles.inputData} value={this.state.apellido} onChangeText={(apellido) => this.setState({apellido})} />
+                            <Text style={{textAlign:'left'}}>Contraseña</Text>
+                            <TextInput style={styles.inputData} secureTextEntry={true} onChangeText={(newPass) => this.setState({newPass})}  />
+                            <Text style={{textAlign:'left'}}>Confirmación de contraseña</Text>
+                            <TextInput style={styles.inputData} secureTextEntry={true} onChangeText={(newPass2) => this.setState({newPass2})} />
+                        </View>
+                        <View style={styles.botones2}>
+                            <View style={styles.botonesA}>
+                                <TouchableOpacity style={styles.editI}
+                                onPress={this._saveChanges}>
+                                    <Text>Aceptar</Text>
                                 </TouchableOpacity>
                             </View>
-                        ):(
-                             <View style={styles.arriba}>
-                                <TouchableOpacity 
-                                onPress={this._pickImage}
-                                style={styles.imgA}>
-                                    <Image />
-                                </TouchableOpacity>
-                            </View>
-                        ) }
-                   
-                    <View style={styles.datos2}>
-                        <Text style={{textAlign:'left'}}>Usuario</Text>
-                        <TextInput style={styles.inputData} editable={false} value={this.state.username}  />
-                        <Text style={{textAlign:'left'}}>Correo</Text>
-                        <TextInput style={styles.inputData} value={this.state.correo} onChangeText={(correo) => this.setState({correo})} />
-                        <Text style={{textAlign:'left'}}>Telefono</Text>
-                        <TextInput style={styles.inputData} value={this.state.telefono} onChangeText={(telefono) => this.setState({telefono})}  keyboardType={"numeric"} maxLength={10} />
-                        <Text style={{textAlign:'left'}}>Nombre(s)</Text>
-                        <TextInput style={styles.inputData} value={this.state.nombre} onChangeText={(nombre) => this.setState({nombre})}  />
-                        <Text style={{textAlign:'left'}}>Apellidos(s)</Text>
-                        <TextInput style={styles.inputData} value={this.state.apellido} onChangeText={(apellido) => this.setState({apellido})} />
-                        <Text style={{textAlign:'left'}}>Contraseña</Text>
-                        <TextInput style={styles.inputData} secureTextEntry={true} onChangeText={(newPass) => this.setState({newPass})}  />
-                        <Text style={{textAlign:'left'}}>Confirmación de contraseña</Text>
-                        <TextInput style={styles.inputData} secureTextEntry={true} onChangeText={(newPass2) => this.setState({newPass2})} />
-                    </View>
-                    <View style={styles.botones2}>
-                        <View style={styles.botonesA}>
-                            <TouchableOpacity style={styles.editI}
-                            onPress={this._saveChanges}>
-                                <Text>Aceptar</Text>
-                            </TouchableOpacity>
                         </View>
-                    </View>
-                </KeyboardAwareScrollView>
-            </View>
-            ):(
-                <View>
-                     {this.state.image!=null?
-                        (
-                             <View style={styles.arriba}>
-                                <TouchableOpacity 
-                                style={styles.imgA}>
-                                    <Image style={{flex:1,borderRadius:100}} source={{uri:this.state.image}} />
-                                </TouchableOpacity>
-                            </View>
-                        ):(
-                             <View style={styles.arriba}>
-                                <TouchableOpacity 
-                                style={styles.imgA}>
-                                    <Image />
-                                </TouchableOpacity>
-                            </View>
-                        ) }
-                    <View style={styles.datos}>
-                        <Text style={{textAlign:'left'}}>Usuario</Text>
-                        <View style={styles.inputData}>
-                            <Text style={styles.textIn}>{this.state.username}</Text>
-                        </View>
-                        <Text style={{textAlign:'left'}}>Nombre</Text>
-                        <View style={styles.inputData}>
-                            <Text style={styles.textIn}>{this.state.nombre}</Text>
-                        </View>
-                        <Text style={{textAlign:'left'}}>Apellido(s)</Text>
-                        <View style={styles.inputData}>
-                            <Text style={styles.textIn}>{this.state.apellido}</Text>
-                        </View>
-                        <Text style={{textAlign:'left'}}>Correo electrónico</Text>
-                        <View style={styles.inputData}>
-                            <Text style={styles.textIn}>{this.state.correo}</Text>
-                        </View>
-                        <Text style={{textAlign:'left'}}>Telefono</Text>
-                        <View style={styles.inputData}>
-                            <Text style={styles.textIn}>{this.state.telefono}</Text>
-                        </View>
-                        {/* <View style={styles.inputData}>
-                            <Text style={styles.textIn}>********</Text>
-                        </View> */}
-                    </View>
-                    <View style={styles.botones}>
-                        <View style={styles.botonesA}>
-                            <TouchableOpacity style={styles.editI}
-                            onPress={()=>{this.setState({edit:true})}}>
-                                <Text>Editar información</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity 
-                            onPress={this._editarPref}
-                            style={styles.editP}>
-                                <Text>Editar preferencias</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.botonesC}>
-                            <TouchableOpacity 
-                            onPress={this._cerrarSesion}
-                            style={styles.cerrarS}>
-                                <Text>Cerrar sesión</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                    </KeyboardAwareScrollView>
                 </View>
-            )}
-
+                ):(
+                    <View>
+                        {this.state.image!=null?
+                            (
+                                <View style={styles.arriba}>
+                                    <View style={styles.imgA}>
+                                        <Icon name={'face-profile'} size={100} color={'#FAFAFA'} />
+                                    </View>
+                                </View>
+                            ):(
+                                <View style={styles.arriba}>
+                                    <View style={styles.imgA}>
+                                        <Icon name={'face-profile'} size={100} color={'#FAFAFA'} />
+                                    </View>
+                                </View>
+                            ) }
+                        <View style={styles.datos}>
+                            <Text style={{textAlign:'left'}}>Usuario</Text>
+                            <View style={styles.inputData}>
+                                <Text style={styles.textIn}>{this.state.username}</Text>
+                            </View>
+                            <Text style={{textAlign:'left'}}>Nombre</Text>
+                            <View style={styles.inputData}>
+                                <Text style={styles.textIn}>{this.state.nombre}</Text>
+                            </View>
+                            <Text style={{textAlign:'left'}}>Apellido(s)</Text>
+                            <View style={styles.inputData}>
+                                <Text style={styles.textIn}>{this.state.apellido}</Text>
+                            </View>
+                            <Text style={{textAlign:'left'}}>Correo electrónico</Text>
+                            <View style={styles.inputData}>
+                                <Text style={styles.textIn}>{this.state.correo}</Text>
+                            </View>
+                            <Text style={{textAlign:'left'}}>Telefono</Text>
+                            <View style={styles.inputData}>
+                                <Text style={styles.textIn}>{this.state.telefono}</Text>
+                            </View>
+                            {/* <View style={styles.inputData}>
+                                <Text style={styles.textIn}>********</Text>
+                            </View> */}
+                        </View>
+                        <View style={styles.botones}>
+                            <View style={styles.botonesA}>
+                                <TouchableOpacity style={styles.editI}
+                                onPress={()=>{this.setState({edit:true})}}>
+                                    <Text>Editar información</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity 
+                                onPress={this._editarPref}
+                                style={styles.editP}>
+                                    <Text>Editar preferencias</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.botonesC}>
+                                <TouchableOpacity 
+                                onPress={this._cerrarSesion}
+                                style={styles.cerrarS}>
+                                    <Text>Cerrar sesión</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                )}
             </ScrollView>
-            
         )
     }
-    
 }
 
 const styles = StyleSheet.create({
@@ -366,10 +345,12 @@ const styles = StyleSheet.create({
         marginBottom:20,
     },
     imgA:{
-        width:200,
-        height:200,
+        width:120,
+        height:120,
         borderRadius:100,
-        backgroundColor:'pink'
+        backgroundColor:'#71C0F2',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     datos:{
         flex:4,

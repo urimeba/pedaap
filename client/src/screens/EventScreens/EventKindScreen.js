@@ -17,11 +17,11 @@ export default class App extends Component{
         this.state={
             selectedItem: null,
             datos: [
-                {id: '1', text: 'opcion 1'},
-                {id: '2', text: 'opcion 2'},
-                {id: '3', text: 'opcion 3'},
-                {id: '4', text: 'opcion 4'},
-                {id: '5', text: 'opcion 5'},
+                {id: '1', text: 'Familiar', icono: 'account-group'},
+                {id: '2', text: 'Amigos', icono: 'account-group-outline'},
+                {id: '3', text: 'Formal', icono: 'shoe-formal'},
+                {id: '4', text: 'Romántico', icono: 'heart-circle'},
+                {id: '5', text: 'Otro', 'icono': 'star-circle-outline'},
             ]
         }
     }
@@ -39,7 +39,7 @@ export default class App extends Component{
                         onPress={() => this._choosen(item.id)}
                         style={styles.circle}          
                     >
-                        <Icon name={'plus'} size={50} color={'#707070'} />
+                        <Icon name={item.icono} size={50} color={'#707070'} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.bottomBox}>
@@ -57,7 +57,7 @@ export default class App extends Component{
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.title}>
-                    <Text style={styles.titleWhite}>Selecciona el numero de personas</Text>
+                    <Text style={styles.titleWhite}>Selecciona el tipo de evento</Text>
                 </View>
                 <View style={styles.flatContainer}>
                     <FlatList 
@@ -73,7 +73,7 @@ export default class App extends Component{
                     <View style={styles.viewContinue}>
                         <TouchableOpacity 
                             style={styles.continue} 
-                            onPress={() => this._continuar}
+                            onPress={this._continuar}
                         >
                             <Text style={styles.white}>Continuar</Text>
                         </TouchableOpacity>

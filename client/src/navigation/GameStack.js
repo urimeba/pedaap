@@ -10,7 +10,11 @@ import JoinGame from '../screens/GameScreens/JoinGame';
 const GameStack = createStackNavigator(
     {
         CreateGame: {
-            screen: CreateGame
+            screen: CreateGame,
+            navigationOptions: {
+                title: 'Crear sala',
+                header: null
+            }
         },
         GameRoom: {
             screen: GameRoom,
