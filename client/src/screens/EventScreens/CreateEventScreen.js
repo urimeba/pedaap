@@ -26,7 +26,10 @@ export default class Event extends Component{
     }
 
     _crear=()=>{
-        this.props.navigation.navigate('EventK')
+        this.props.navigation.navigate('EventK', {
+            nombre: this.state.nameE,
+            montoMaximo: this.state.presu,
+        })
     }
 
     render(){

@@ -29,6 +29,7 @@ export default class App extends Component{
     async _choosen(selectedItem) {
         await this.setState({ selectedItem: selectedItem });
         console.log(this.state.selectedItem);
+        this._continuar();
     }
       
     _renderList = ({ item }) => {        
@@ -50,7 +51,11 @@ export default class App extends Component{
     }
     
     _continuar = () => {
-        this.props.navigation.navigate('NumAsis');
+        this.props.navigation.navigate('NumAsis', {
+            tipoEvento: this.state.selectedItem,
+            nombre: '',
+            montoMaximo: '',
+        });
     }
 
     render(){

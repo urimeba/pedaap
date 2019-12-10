@@ -1,47 +1,52 @@
-import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity,Alert, ScrollView} from 'react-native';
-import Constants from 'expo-constants';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-const code={codigo:'A'}
+import React, { Component } from 'react';
+import { View, StyleSheet, Text, TextInput,TouchableOpacity } from 'react-native';
+
 export default class Join extends Component{
     constructor(props){
         super(props);
         this.state={
-            cod:'',
-            codigo:'',
-            error1:false,//no existe el codigo
-            error2:false,//campo vacio
-            succes:false ,// se encontro el codigo
+            codigo: '',
+            error1: false,//no existe el codigo
+            error2: false,//campo vacio
+            succes: false,// se encontro el codigo
         };
     }
 
+    _unirme = async() => {
+        if(this.state.codigo === ''){
+            this.setState({error2:true});
+            this.setState({error1:false});
+            this.setState({succes:false});
+        }else {
+            this.setState({error1:false})
+            this.setState({error2:false})
+            // this.props.navigation.navigate('AportBudget',)
+            url = await AsyncStorage.getItem("server");
+            token = await AsyncStorage.getItem("userToken");
+            // console.log(id, url);
 
-_unirme=()=>{
-    // Alert.alert(this.state.codigo)
-    if(this.state.codigo===""){
-        this.setState({error2:true})
-        this.setState({error1:false})
-        this.setState({succes:false})
-        return false
-        // Alert.alert('vacio')
-    }else if(this.state.codigo==code.codigo){
-         this.setState({error1:false})
-        this.setState({error2:false})
-        this.setState({succes:true})
-        this.props.navigation.navigate('AportBudget',)
-        
-    }else{
-        this.setState({error1:true})
-        this.setState({error2:false})
-        this.setState({succes:false})
-        // Alert.alert('no codigo')
-         return false
-        // Alert.alert('yes')
+            axios({
+                method: 'POST',
+                url: url+"compartidos/getPresupuesto/",
+                data: {id:id},
+                headers: {
+                    "content-type":"application/json",
+                    "Authorization":"Token "+ token
+                }, 
+            }).then( res => {
+                console.log(res.data);
+                data = JSON.parse(res.data.datos);
+                this.setState({
+                    datos: data,
+                });
+            }).catch(err => {
+                console.log(err)
+            });
+        }
     }
-}
 
-    ontext=(codigo)=>{
-        this.setState({codigo})
+    ontext = (codigo) => {
+        this.setState({codigo: codigo})
     }
 
 
@@ -72,9 +77,9 @@ _unirme=()=>{
                 </TouchableOpacity>
             </View>
         )
-    }
-    
+    }    
 }
+
 const styles = StyleSheet.create({
     todo:{
         flex:1,

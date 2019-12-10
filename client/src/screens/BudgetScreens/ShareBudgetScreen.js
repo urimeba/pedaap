@@ -56,17 +56,11 @@ export default class App extends Component{
     constructor(props){
         super(props);
         this.state={
-
+            datos: []
         }
     }
 
-    componentDidMount(){
-        this._getInfo();
-      }
-
-    _getInfo = async() =>{
-        // console.log("HOLA-----");
-        // console.log(JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID')));
+    async componentDidMount(){
         id = JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID'));
         url = await AsyncStorage.getItem("server");
         token = await AsyncStorage.getItem("userToken");
@@ -81,9 +75,11 @@ export default class App extends Component{
                 "Authorization":"Token "+ token
             }, 
         }).then( res => {
-            console.log(res.data.datos);
+            console.log(res.data);
             data = JSON.parse(res.data.datos);
-            datos.push(data);
+            this.setState({
+                datos: data,
+            });
         }).catch(err => {
             console.log(err)
         });
@@ -165,12 +161,12 @@ export default class App extends Component{
                 <View style={styles.aportadores}>
                     <Text style={styles.titulAporta}>Aportadores</Text>
                 </View>
-                <FlatList
+                {/* <FlatList
                     style={styles.flat}
                     data={datos}
                     renderItem={this.caja}
                     keyExtractor={item => item.id}
-                />
+                /> */}
             </ScrollView>
         )
     }

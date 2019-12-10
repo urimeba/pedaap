@@ -76,48 +76,48 @@ export default (props) => {
     const [presupuesto, setPresupuesto] = React.useState('')
 
 
-    // _next=async()=>{
-    //     // Alert.alert('back')
-    //     url = await AsyncStorage.getItem("server");
-    //     token = await AsyncStorage.getItem("userToken");
-    //     idUser = await AsyncStorage.getItem("userId");
-    //     // console.log(this.state.presupuesto)
+    const next = (p) => async() => {
+        // Alert.alert('back')
+        url = await AsyncStorage.getItem("server");
+        token = await AsyncStorage.getItem("userToken");
+        idUser = await AsyncStorage.getItem("userId");
+        // console.log(this.state.presupuesto)
 
+        if(presupuesto == ''){
+            // console.log(false)
+            Alert.alert("Error","Ingresa un numero válido");
+        }else{
+            if(presupuesto > 0){
+                axios({
+                    method: 'POST',
+                    url: url+"compartidos/",
+                    data: {usuarioPropietario:url+"usuarios/"+idUser+"/", monto:presupuesto},
+                    headers: {
+                        "content-type":"application/json",
+                        "Authorization":"Token "+ token
+                    }, 
+                }).then( res => {
+                    // console.log(res.data.id, res.data.monto, res.data.codigo);
+                    sendData(selected, res.data.id, res.data.monto, res.data.codigo)
+                    // props.navigation.navigate('ShareBudget',{idPresupuesto: res.data.id, monto: res.data.monto, codigo:res.data.codigo })
+                }).catch(err => {
+                    console.log(err)
+                });
+            }
+            else{
+                // console.log("Igual a 0")
+                Alert.alert("Error","Debes ingresar un número mayor a 0");
+            }
+        }        
+    }
 
-    //     if(isNaN(this.state.presupuesto)){
-    //         // console.log(false)
-    //         Alert.alert("Error","Ingresa un numero válido");
-    //     }else{
-    //         if(this.state.presupuesto>0){
-    //             // console.log(true)
-    //             axios({
-    //                 method: 'POST',
-    //                 url: url+"compartidos/",
-    //                 data: {usuarioPropietario:url+"usuarios/"+idUser+"/", monto:this.state.presupuesto},
-    //                 headers: {
-    //                     "content-type":"application/json",
-    //                     "Authorization":"Token "+ token
-    //                 }, 
-    //             }).then( res => {
-    //                 console.log(res.data.id, res.data.monto, res.data.codigo);
-    //                 this.props.navigation.navigate('ShareBudget',{idPresupuesto: res.data.id, monto: res.data.monto, codigo:res.data.codigo })
-    //             }).catch(err => {
-    //                 console.log(err)
-    //             });
-    //         }
-    //         else{
-    //             // console.log("Igual a 0")
-    //             Alert.alert("Error","Debes ingresar un número mayor a 0");
-    //         }
-    //     }        
-    // }
-
-    const sendData = (s) => async() => {
+    const sendData = async (s, pID, m, c) => {
         let obj = Object.create(null);
         for (let [k,v] of s) {
             obj[k] = v;
         }
         console.log(JSON.stringify(obj));
+        console.log(pID);
 
         servidor = await AsyncStorage.getItem("server")
         
@@ -126,29 +126,36 @@ export default (props) => {
 
         for(categoria in obj){
             if(obj[categoria]==true){
-                console.log(categoria);
-                url = servidor+'userCategorias/';
+                // console.log(categoria);
+                url = servidor+'categoriasCompartido/';
 
                 axios({
                     method: 'POST',
                     url: url,
-                    data: {user:servidor+"usuarios/"+idUser+"/", categoria: servidor+"categoriaProductos/"+categoria+"/"},
+                    data: {
+                        presupuestoCompartido:servidor+"compartidos/"+pID+"/",
+                        categoria: servidor+"categoriaProductos/"+categoria+"/"
+                    },
                     headers: {
                         "content-type":"application/json",
                         "Authorization": "Token "+token
                     }, 
                 }).then( res => {
-                    console.log(res.data);
+                    console.log('ok');
                 }).catch(err => {
                     console.log(err.response.data);
                 });
             }
         }
-        goNext();
+        goNext(pID, m, c);
     }
 
-    const goNext = () => {
-        props.navigation.navigate('ShareBudget');
+    const goNext = (pID, m, c) => {
+        props.navigation.navigate('ShareBudget', {
+            idPresupuesto: pID,
+            monto: m,
+            codigo: c,
+        });
     }
 
     return (
@@ -185,7 +192,7 @@ export default (props) => {
                         </View>
                     <TouchableOpacity 
                         style={styles.InputsNavEnter}
-                        onPress={sendData(selected)}>
+                        onPress={next(presupuesto)}>
                         <Text style={[styles.TextColorOne, styles.TextButton]}>Crear</Text>
                     </TouchableOpacity>
                 </ScrollView>
