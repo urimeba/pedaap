@@ -20,11 +20,12 @@ export default (props) => {
 
     React.useEffect(() => {
         async function _prefLis() {
-            url = await AsyncStorage.getItem("server")+'tiendas/';
+            url = await AsyncStorage.getItem("server");
+            url2 = url+'tiendas/';
             token = await AsyncStorage.getItem('userToken');
 
             try {
-                let request = await fetch(url, {
+                let request = await fetch(url2, {
                     method: 'GET',
                     mode: 'cors',
                     credentials: 'include',
@@ -34,6 +35,21 @@ export default (props) => {
                 });
                 let resp = await request.json();
                 setDataS(resp.results);
+
+                axios({
+                    method: 'POST',
+                    url: url+"userTiendas/eliminarTiendas/",
+                    data: {idUser:idUser},
+                    headers: {
+                        "content-type":"application/json",
+                        "Authorization": "Token "+token
+                    }, 
+                }).then( res => {
+                    console.log(res.data);
+                }).catch(err => {
+                    console.log(err.response.data);
+                });
+
             } catch (error) {
                 console.error(error);
             }

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage, Alert} from 'react-native';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity,Platform, ScrollView} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage, Alert, Platform} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
@@ -16,6 +15,7 @@ const datos=[{
 }]
 
 const behavior = process.env.NODE_ENV === 'production' ? 'padding' : undefined;
+
 export default class App extends Component{
     constructor(props){
         super(props);
@@ -29,7 +29,7 @@ export default class App extends Component{
 
 
             newPass:"",
-            newPass2:""
+            newPass2:"",
 
 
             image:null,
@@ -41,6 +41,10 @@ export default class App extends Component{
         url = await AsyncStorage.getItem("server");
         token = await AsyncStorage.getItem("userToken");
         idUsuario = await AsyncStorage.getItem("userId");
+
+        
+        this.getPermissionAsync();
+        // console.log('hi');
 
         axios({
             method: 'GET',
@@ -171,15 +175,17 @@ export default class App extends Component{
         this.props.navigation.navigate('Prefer')
     }
 
-    _cerrarSesion=()=>{
+    _cerrarSesion=async()=>{
+        await AsyncStorage.removeItem("userToken");
+        await AsyncStorage.removeItem("userId");
         this.props.navigation.navigate('Login')
     }
 
 // ------------------------------------------Imagen--------------
-componentDidMount() {
-    this.getPermissionAsync();
-    console.log('hi');
-  }
+// componentDidMount() {
+//     this.getPermissionAsync();
+//     console.log('hi');
+//   }
 
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
