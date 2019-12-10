@@ -1,21 +1,11 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, Modal, Alert} from 'react-native';
+import { Button, SafeAreaView, Platform, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, Modal, Alert, Picker, AsyncStorage}  from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
-
-const datos=[
-    {
-        id: '1',
-        nombre: '2 x 1 Cerveza Indio',
-        establecimiento: 'Oxxo Juriquilla',
-        inicio: '2019-12-10',
-        costo: '$20',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        vencimiento: '2019-12-20'
-    }
-];
+import axios from 'axios';
+import DatePicker from 'react-native-datepicker';
 
 export default class App extends Component{
     constructor(props){
@@ -36,7 +26,15 @@ export default class App extends Component{
             descrip:'',
             inicio:'',
             vencimiento:'',
-
+            fechaExpiracion:"01-12-2019",
+            fechaInicio:"01-12-2019",
+            modalVisible: false,
+            categorias:[],
+            categoria:'',
+            productos: [],
+            producto:'',
+            tiendas: [],
+            tienda: '',
             modalVisible: false,
         }
     }
@@ -47,8 +45,9 @@ export default class App extends Component{
 
     _enviar =async () => {
         // console.log("kfnvfnk")
-        // console.log(this.state)
-        if (this.state.establecimiento =="" || this.state.nombre =="" || this.state.costo =="" || this.state.descrip == "" || this.state.inicio == "" || this.state.vencimiento == "") {
+        console.log(this.state.categoria)
+        if (this.state.fechaInicio =="" || this.state.fechaExpiracion =="" || this.state.costo =="" || this.state.descrip == "" || this.state.producto == "" || this.state.tienda == "") {
+            console.log(this.state.fechaExpiracion, this.state.fechaInicio, this.state.costo, this.state.descrip, this.state.producto, this.state.tienda)
             this.setState({error1:true})
             this.setState({error2:false})
             this.setState({succes:false})
@@ -68,6 +67,51 @@ export default class App extends Component{
     async componentDidMount() {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
         this.setState({ hasPermission: status === 'granted' });
+
+        token = await AsyncStorage.getItem("userToken");
+        url = await AsyncStorage.getItem("server");
+        // idUser = await AsyncStorage.setItem("userId",idUser);
+
+
+        axios({
+            method: 'GET',
+            url: url+"categoriaProductos/",
+            data: {},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": "Token "+token
+
+            }, 
+        }).then( res => {
+            console.log(res.data.results);
+            this.setState({categorias: res.data.results})
+
+            
+        }).catch(err => {
+            console.log(err)
+        });
+
+        axios({
+            method: 'GET',
+            url: url+"tiendas/",
+            data: {},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": "Token "+token
+
+            }, 
+        }).then( res => {
+            console.log(res.data.results);
+            this.setState({tiendas: res.data.results, tienda:""})
+
+            
+        }).catch(err => {
+            console.log(err)
+        });
+
+
+
+
     }
 
     _user =async()=>{
@@ -84,8 +128,67 @@ export default class App extends Component{
         }
     };
 
+    _selectCategoria = async(itemValue, itemIndex) =>{
+        this.setState({categoria: itemValue});
+
+        // console.log(this.state.categoria);
+        // AsyncStorage.getItem("server").then((obj)=>{
+        //     this.state.server = obj
+        //     this.forceUpdate();
+        //   })
+
+        token = await AsyncStorage.getItem("userToken");
+        url = await AsyncStorage.getItem("server");
+
+
+        axios({
+            method: 'POST',
+            url: url+"productos/busqueda/",
+            data: {idCategoria: this.state.categoria},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": "Token "+token
+
+            }, 
+        }).then( res => {
+            // console.log(res.data.results);
+            this.setState({productos: res.data.results, producto:""});
+            // this.setState({productos: res.data.results})
+
+            
+        }).catch(err => {
+            console.log(err)
+        });
+        
+    }
+
+    _sendPromo = async() =>{
+
+        token = await AsyncStorage.getItem("userToken");
+        url = await AsyncStorage.getItem("server");
+
+
+        axios({
+            method: 'POST',
+            url: url+"promociones/altas/",
+            data: {descripcion:this.state.descrip, fechaInicio:this.state.fechaInicio, fechaVencimiento:this.state.fechaExpiracion, foto:this.state.photo, costo:this.state.costo, producto:this.state.producto, tienda:this.state.tienda},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": "Token "+token
+
+            }, 
+        }).then( res => {
+            console.log(res.data);
+            
+        }).catch(err => {
+            console.log(err.response.data.Error)
+        });
+
+    }
+
 
     render(){
+        const { show, date, mode } = this.state;
         console.log(this.state.hasPermission, this.state.camera)
         const { hasPermission } = this.state
         if (hasPermission === null) {
@@ -141,117 +244,126 @@ export default class App extends Component{
                                     </TouchableOpacity>
                                 </View>
                             )}
-                            {this.state.succes===true &&(
-                                <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
-                                    <Image
-                                        style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
-                                        source={require('../../img/check.png')}
-                                    />
-                                    <Text style={{marginTop: 20}}>Enviado correctamente</Text>
-                                    <TouchableOpacity
-                                        style={styles.botonModal}
-                                        onPress={() => {
-                                            this.setModalVisible(!this.state.modalVisible);
+                            </TouchableOpacity>
+                           
+                            <View style={styles.datosCaja}>
+                            
+                                <Text style={styles.titulo1}>Categoría</Text>
+                                <Picker
+                                    selectedValue={this.state.categoria}
+                                    style={{height: 50, width: "100%"}}
+                                    onValueChange={(itemValue, itemIndex) => this._selectCategoria(itemValue, itemIndex)
+                                    }>
+                                    {this.state.categorias.map(
+                                        c => (<Picker.Item key={c.id} label={c.nombre} value={c.id} />)
+                                    )}
+                                </Picker>
+                                <Text style={styles.titulo1}>Producto</Text>
+                                <Picker
+                                    selectedValue={this.state.producto}
+                                    style={{height: 50, width: "100%"}}
+                                    // onValueChange={ () => this.selectCategoria(itemValue, itemIndex)
+                                    // }>
+                                    onValueChange={(itemValue, itemIndex) =>
+                                         this.setState({producto: itemValue})
+                                     }>
+                                        {this.state.productos.map(
+                                            p => (<Picker.Item key={p.id} label={p.descripcion} value={p.id} />)
+                                        )}
+                                </Picker>
+                                <Text style={styles.titulo1}>Tienda</Text>
+                                <Picker
+                                    selectedValue={1}
+                                    style={{height: 50, width: "100%"}}
+                                    // onValueChange={ () => this.selectCategoria(itemValue, itemIndex)
+                                    // }>
+                                    onValueChange={(itemValue, itemIndex) =>
+                                         this.setState({tienda: itemValue})
+                                     }>
+                                        {this.state.tiendas.map(
+                                            t => (<Picker.Item key={t.id} label={t.nombre} value={t.id} />)
+                                        )}
+                                </Picker>
+                                <Text style={styles.titulo1}>Descripción</Text>
+                                <View style={styles.grande}>
+                                    <TextInput multiline style={ styles.titulo2}
+                                     placeholder="Descripción"
+                                        placeholderTextColor="#848482"
+                                        onChangeText={(descrip) => this.setState({ descrip })}></TextInput>
+                                </View>
+                                <Text style={styles.titulo1}>Costo</Text>
+                                <View style={styles.inputs}>
+                                    <TextInput style={styles.titulo2} 
+                                        placeholder="Costo"
+                                        placeholderTextColor="#848482"
+                                        keyboardType='numeric'
+                                        onChangeText={(costo) => this.setState({ costo })}
+                                    ></TextInput>
+                                </View>
+                                <Text style={styles.titulo1}>Fecha de inicio</Text>
+                                <View >
+                                    {/* <TextInput style={styles.titulo2}
+                                        placeholder="2019-12-10"
+                                        placeholderTextColor="#848482"
+                                        onChangeText={(inicio) => this.setState({ inicio })}
+                                    ></TextInput> */}
+                                    <DatePicker
+                                        style={{width: '100%'}}
+                                        date={this.state.fechaInicio} //initial date from state
+                                        mode="date" //The enum of date, datetime and time
+                                        placeholder="Fecha de inicio "
+                                        format="DD-MM-YYYY"
+                                        minDate="01-12-2019"
+                                        maxDate="31-12-2019"
+                                        confirmBtnText="Aceptar"
+                                        cancelBtnText="Cancel"
+                                        customStyles={{
+                                            dateIcon: {
+                                            position: 'absolute',
+                                            left: 0,
+                                            top: 4,
+                                            marginLeft: 0
+                                            },
+                                            dateInput: {
+                                            marginLeft: 36
+                                            }
                                         }}
-                                    >
-                                        <Text style={{color: 'white'}}>Aceptar</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
-                        </View>
-                    </Modal>
-                    <View style={styles.container}>
-                        <View style={styles.arriba}>
-                            <View style={styles.textoP}>
-                                <TouchableOpacity onPress={this._user} >
-                                    <Icon name="arrow-left" size={22} color={'#707070'} style={styles.icon} />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.botones}>
-                                <Text style={styles.tituloP}>Promoción</Text>
-                            </View>
-                        </View>
-                        <View style={{ flex: 1 }}></View>
-                        <ScrollView style={styles.container2}>
-                            <View style={styles.caja}>
-                                <TouchableOpacity
-                                    style={styles.imgCaja}
-                                    onPress={()=>{this.setState({camera:true})}}
-                                >
-                                    {this.state.camera===false && (
-                                        <View style={{width: '100%', height: '25%', borderRadius: 10, backgroundColor: '#FEDB6B', alignItems: 'center', justifyContent: 'center'}}>
-                                            <Text style={{width: '90%', color: '#FAFAFA', fontSize: 20, textAlign: 'center'}}>Presiona aqui para tomar una foto de la promoción</Text>
-                                        </View>
-                                    )}
-                                    {this.state.camera===true && (
-                                        <Camera style={{ flex: 1 }} type={this.state.cameraType} ref={ref => { this.camera = ref; }}>
-                                            <View style={styles.camerabuttonview}>
-                                                <TouchableOpacity
-                                                    style={styles.cameraButtons}
-                                                    onPress={this.snap}
-                                                >
-                                                    <Icon name={'camera'} size={35} color={'#FAFAFA'}/>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </Camera>
-                                    )}
-                                    {this.state.take===true && (
-                                        <Image
-                                            style={styles.imgCaja2}
-                                            source={{uri:this.state.photo}}
+                                        onDateChange={(fechaInicio) => {this.setState({fechaInicio: fechaInicio})}}
                                         />
-                                    )}
-                                </TouchableOpacity>
-                                <View style={styles.datosCaja}>
-                                    <Text style={styles.titulo1}>Nombre de la promoción</Text>
-                                    <View style={styles.inputs}>
-                                        <TextInput style={styles.titulo2}
-                                            placeholder="Nombre"
-                                            placeholderTextColor="#848482"
-                                            onChangeText={(nombre) => this.setState({ nombre })}
-                                        ></TextInput>
-                                    </View>
-                                    <Text style={styles.titulo1}>categoría</Text>
-                                    <View style={styles.inputs}>
-                                        <TextInput style={styles.titulo2}
-                                            placeholder="Costo"
-                                            placeholderTextColor="#848482"
-                                            onChangeText={(costo) => this.setState({ costo })}
-                                        ></TextInput>
-                                    </View>
-                                    <Text style={styles.titulo1}>Descripción</Text>
-                                    <View style={styles.grande}>
-                                        <TextInput multiline style={ styles.titulo2}
-                                            placeholder="Descripción"
-                                            placeholderTextColor="#848482"
-                                            onChangeText={(descrip) => this.setState({ descrip })}
-                                        ></TextInput>
-                                    </View>
-                                    <Text style={styles.titulo1}>Fecha de inicio</Text>
-                                    <View style={styles.inputs}>
-                                        <TextInput style={styles.titulo2}
-                                            placeholder="2019-12-10"
-                                            placeholderTextColor="#848482"
-                                            onChangeText={(inicio) => this.setState({ inicio })}
-                                        ></TextInput>
-                                    </View>
-                                    <Text style={styles.titulo1}>Fecha de vencimiento</Text>
-                                    <View style={styles.inputs}>
-                                        <TextInput multiline style={styles.titulo2} 
-                                            placeholder = "2019-12-20"
-                                            placeholderTextColor="#848482"
-                                            onChangeText={(vencimiento) => this.setState({ vencimiento })}
-                                        ></TextInput>
-                                    </View>
-                                    <Text style={styles.titulo1}>Establecimiento</Text>
-                                    <View style={styles.inputs}>
-                                        <TextInput style={styles.titulo2} 
-                                            placeholder="Establecimiento"
-                                            placeholderTextColor="#848482"
-                                            onChangeText={(establecimiento) => this.setState({ establecimiento })}
-                                        ></TextInput>
-                                    </View>
                                 </View>
+                                
+                                <Text style={styles.titulo1}>Fecha de vencimiento</Text>
+                                <View>
+                                    {/* <TextInput multiline style={styles.titulo2} 
+                                        placeholder = "2019-12-20"
+                                        placeholderTextColor="#848482"
+                                        onChangeText={(vencimiento) => this.setState({ vencimiento })}
+                                    ></TextInput> */}
+                                    <DatePicker
+                                        style={{width: '100%'}}
+                                        date={this.state.fechaExpiracion} //initial date from state
+                                        mode="date" //The enum of date, datetime and time
+                                        placeholder="Fecha de vencimiento "
+                                        format="DD-MM-YYYY"
+                                        minDate={this.state.fechaInicio}
+                                        maxDate="31-12-2019"
+                                        confirmBtnText="Aceptar"
+                                        cancelBtnText="Cancel"
+                                        customStyles={{
+                                            dateIcon: {
+                                            position: 'absolute',
+                                            left: 0,
+                                            top: 4,
+                                            marginLeft: 0
+                                            },
+                                            dateInput: {
+                                            marginLeft: 36
+                                            }
+                                        }}
+                                        onDateChange={(fechaExpiracion) => {this.setState({fechaExpiracion: fechaExpiracion})}}
+                                        />
+                                </View>
+                                
                             </View>
                             <View style={styles.send}>
                                 <TouchableOpacity

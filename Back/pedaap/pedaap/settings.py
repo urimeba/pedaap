@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'Apps.PresupuestosCompartidos',
     'Apps.Productos',
     'Apps.Promociones',
-    'Apps.Restaurantes',
     'Apps.Tiendas',
     'Apps.Usuarios',
     'Apps.Notificaciones',

@@ -15,6 +15,7 @@ const datos=[{
 }]
 
 const behavior = process.env.NODE_ENV === 'production' ? 'padding' : undefined;
+
 export default class App extends Component{
     constructor(props){
         super(props);
@@ -165,7 +166,9 @@ export default class App extends Component{
         this.props.navigation.navigate('Prefer')
     }
 
-    _cerrarSesion=()=>{
+    _cerrarSesion=async()=>{
+        await AsyncStorage.removeItem("userToken");
+        await AsyncStorage.removeItem("userId");
         this.props.navigation.navigate('Login')
     }
 

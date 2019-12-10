@@ -278,6 +278,13 @@ class UserTiendasViewSet(viewsets.ModelViewSet):
         UserTiendas.objects.filter(user=user,tienda=tienda).delete()
         return Response({"Exito":"Categorias eliminadas"}, status=HTTP_200_OK)
 
+    @action(detail=False, methods=['post'])
+    def eliminarTiendas(self, request):
+        idUser = request.data.get('idUser')
+        user = User.objects.get(id=idUser)
+        UserTiendas.objects.filter(user=user).delete()
+        return Response({"Exito":"Tiendas eliminadas"}, status=HTTP_200_OK)
+
 
 class UserCategoriasViewSet(viewsets.ModelViewSet):
     queryset = UserCategorias.objects.all()
@@ -286,7 +293,6 @@ class UserCategoriasViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def eliminarCategoria(self, request):
         idUser = request.data.get('idUser')
-        idCategoria = request.data.get('idCategoria')
         user = User.objects.get(id=idUser)
         UserCategorias.objects.filter(user=user).delete()
         return Response({"Exito":"Categorias eliminadas"}, status=HTTP_200_OK)

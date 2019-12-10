@@ -21,7 +21,6 @@ from Apps.Usuarios import views as views_usuarios
 from Apps.Tiendas import views as views_tienda
 from Apps.Productos import views as views_productos
 from Apps.Promociones import views as views_promociones
-from Apps.Restaurantes import views as views_restaurantes
 from Apps.Presupuestos import views as views_presupuestos
 from Apps.PresupuestosCompartidos import views as views_compartidos
 from Apps.Juegos import views as views_juego
@@ -34,9 +33,6 @@ router.register(r'tiendaProductos', views_tienda.TiendaProductoViewSet)
 router.register(r'productos', views_productos.ProductoViewSet)
 router.register(r'categoriaProductos', views_productos.CategoriaProductoViewSet)
 router.register(r'promociones', views_promociones.PromocionesViewSet)
-router.register(r'restaurantes', views_restaurantes.RestaurantesViewSet)
-router.register(r'rangoPreciosRestaurantes', views_restaurantes.RangoPrecioRestauranteViewSet)
-router.register(r'tiposComida', views_restaurantes.tipoComidaViewSet)
 router.register(r'presupuestos', views_presupuestos.PresupuestoViewSet)
 router.register(r'presupuestosCategorias', views_presupuestos.PresupuestoCategoriasViewSet)
 router.register(r'tiposEvento', views_presupuestos.tipoEventoViewSet)
