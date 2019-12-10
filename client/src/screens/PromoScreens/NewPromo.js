@@ -52,22 +52,26 @@ export default class App extends Component{
 
     _enviar =async () => {
         // console.log("kfnvfnk")
-        console.log(this.state.categoria)
+        // console.log(this.state.categoria)
+        // console.log(this.state.fechaExpiracion, this.state.fechaInicio, this.state.costo, this.state.descrip, this.state.producto, this.state.tienda)
         if (this.state.fechaInicio =="" || this.state.fechaExpiracion =="" || this.state.costo =="" || this.state.descrip == "" || this.state.producto == "" || this.state.tienda == "") {
-            console.log(this.state.fechaExpiracion, this.state.fechaInicio, this.state.costo, this.state.descrip, this.state.producto, this.state.tienda)
+            
             this.setState({error1:true})
             this.setState({error2:false})
             this.setState({succes:false})
             this.setModalVisible(true);
-        } else if (this.state.error1 === true) {
-            this.setState({error2:true})
+            console.log("AAAA");
+        } else {
+            this.setState({correcto:true})
+            console.log("BBBB");
+
+            this.setState({succes:true})
+            this.setState({error1:false})
             this.setState({error1:false})
             this.setModalVisible(true);
-        } else if (this.state.correcto === true) {
-           this.setState({succes:true})
-            this.setState({error1:false})
-            this.setState({error1:false})
-            this.setModalVisible(true);
+            console.log("CCCCC");
+
+            this._sendPromo();
         }
 
     }
@@ -91,7 +95,7 @@ export default class App extends Component{
 
             }, 
         }).then( res => {
-            console.log(res.data.results);
+            // console.log(res.data.results);
             this.setState({categorias: res.data.results})
 
             
@@ -109,7 +113,7 @@ export default class App extends Component{
 
             }, 
         }).then( res => {
-            console.log(res.data.results);
+            // console.log(res.data.results);
             this.setState({tiendas: res.data.results, tienda:""})
 
             
@@ -129,6 +133,7 @@ export default class App extends Component{
     snap = async () => {
         if (this.camera) {
             let photo = await this.camera.takePictureAsync();
+            console.log(photo)
             console.log(photo.uri);
             this.setState({camera:false});
             this.setState({photo: photo.uri})
@@ -173,18 +178,69 @@ export default class App extends Component{
     _sendPromo = async() =>{
 
         token = await AsyncStorage.getItem("userToken");
+        idUser = await AsyncStorage.getItem("userId");
         url = await AsyncStorage.getItem("server");
 
+        // console.log("SEND PROMO");
+
         f1 = this.state.fechaInicio;
-        
+        // console.log(f1)
+        f1D = f1.substring(0,2);
+        f1M = f1.substring(3,5);
+        f1A = f1.substring(6,10);
+
+        fechaIni = f1A + "-" + f1M + "-" + f1D;
+        console.log(fechaIni);
+
+        f2 = this.state.fechaExpiracion;
+        // console.log(f2)
+        f2D = f2.substring(0,2);
+        f2M = f2.substring(3,5);
+        f2A = f2.substring(6,10);
+
+        fechaExp = f2A + "-" + f2M + "-" + f2D;
+        console.log(fechaExp);
+
+        const data = new FormData();
+        data.append('descripcion', this.state.descrip);
+        data.append('fechaInicio', fechaIni);
+        data.append('fechaVencimiento', fechaExp);
+        data.append('foto', {uri: this.state.photo, type: 'image/jpeg', name:'testPhotoName'});
+        data.append('costo', this.state.costo);
+        data.append('producto', this.state.producto);
+        data.append('tienda', this.state.tienda);
+        data.append('idUser', idUser);
+
+        // {descripcion:this.state.descrip, 
+        //  fechaInicio:fechaIni, 
+        //  fechaVencimiento:fechaExp, 
+        //  foto:this.state.photo, 
+        //  costo:this.state.costo, 
+        //  producto:this.state.producto, 
+        //  tienda:this.state.tienda, 
+        //  idUser:idUser},
+
+        // fetch(url+"promociones/alta/", {
+        //     method: 'post',
+        //     body: data
+        // }).then( res => {
+        //     console.log(res.data);
+        // }).catch(err => {
+        //     console.log(err.response)
+        // });
+
+          
+
+
+
 
 
         axios({
             method: 'POST',
-            url: url+"promociones/altas/",
-            data: {descripcion:this.state.descrip, fechaInicio:this.state.fechaInicio, fechaVencimiento:this.state.fechaExpiracion, foto:this.state.photo, costo:this.state.costo, producto:this.state.producto, tienda:this.state.tienda},
+            url: url+"promociones/alta/",
+            data: data,
             headers: {
-                "content-type":"application/json",
+                "content-type":"multipart/form-data",
                 "Authorization": "Token "+token
 
             }, 
@@ -193,6 +249,7 @@ export default class App extends Component{
             
         }).catch(err => {
             console.log(err.response.data.Error)
+            // Alert.alert("Error",);
         });
 
     }

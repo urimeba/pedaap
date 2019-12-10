@@ -161,5 +161,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'fiestaapqueretaro@gmail.com'
 EMAIL_HOST_PASSWORD = 'mochila1'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

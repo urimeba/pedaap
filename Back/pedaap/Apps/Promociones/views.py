@@ -87,11 +87,11 @@ class PromocionesViewSet(viewsets.ModelViewSet):
         foto = request.data.get("foto")
         estado = 0
         costo = request.data.get("costo")
-        producto = int(request.data.get("producto"))
-        tienda = int(request.data.get("tienda"))
-        idUser = int(request.data.get("idUser"))
+        producto = (request.data.get("producto"))
+        tienda = (request.data.get("tienda"))
+        idUser = (request.data.get("idUser"))
 
-        # print(producto, tienda)
+        print(costo, descripcion)
 
         prod = Producto.objects.get(id=producto)
         tien = Tienda.objects.get(id=tienda)
@@ -130,14 +130,19 @@ class PromocionesViewSet(viewsets.ModelViewSet):
                 promo.descripcion=descripcion
                 promo.foto=foto
                 promo.estado=0
+                promo.usuario=user
                 promo.save()
 
-                noti = Notificacion(usuario=user, mensaje="Has enviado una promocion. Espera a que sea verificada", estado=1)
+                noti = Notificacion(usuario=user, mensaje="Has enviado una promocion. Espera a que sea verificada. +100pts", estado=0)
+                noti.save()
 
 
             else:
                 promo.estado=1
                 promo.save()
+
+                noti = Notificacion(usuario=user, mensaje="Has verificado una promocion. +80pts", estado=0)
+                noti.save()
 
             print(promo)
 
