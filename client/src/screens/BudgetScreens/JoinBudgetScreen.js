@@ -59,6 +59,7 @@ export default class Join extends Component{
                 });
 
                 this.props.navigation.navigate('AportBudget',{
+                    id: da[0].id,
                     propietario: da[0].propietario,
                     monto: da[0].monto,
                 });

@@ -11,6 +11,7 @@ export default class App extends Component{
     constructor(props){
         super(props);
         this.state={
+            id: '',
             pres:0,
             presIni:0,
             aporte:0,
@@ -20,22 +21,55 @@ export default class App extends Component{
 
     componentDidMount(){
         this.setState({
+            id: JSON.stringify(this.props.navigation.getParam('id', '0')).replace(/"/g, ''),
             pres: JSON.stringify(this.props.navigation.getParam('monto', '0')).replace(/"/g, ''),
             presIni: JSON.stringify(this.props.navigation.getParam('monto', '0')).replace(/"/g, ''),
         });
     }
 
-    _aporte=()=>{
-        var total= parseInt(this.state.aporte)+ parseInt(this.state.pres)
+    _aporte=async()=>{
+        var total= parseInt(this.state.aporte) + parseInt(this.state.pres)
         console.log(total, 'total')
-        // console.log(this.state.aporte,'thisaporte')
-        // console.log(this.state.pres,'pres')
          var apor = parseInt(this.state.aportes) + parseInt(this.state.aporte)
          console.log(apor, 'apor')
 
-    
-
         this.setState({pres:total,aportes:apor})
+
+        url = await AsyncStorage.getItem("server");
+        token = await AsyncStorage.getItem("userToken");
+
+        axios({
+            method: 'PATCH',
+            url: url+"compartidos/getPresupuesto/",
+            data: {
+                codigo:this.state.codigo
+            },
+            headers: {
+                "content-type":"application/json",
+                "Authorization":"Token "+ token
+            }, 
+        }).then( res => {
+            // console.log(res.data);
+            data = res.data.Datos;
+            d = JSON.parse(data.replace(/'/g, '"'));
+            // console.log(data);
+            let da = []
+            for(var i in d){
+                da.push(d[i]);
+            }
+            console.log(da);
+            
+            this.setState({
+                datos: da,
+            });
+
+            this.props.navigation.navigate('AportBudget',{
+                propietario: da[0].propietario,
+                monto: da[0].monto,
+            });
+        }).catch(err => {
+            console.log(err)
+        });
     }
 
     // aporte(aporte){
