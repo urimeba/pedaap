@@ -53,8 +53,8 @@ export default class App extends Component{
     _continuar = () => {
         this.props.navigation.navigate('NumAsis', {
             tipoEvento: this.state.selectedItem,
-            nombre: '',
-            montoMaximo: '',
+            nombre: JSON.stringify(this.props.navigation.getParam('nombre', 'NON')),
+            montoMaximo: JSON.stringify(this.props.navigation.getParam('montoMaximo', '0')),
         });
     }
 

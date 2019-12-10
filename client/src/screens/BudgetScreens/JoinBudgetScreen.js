@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TextInput,TouchableOpacity } from 'react-native';
+import {
+    View,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    AsyncStorage,
+} from 'react-native';
+import axios from 'axios';
 
 export default class Join extends Component{
     constructor(props){
@@ -28,16 +36,31 @@ export default class Join extends Component{
             axios({
                 method: 'POST',
                 url: url+"compartidos/getPresupuesto/",
-                data: {id:id},
+                data: {
+                    codigo:this.state.codigo
+                },
                 headers: {
                     "content-type":"application/json",
                     "Authorization":"Token "+ token
                 }, 
             }).then( res => {
-                console.log(res.data);
-                data = JSON.parse(res.data.datos);
+                // console.log(res.data);
+                data = res.data.Datos;
+                d = JSON.parse(data.replace(/'/g, '"'));
+                // console.log(data);
+                let da = []
+                for(var i in d){
+                    da.push(d[i]);
+                }
+                console.log(da);
+                
                 this.setState({
-                    datos: data,
+                    datos: da,
+                });
+
+                this.props.navigation.navigate('AportBudget',{
+                    propietario: da[0].propietario,
+                    monto: da[0].monto,
                 });
             }).catch(err => {
                 console.log(err)

@@ -11,11 +11,18 @@ export default class App extends Component{
     constructor(props){
         super(props);
         this.state={
-            pres:200,
-            presIni:200,
+            pres:0,
+            presIni:0,
             aporte:0,
             aportes:0,
         }
+    }
+
+    componentDidMount(){
+        this.setState({
+            pres: JSON.stringify(this.props.navigation.getParam('monto', '0')).replace(/"/g, ''),
+            presIni: JSON.stringify(this.props.navigation.getParam('monto', '0')).replace(/"/g, ''),
+        });
     }
 
     _aporte=()=>{
@@ -57,7 +64,7 @@ export default class App extends Component{
                 <View style={styles.titulo1}>
                     <Text style={styles.text1}>Presupuesto</Text>
                     <View style={styles.nombreE}>
-                        <Text style={styles.textC2}>{this.state.pres}</Text> 
+                        <Text style={styles.textC2}>${this.state.pres}</Text> 
                     </View>
                 </View>
                 <TouchableOpacity style={styles.verCombos} onPress={this._combo}>
@@ -70,8 +77,8 @@ export default class App extends Component{
                             <Image/>
                         </View>
                         <View style={styles.datosCaja}>
-                            <Text style={styles.nombre}>Carlos</Text>
-                            <Text style={styles.aporte}>$200</Text>
+                            <Text style={styles.nombre}>{JSON.stringify(this.props.navigation.getParam('propietario', 'Nadie')).replace(/"/g, '')}</Text>
+                            <Text style={styles.aporte}>${this.state.presIni}</Text>
                         </View>
                     </View>
                 </View>

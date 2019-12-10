@@ -20,8 +20,7 @@ export default class Event extends Component{
         super(props);
         this.state={
             nameE:'',
-            presu:''
-
+            presu:'',
         }
     }
 

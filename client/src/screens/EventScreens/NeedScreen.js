@@ -55,8 +55,32 @@ const dataP = [{
 
 export default (props) => {
     //Data
-    // const [dataP, setDataP] = React.useState([]);
+    const [dataP, setDataP] = React.useState([]);
 
+    React.useEffect(() => {
+        async function _prefLis() {
+            url = await AsyncStorage.getItem("server")+'categoriaProductos/';
+            token = await AsyncStorage.getItem('userToken');
+
+            try {
+                console.log(token)
+                let request = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Token '+token, 
+                    }
+                });
+                let resp = await request.json();
+                console.log(resp.results);
+                setDataP(resp.results);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        _prefLis();
+    }, [setDataP]);
 
     const [selected, setSelected] = React.useState(new Map());
     const onSelect = React.useCallback(
@@ -72,10 +96,6 @@ export default (props) => {
 
     //Send Data
     const sendData = (s) => () => {
-        // console.log(Array.from(selected.entries()));
-        /*
-            Se convierte el MAP en un JSON que se puede enviar a la API
-        */
         let obj = Object.create(null);
         for (let [k,v] of s) {
             obj[k] = v;
@@ -85,7 +105,13 @@ export default (props) => {
     }
 
     const goNext = () => {
-        props.navigation.navigate('Product');
+        props.navigation.navigate('Product', {
+            categorias: selected,
+            numAsis: JSON.stringify(props.navigation.getParam('numAsis', 'NON')),
+            tipoEvento: JSON.stringify(props.navigation.getParam('tipoEvento', 'NON')),
+            nombre: JSON.stringify(props.navigation.getParam('nombre', 'NON')),
+            montoMaximo: JSON.stringify(props.navigation.getParam('montoMaximo', '0')),
+        });
     }
 
     return (
@@ -115,7 +141,6 @@ export default (props) => {
                     <TouchableOpacity 
                         style={styles.continue} 
                         onPress={sendData(selected)}
-                        // onPress={() => props.navigation.navigate('Stores')}
                     >
                         <Text style={styles.white}>Continuar</Text>
                     </TouchableOpacity>

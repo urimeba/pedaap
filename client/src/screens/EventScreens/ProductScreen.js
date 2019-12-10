@@ -78,9 +78,6 @@ const item=[
     },
 ];
 
-//  const daata = datos.productos
-
-
 export default class App extends Component{
     constructor(props){
         super(props);
@@ -88,7 +85,6 @@ export default class App extends Component{
             filter: false,
         }
     }
-
          _filtro=()=>{
         if(this.state.filter===false){
             this.setState({filter:true})

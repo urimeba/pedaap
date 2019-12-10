@@ -28,6 +28,7 @@ export default class App extends Component{
     async _choosen(selectedItem) {
         await this.setState({ selectedItem: selectedItem });
         console.log(this.state.selectedItem);
+        this._continuar();
     }
       
     _renderList = ({ item }) => {        
@@ -47,9 +48,14 @@ export default class App extends Component{
             </View>
         );
     }
-    
-    _goNext = () => {
-        this.props.navigation.navigate('Need');
+
+    _continuar = () => {
+        this.props.navigation.navigate('Need', {
+            numAsis: this.state.selectedItem,
+            tipoEvento: JSON.stringify(this.props.navigation.getParam('tipoEvento', 'NON')),
+            nombre: JSON.stringify(this.props.navigation.getParam('nombre', 'NON')),
+            montoMaximo: JSON.stringify(this.props.navigation.getParam('montoMaximo', '0')),
+        });
     }
 
     render(){

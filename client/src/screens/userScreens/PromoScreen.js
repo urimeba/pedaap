@@ -201,7 +201,11 @@ export default class App extends Component{
                 style={styles.caja}
             >
                 <View style={styles.imgCaja}>
-                    <Image/>
+                    <Image
+                        style={styles.pngImage}
+                        source={Logo[item.icono]}
+                        resizeMode="center"
+                    />
                 </View>
                 <View style={styles.datosCaja}>
                     <Text style={styles.titulo}>{item.nombre}</Text>
