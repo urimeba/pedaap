@@ -19,27 +19,26 @@ const datos=[
 
 export default class App extends Component{
     constructor(props){
-        super(props);
-            this.state={
-                hasPermission: null,
-                type: Camera.Constants.Type.back,
-                camera: false,
-                photo:'',
-                take: false,
-                error1: false, //campos vacios
-                error2: false, //error al mandarlos
-                succes: true, //todo bien
+    super(props);
+        this.state={
+            hasPermission: null,
+            type: Camera.Constants.Type.back,
+            camera: false,
+            photo:'',
+            take: false,
+            error1: false, //campos vacios
+            error2: false, //error al mandarlos
+            succes: true, //todo bien
 
-                establecimiento:'',
-                nombre: '',
-                costo:'',
-                descrip:'',
-                inicio:'',
-                vencimiento:'',
+            establecimiento:'',
+            nombre: '',
+            costo:'',
+            descrip:'',
+            inicio:'',
+            vencimiento:'',
 
-
-                 modalVisible: false,
-            }
+            modalVisible: false,
+        }
     }
 
     setModalVisible(visible) {
@@ -64,7 +63,6 @@ export default class App extends Component{
             this.setState({error1:false})
             this.setModalVisible(true);
         }
-
     }
 
     async componentDidMount() {
@@ -89,196 +87,189 @@ export default class App extends Component{
 
     render(){
         console.log(this.state.hasPermission, this.state.camera)
-    const { hasPermission } = this.state
+        const { hasPermission } = this.state
         if (hasPermission === null) {
-              return <View/> ;
+            return <View/>;
         } else if (hasPermission === false) {
-                return <Text> No access to camera </Text>;
+            return <Text> No access to camera </Text>;
         } else {
-    return(
-       <View style={styles.todo}>
-           <Modal
-                animationType="slide"
-                transparent={true}
-                // transparent={false}
-                style={{width: 80, height: 80, backgroundColor: 'pink'}}
-                visible={this.state.modalVisible}
-                onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
-                    this.setState({modalVisible:false})
-                }}>
-                <View style = {styles.modal} >
-                    
-                    {this.state.error1===true &&(
-                        <View style={{justifyContent:'center', alignContent:'center',alignItems:'center'}}>
-                            <Image
-                                 style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
-                                 source={require('../../img/remove.png')}
-                            />
-                            <Text style={{marginTop: 20}} >Completa los campos</Text>
-                            <TouchableOpacity
-                               style={styles.botonModal}
-                                onPress={() => {
-                                this.setModalVisible(!this.state.modalVisible);
-                                }}>
-                            <Text style={{color: 'white'}}>Aceptar</Text>
-                        </TouchableOpacity>
-                        </View>
-                           
-                    )}
-                    {this.state.error2===true &&(
-                        <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
-                            <Image
-                                 style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
-                                 source={require('../../img/remove.png')}
-                            />
-                            < Text style={{marginTop: 20}} >Error al mandar la promocion</Text>
-                            <TouchableOpacity
-                            style={styles.botonModal}
-                            onPress={() => {
-                            this.setModalVisible(!this.state.modalVisible);
-                            }}>
-                            <Text style={{color: 'white'}}>Aceptar</Text>
-                        </TouchableOpacity>
-
-                        </View>
-                        
-                    )}
-                    {this.state.succes===true &&(
-                        <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
-                            <Image
-                                 style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
-                                 source={require('../../img/check.png')}
-                            />
-                            < Text style={{marginTop: 20}}>Enviado correctamente</Text>
-                            <TouchableOpacity
-                                style={styles.botonModal}
-                                onPress={() => {
-                                this.setModalVisible(!this.state.modalVisible);
-                                }}>
-                                <Text style={{color: 'white'}}>Aceptar</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                </View>
-        </Modal>
-            <View style={styles.container}>
-                <View style={styles.arriba}>
-                    <View style={styles.textoP}>
-                        <TouchableOpacity onPress={this._user} >
-                             <Icon name="arrow-left" size={22} color={'#707070'} style={styles.icon} />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.botones}>
-                        <Text style={styles.tituloP}>Promoción</Text>
-                    </View>
-                </View>
-           
-                                <View style={{ flex: 1 }}>
-                                    
+            return(
+                <View style={styles.todo}>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        // transparent={false}
+                        style={{width: 80, height: 80, backgroundColor: 'pink'}}
+                        visible={this.state.modalVisible}
+                        onRequestClose={() => {
+                            Alert.alert('Modal has been closed.');
+                            this.setState({modalVisible:false})
+                        }}
+                    >
+                        <View style = {styles.modal} >
+                            {this.state.error1===true &&(
+                                <View style={{justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}>
+                                    <Image
+                                        style={{ width: 50, height: 50, alignSelf: 'center', marginTop: 20}}
+                                        source={require('../../img/remove.png')}
+                                    />
+                                    <Text style={{marginTop: 20}} >Completa los campos</Text>
+                                    <TouchableOpacity
+                                    style={styles.botonModal}
+                                        onPress={() => {
+                                        this.setModalVisible(!this.state.modalVisible);
+                                        }}
+                                    >
+                                        <Text style={{color: 'white'}}>Aceptar</Text>
+                                    </TouchableOpacity>
                                 </View>
-                <ScrollView style={styles.container2}>
-                        <View style={styles.caja}>
-                            <TouchableOpacity
-                             style={styles.imgCaja}
-                              onPress={()=>{this.setState({camera:true})}}>
-                            {this.state.camera===true && (
-                                <Camera style={{ flex: 1 }} type={this.state.cameraType} ref={ref => { this.camera = ref; }}>
-                                        <View style={styles.camerabuttonview}>
-                                            <TouchableOpacity
-                                                style={styles.cameraButtons}
-                                                onPress={this.snap}
-                                            >
-                                                <Text
-                                                style={{ fontSize: 18, marginBottom: 10, color: "white" }}
-                                                >
-                                                foto
-                                                </Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                </Camera>
                             )}
-                            {this.state.take===true && (
-                                <Image
-                                    style={styles.imgCaja2}
-                                    source={{uri:this.state.photo}}
-                                />
+                            {this.state.error2===true &&(
+                                <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
+                                    <Image
+                                        style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
+                                        source={require('../../img/remove.png')}
+                                    />
+                                    <Text style={{marginTop: 20}} >Error al mandar la promocion</Text>
+                                    <TouchableOpacity
+                                        style={styles.botonModal}
+                                        onPress={() => {
+                                            this.setModalVisible(!this.state.modalVisible);
+                                        }}
+                                    >
+                                        <Text style={{color: 'white'}}>Aceptar</Text>
+                                    </TouchableOpacity>
+                                </View>
                             )}
-                            </TouchableOpacity>
-                           
-                            <View style={styles.datosCaja}>
-                                <Text style={styles.titulo1}>Nombre de la promoción</Text>
-                                <View style={styles.inputs}>
-                                    <TextInput style={styles.titulo2}
-                                        placeholder="Nombre"
-                                        placeholderTextColor="#848482"
-                                        onChangeText={(nombre) => this.setState({ nombre })}
-                                    ></TextInput>
+                            {this.state.succes===true &&(
+                                <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
+                                    <Image
+                                        style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
+                                        source={require('../../img/check.png')}
+                                    />
+                                    <Text style={{marginTop: 20}}>Enviado correctamente</Text>
+                                    <TouchableOpacity
+                                        style={styles.botonModal}
+                                        onPress={() => {
+                                            this.setModalVisible(!this.state.modalVisible);
+                                        }}
+                                    >
+                                        <Text style={{color: 'white'}}>Aceptar</Text>
+                                    </TouchableOpacity>
                                 </View>
-                                <Text style={styles.titulo1}>categoría</Text>
-                                <View style={styles.inputs}>
-                                    <TextInput style={styles.titulo2}
-                                        placeholder="Costo"
-                                        placeholderTextColor="#848482"
-                                        onChangeText={(costo) => this.setState({ costo })}
-                                    ></TextInput>
-                                </View>
-                                <Text style={styles.titulo1}>Descripción</Text>
-                                <View style={styles.grande}>
-                                    <TextInput multiline style={ styles.titulo2}
-                                     placeholder="Descripción"
-                                        placeholderTextColor="#848482"
-                                        onChangeText={(descrip) => this.setState({ descrip })}></TextInput>
-                                </View>
-                                <Text style={styles.titulo1}>Fecha de inicio</Text>
-                                <View style={styles.inputs}>
-                                    <TextInput style={styles.titulo2}
-                                        placeholder="2019-12-10"
-                                        placeholderTextColor="#848482"
-                                        onChangeText={(inicio) => this.setState({ inicio })}
-                                    ></TextInput>
-                                </View>
-                                <Text style={styles.titulo1}>Fecha de vencimiento</Text>
-                                <View style={styles.inputs}>
-                                    <TextInput multiline style={styles.titulo2} 
-                                        placeholder = "2019-12-20"
-                                        placeholderTextColor="#848482"
-                                        onChangeText={(vencimiento) => this.setState({ vencimiento })}
-                                    ></TextInput>
-                                </View>
-                                <Text style={styles.titulo1}>Establecimiento</Text>
-                                <View style={styles.inputs}>
-                                    <TextInput style={styles.titulo2} 
-                                        placeholder="Establecimiento"
-                                        placeholderTextColor="#848482"
-                                        onChangeText={(establecimiento) => this.setState({ establecimiento })}
-                                    ></TextInput>
-                                </View>
+                            )}
+                        </View>
+                    </Modal>
+                    <View style={styles.container}>
+                        <View style={styles.arriba}>
+                            <View style={styles.textoP}>
+                                <TouchableOpacity onPress={this._user} >
+                                    <Icon name="arrow-left" size={22} color={'#707070'} style={styles.icon} />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.botones}>
+                                <Text style={styles.tituloP}>Promoción</Text>
                             </View>
                         </View>
-                    <View style={styles.send}>
-                        <TouchableOpacity
-                            style={styles.enviar}
-                             onPress={ this._enviar}
-                        >
-                            <Text style={{color:'white', width:'100%',height:'100%',textAlign:'center', fontSize:15, alignSelf:'center'}}>Enviar</Text>
-                        </TouchableOpacity>
+                        <View style={{ flex: 1 }}></View>
+                        <ScrollView style={styles.container2}>
+                            <View style={styles.caja}>
+                                <TouchableOpacity
+                                    style={styles.imgCaja}
+                                    onPress={()=>{this.setState({camera:true})}}
+                                >
+                                    {this.state.camera===false && (
+                                        <View style={{width: '100%', height: '25%', borderRadius: 10, backgroundColor: '#FEDB6B', alignItems: 'center', justifyContent: 'center'}}>
+                                            <Text style={{width: '90%', color: '#FAFAFA', fontSize: 20, textAlign: 'center'}}>Presiona aqui para tomar una foto de la promoción</Text>
+                                        </View>
+                                    )}
+                                    {this.state.camera===true && (
+                                        <Camera style={{ flex: 1 }} type={this.state.cameraType} ref={ref => { this.camera = ref; }}>
+                                            <View style={styles.camerabuttonview}>
+                                                <TouchableOpacity
+                                                    style={styles.cameraButtons}
+                                                    onPress={this.snap}
+                                                >
+                                                    <Icon name={'camera'} size={35} color={'#FAFAFA'}/>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </Camera>
+                                    )}
+                                    {this.state.take===true && (
+                                        <Image
+                                            style={styles.imgCaja2}
+                                            source={{uri:this.state.photo}}
+                                        />
+                                    )}
+                                </TouchableOpacity>
+                                <View style={styles.datosCaja}>
+                                    <Text style={styles.titulo1}>Nombre de la promoción</Text>
+                                    <View style={styles.inputs}>
+                                        <TextInput style={styles.titulo2}
+                                            placeholder="Nombre"
+                                            placeholderTextColor="#848482"
+                                            onChangeText={(nombre) => this.setState({ nombre })}
+                                        ></TextInput>
+                                    </View>
+                                    <Text style={styles.titulo1}>categoría</Text>
+                                    <View style={styles.inputs}>
+                                        <TextInput style={styles.titulo2}
+                                            placeholder="Costo"
+                                            placeholderTextColor="#848482"
+                                            onChangeText={(costo) => this.setState({ costo })}
+                                        ></TextInput>
+                                    </View>
+                                    <Text style={styles.titulo1}>Descripción</Text>
+                                    <View style={styles.grande}>
+                                        <TextInput multiline style={ styles.titulo2}
+                                            placeholder="Descripción"
+                                            placeholderTextColor="#848482"
+                                            onChangeText={(descrip) => this.setState({ descrip })}
+                                        ></TextInput>
+                                    </View>
+                                    <Text style={styles.titulo1}>Fecha de inicio</Text>
+                                    <View style={styles.inputs}>
+                                        <TextInput style={styles.titulo2}
+                                            placeholder="2019-12-10"
+                                            placeholderTextColor="#848482"
+                                            onChangeText={(inicio) => this.setState({ inicio })}
+                                        ></TextInput>
+                                    </View>
+                                    <Text style={styles.titulo1}>Fecha de vencimiento</Text>
+                                    <View style={styles.inputs}>
+                                        <TextInput multiline style={styles.titulo2} 
+                                            placeholder = "2019-12-20"
+                                            placeholderTextColor="#848482"
+                                            onChangeText={(vencimiento) => this.setState({ vencimiento })}
+                                        ></TextInput>
+                                    </View>
+                                    <Text style={styles.titulo1}>Establecimiento</Text>
+                                    <View style={styles.inputs}>
+                                        <TextInput style={styles.titulo2} 
+                                            placeholder="Establecimiento"
+                                            placeholderTextColor="#848482"
+                                            onChangeText={(establecimiento) => this.setState({ establecimiento })}
+                                        ></TextInput>
+                                    </View>
+                                </View>
+                            </View>
+                            <View style={styles.send}>
+                                <TouchableOpacity
+                                    style={styles.enviar}
+                                    onPress={ this._enviar}
+                                >
+                                    <Text style={{color:'white', width:'100%',height:'100%',textAlign:'center', fontSize:15, alignSelf:'center'}}>Enviar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </ScrollView>
                     </View>
-                </ScrollView>
-            </View>
-        </View>
-    )
-  }
-  }
+                </View>
+            )
+        }
+    }
 }
 
-
-
-
-    
 // console.log(datos[0].inicio)
-
-
 const styles = StyleSheet.create({
     todo:{
         flex: 1,
@@ -370,8 +361,10 @@ const styles = StyleSheet.create({
         width:'100%',
         height: '25%',
         borderRadius: 10,
-        backgroundColor:'gray',
+        backgroundColor:'#FAFAFA',
         marginBottom: 10,
+        // justifyContent: 'center',
+        // alignItems: 'center'
     },
     imgCaja2:{
         // flex: 2,
@@ -491,6 +484,19 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+    },
+    camerabuttonview: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center'
+    },
+    cameraButtons: {
+        backgroundColor: '#FEDB6B',
+        borderRadius: 100,
+        height: 60,
+        width: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 4
     }
-    
 });
