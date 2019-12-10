@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor:'#FAFAFA',
         // marginTop: '20%',
-        // height: '100%',
+        height: '100%',
         width:'100%',
     },
     titulo:{
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         // flex:4,
         flexDirection: 'column',
         width:'100%',
-        height: 1200,
+        height: 1500,
         // height: '100%',
         paddingLeft: '5%',
         paddingRight: '5%',

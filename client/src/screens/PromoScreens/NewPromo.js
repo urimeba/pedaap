@@ -270,10 +270,10 @@ export default class App extends Component{
                 animationType="slide"
                 transparent={true}
                 // transparent={false}
-                style={{width: 80, height: 80, backgroundColor: 'white'}}
+                style={{width: 80, height: 80, backgroundColor: 'pink'}}
                 visible={this.state.modalVisible}
                 onRequestClose={() => {
-                    // Alert.alert('Modal has been closed.');
+                    Alert.alert('Modal has been closed.');
                     this.setState({modalVisible:false})
                 }}>
                 <View style = {styles.modal} >
@@ -437,7 +437,7 @@ export default class App extends Component{
                                         onChangeText={(inicio) => this.setState({ inicio })}
                                     ></TextInput> */}
                                     <DatePicker
-                                        style={{width: '100%',backgroundColor:'#F0F0F0', borderRadius:10}}
+                                        style={{width: '100%'}}
                                         date={this.state.fechaInicio} //initial date from state
                                         mode="date" //The enum of date, datetime and time
                                         placeholder="Fecha de inicio "
@@ -469,7 +469,7 @@ export default class App extends Component{
                                         onChangeText={(vencimiento) => this.setState({ vencimiento })}
                                     ></TextInput> */}
                                     <DatePicker
-                                        style={{width: '100%',backgroundColor:'#F0F0F0', borderRadius:10}}
+                                        style={{width: '100%'}}
                                         date={this.state.fechaExpiracion} //initial date from state
                                         mode="date" //The enum of date, datetime and time
                                         placeholder="Fecha de vencimiento "
@@ -528,7 +528,7 @@ const styles = StyleSheet.create({
         // flex:1,
         marginTop: 25,
         width:'100%',
-        height: '10%',
+        height: '12%',
         paddingLeft: 10,
         paddingRight: 10,
         // backgroundColor: '#FAFAFA',
@@ -558,25 +558,23 @@ const styles = StyleSheet.create({
         // backgroundColor:'blue'
     },
     container: {
-        flex: 1,
-        // alignItems: 'center',
-        // flexDirection:'column',
-        // justifyContent: 'center',
+        // flex: 4,
+        alignItems: 'center',
+        flexDirection:'column',
+        justifyContent: 'center',
         backgroundColor:'#FAFAFA',
-        // backgroundColor:'purple',
         // marginTop: '20%',
-        height: 500,
+        height: '100%',
         width:'100%',
     },
-    container2: {
+    container: {
         // flex: 4,
         // alignItems: 'center',
         // flexDirection:'column',
         // justifyContent: 'center',
-        // backgroundColor:'blue',
-        // backgroundColor:'#FAFAFA',
+        backgroundColor:'#FAFAFA',
         // marginTop: '20%',
-        height: 400,
+        height: '100%',
         width:'100%',
     },
     titulo:{
@@ -591,7 +589,7 @@ const styles = StyleSheet.create({
         // flex:4,
         flexDirection: 'column',
         width:'100%',
-        height: 1000,
+        height: 1500,
         // height: '100%',
         paddingLeft: '5%',
         paddingRight: '5%',
@@ -627,7 +625,7 @@ const styles = StyleSheet.create({
         // justifyContent:'center',
         alignContent:'center',
         width:'100%',
-        height: 500,
+        height: '100%',
         // backgroundColor: 'pink',
         // marginLeft: 10,
         // padding: 10,
@@ -683,8 +681,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         width: '100%',
-        height: 30,
-        marginBottom:20
+        height: 100,
         // backgroundColor:'purple',
         // marginTop: 20
     },
@@ -693,12 +690,12 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignContent:'center',
         alignItems:'center',
-        backgroundColor: '#FEDB6B',
-        width: 80,
-        height: 30,
+        width: 70,
+        height: 40,
+        backgroundColor: 'blue',
         color: 'white',
         fontSize: 18,
-        borderRadius: 10,
+        borderRadius: 5,
         textAlign:'center',
         padding:5
     },

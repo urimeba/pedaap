@@ -1,546 +1,317 @@
-import React, {Component} from 'react';
-import { Button, SafeAreaView, Platform, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, Modal, Alert, Picker, AsyncStorage}  from 'react-native';
-import Constants from 'expo-constants';
+import React,{Component} from 'react';
+import { View, Text, StyleSheet ,TextInput,FlatList,TouchableOpacity,Modal,Image, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import * as Permissions from 'expo-permissions';
-import { Camera } from 'expo-camera';
-import axios from 'axios';
-import DatePicker from 'react-native-datepicker';
-
-export default class App extends Component{
-    constructor(props){
+// import { TextInput } from 'react-native-gesture-handler';
+const est = [{
+        id: '1',
+        establecimiento: 'Oxxo',
+    },
+    {
+        id: '2',
+        establecimiento: 'Chedraui',
+    },
+]
+export default class App extends Component {
+    constructor(props) {
         super(props);
-            this.state={
+        this.state = {
+            datos: [],
+            editar:false,
+            eliminar:false,
+            nombre: this.props.navigation.getParam('nombre', 'promo'),
+            costo: this.props.navigation.getParam('costo', 'promo'),
+            descripcion: this.props.navigation.getParam('descripcion', 'promo'),
+            fechaInicio: this.props.navigation.getParam('inicio', 'promo'),
+            fechaVencimiento: this.props.navigation.getParam('vencimiento', 'promo'),
+            establecimiento: this.props.navigation.getParam('establecimiento', 'promo'),
+            modalVisible: false,
+            error1:false,//Error al eliminar
+            succes:false,
+            clickEst:false
+        }
 
-                hasPermission: null,
-                type: Camera.Constants.Type.back,
-                camera: false,
-                photo:'',
-                take: false,
-                error1: false, //campos vacios
-                error2: false, //error al mandarlos
-                succes: true, //todo bien
-
-
-                fechaInicio:"01-12-2019",
-                fechaExpiracion:"01-12-2019",
-
-                // establecimiento:'',
-                // nombre: '',
-                costo:'',
-                descrip:'',
-                // inicio:'',
-                // vencimiento:'',
-
-                categorias:[],
-                categoria:'',
-
-                productos: [],
-                producto:'',
-
-                tiendas: [],
-                tienda: '',
+    }
 
 
-                 modalVisible: false,
-            }
+    _aceptarE = () => {
+        this.setState({
+            editar: false,
+            modalVisible: true,
+            succes: true,
+            nombre2: this.state.nombre,
+            costo2: this.state.costo,
+            descripcion2: this.state.descripcion,
+            fechaInicio2: this.state.fechaInicio,
+            fechaVencimiento2: this.state.fechaVencimiento,
+            establecimiento2: this.state.establecimiento
+        })
+    }
+
+    caja3=({item})=>(
+        <TouchableOpacity  onPress={()=>{this.setState({establecimiento:item.establecimiento,clickEst:false})}}>
+                <Text style={styles.titulo}>{item.establecimiento}</Text>
+        </TouchableOpacity>
+    )
+    _editar=()=>{
+        this.setState({editar:true})
+        this.setState({eliminar:false})
+    }
+
+    _eliminar=()=>{
+        this.setState({modalVisible:false});
+        setTimeout(()=>{
+            this.props.navigation.goBack()
+        },500)
+        
+    }
+
+    _ValidarEliminar=()=>{
+        this.setState({modalVisible:true})
+        this.setState({eliminar:true})
+        this.setState({succes:false})
     }
 
     setModalVisible(visible) {
         this.setState({modalVisible: visible});
     } 
-
-    _enviar =async () => {
-        // console.log("kfnvfnk")
-        console.log(this.state.categoria)
-        if (this.state.fechaInicio =="" || this.state.fechaExpiracion =="" || this.state.costo =="" || this.state.descrip == "" || this.state.producto == "" || this.state.tienda == "") {
-            console.log(this.state.fechaExpiracion, this.state.fechaInicio, this.state.costo, this.state.descrip, this.state.producto, this.state.tienda)
-            this.setState({error1:true})
-            this.setState({error2:false})
-            this.setState({succes:false})
-            this.setModalVisible(true);
-        } else if (this.state.error1 === true) {
-            this.setState({error2:true})
-            this.setState({error1:false})
-            this.setModalVisible(true);
-        } else if (this.state.correcto === true) {
-           this.setState({succes:true})
-            this.setState({error1:false})
-            this.setState({error1:false})
-            this.setModalVisible(true);
-        }
-
-    }
-
-    async componentDidMount() {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        this.setState({ hasPermission: status === 'granted' });
-
-        token = await AsyncStorage.getItem("userToken");
-        url = await AsyncStorage.getItem("server");
-        // idUser = await AsyncStorage.setItem("userId",idUser);
-
-
-        axios({
-            method: 'GET',
-            url: url+"categoriaProductos/",
-            data: {},
-            headers: {
-                "content-type":"application/json",
-                "Authorization": "Token "+token
-
-            }, 
-        }).then( res => {
-            console.log(res.data.results);
-            this.setState({categorias: res.data.results})
-
-            
-        }).catch(err => {
-            console.log(err)
-        });
-
-        axios({
-            method: 'GET',
-            url: url+"tiendas/",
-            data: {},
-            headers: {
-                "content-type":"application/json",
-                "Authorization": "Token "+token
-
-            }, 
-        }).then( res => {
-            console.log(res.data.results);
-            this.setState({tiendas: res.data.results, tienda:""})
-
-            
-        }).catch(err => {
-            console.log(err)
-        });
-
-
-
-
-    }
-
-    _user =async()=>{
-        this.props.navigation.goBack()
-    }
-
-    snap = async () => {
-        if (this.camera) {
-            let photo = await this.camera.takePictureAsync();
-            console.log(photo.uri);
-            this.setState({camera:false});
-            this.setState({photo: photo.uri})
-            this.setState({take: true})
-        }
-    };
-
-    _selectCategoria = async(itemValue, itemIndex) =>{
-        this.setState({categoria: itemValue});
-
-        // console.log(this.state.categoria);
-        // AsyncStorage.getItem("server").then((obj)=>{
-        //     this.state.server = obj
-        //     this.forceUpdate();
-        //   })
-
-        token = await AsyncStorage.getItem("userToken");
-        url = await AsyncStorage.getItem("server");
-
-
-        axios({
-            method: 'POST',
-            url: url+"productos/busqueda/",
-            data: {idCategoria: this.state.categoria},
-            headers: {
-                "content-type":"application/json",
-                "Authorization": "Token "+token
-
-            }, 
-        }).then( res => {
-            // console.log(res.data.results);
-            this.setState({productos: res.data.results, producto:""});
-            // this.setState({productos: res.data.results})
-
-            
-        }).catch(err => {
-            console.log(err)
-        });
-        
-    }
-
-    _sendPromo = async() =>{
-
-        token = await AsyncStorage.getItem("userToken");
-        url = await AsyncStorage.getItem("server");
-
-        f1 = this.state.fechaInicio;
-        
-
-
-        axios({
-            method: 'POST',
-            url: url+"promociones/altas/",
-            data: {descripcion:this.state.descrip, fechaInicio:this.state.fechaInicio, fechaVencimiento:this.state.fechaExpiracion, foto:this.state.photo, costo:this.state.costo, producto:this.state.producto, tienda:this.state.tienda},
-            headers: {
-                "content-type":"application/json",
-                "Authorization": "Token "+token
-
-            }, 
-        }).then( res => {
-            console.log(res.data);
-            
-        }).catch(err => {
-            console.log(err.response.data.Error)
-        });
-
-    }
-
-
     render(){
-        const { show, date, mode } = this.state;
-        console.log(this.state.hasPermission, this.state.camera)
-    const { hasPermission } = this.state
-        if (hasPermission === null) {
-              return <View/> ;
-        } else if (hasPermission === false) {
-                return <Text> No access to camera </Text>;
-        } else {
-    return(
-       <View style={styles.todo}>
-           <Modal
-                animationType="slide"
-                transparent={true}
-                // transparent={false}
-                style={{width: 80, height: 80, backgroundColor: 'white'}}
-                visible={this.state.modalVisible}
-                onRequestClose={() => {
-                    // Alert.alert('Modal has been closed.');
-                    this.setState({modalVisible:false})
-                }}>
-                <View style = {styles.modal} >
-                    
-                    {this.state.error1===true &&(
-                        <View style={{justifyContent:'center', alignContent:'center',alignItems:'center'}}>
-                            <Image
-                                 style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
-                                 source={require('../../img/remove.png')}
-                            />
-                            <Text style={{marginTop: 20}} >Completa los campos</Text>
-                            <TouchableOpacity
-                               style={styles.botonModal}
-                                onPress={() => {
-                                this.setModalVisible(!this.state.modalVisible);
-                                }}>
-                            <Text style={{color: 'white'}}>Aceptar</Text>
-                        </TouchableOpacity>
-                        </View>
-                           
-                    )}
-                    {this.state.error2===true &&(
-                        <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
-                            <Image
-                                 style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
-                                 source={require('../../img/remove.png')}
-                            />
-                            < Text style={{marginTop: 20}} >Error al mandar la promocion</Text>
-                            <TouchableOpacity
-                            style={styles.botonModal}
-                            onPress={() => {
-                            this.setModalVisible(!this.state.modalVisible);
+            return (
+                     <View style={styles.todo}>
+                          <Modal
+                            animationType="slide"
+                            transparent={true}
+                            // transparent={false}
+                            style={{width: 80, height: 80, backgroundColor: 'pink'}}
+                            visible={this.state.modalVisible}
+                            onRequestClose={() => {
+                                Alert.alert('Modal has been closed.');
+                                this.setState({modalVisible:false})
                             }}>
-                            <Text style={{color: 'white'}}>Aceptar</Text>
-                        </TouchableOpacity>
-
-                        </View>
-                        
-                    )}
-                    {this.state.succes===true &&(
-                        <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
-                            <Image
-                                 style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
-                                 source={require('../../img/check.png')}
-                            />
-                            < Text style={{marginTop: 20}}>Enviado correctamente</Text>
-                            <TouchableOpacity
-                                style={styles.botonModal}
-                                onPress={() => {
-                                this.setModalVisible(!this.state.modalVisible);
-                                }}>
-                                <Text style={{color: 'white'}}>Aceptar</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                </View>
-        </Modal>
-            <View style={styles.container}>
-                <View style={styles.arriba}>
-                    <View style={styles.textoP}>
-                        <TouchableOpacity onPress={this._user} >
-                             <Icon name="arrow-left" size={22} color={'#707070'} style={styles.icon} />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.botones}>
-                        <Text style={styles.tituloP}>Promoción</Text>
-                    </View>
-                </View>
-           
-                                <View style={{ flex: 1 }}>
-                                    
-                                </View>
-                <ScrollView style={styles.container2}>
-                        <View style={styles.caja}>
-                            <TouchableOpacity
-                             style={styles.imgCaja}
-                              onPress={()=>{this.setState({camera:true})}}>
-                            {this.state.camera===true && (
-                                <Camera style={{ flex: 1 }} type={this.state.cameraType} ref={ref => { this.camera = ref; }}>
-                                        <View style={styles.camerabuttonview}>
+                            <View style = {styles.modal} >
+                                
+                                {this.state.eliminar===true &&(
+                                    <View style={{justifyContent:'center', alignContent:'center',alignItems:'center'}}>
+                                        <Image
+                                            style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
+                                            source={require('../../img/remove.png')}
+                                        />
+                                        <Text style={{marginTop: 20, textAlign:'center'}} >¿Seguro que quieres eliminar este producto?</Text>
+                                    <View style={{justifyContent:'center',flexDirection:'row', alignContent:'center',alignItems:'center'}}>
+                                        <TouchableOpacity
+                                            style={styles.botonModalA}
+                                                 onPress = {
+                                                     this._eliminar
+                                                 } >
+                                            <Text style={{color: 'white'}}>Aceptar</Text>
+                                        </TouchableOpacity>
                                             <TouchableOpacity
-                                                style={styles.cameraButtons}
-                                                onPress={this.snap}
-                                            >
-                                                <Text
-                                                style={{ fontSize: 18, marginBottom: 10, color: "white" }}
+                                            style={styles.botonModalC}
+                                             onPress={() => {
+                                                this.setModalVisible(!this.state.modalVisible);
+                                                }}
+                                               >
+                                            <Text style={{color: 'white'}}>Cancelar</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                    
+                                )}
+                                {this.state.error2===true &&(
+                                    <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
+                                        <Image
+                                            style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
+                                            source={require('../../img/remove.png')}
+                                        />
+                                        < Text style={{marginTop: 20}} >Error al Eliminar el producto</Text>
+                                        <TouchableOpacity
+                                        style={styles.botonModal}
+                                        onPress={() => {
+                                        this.setModalVisible(!this.state.modalVisible);
+                                        }}>
+                                        <Text style={{color: 'white'}}>Aceptar</Text>
+                                    </TouchableOpacity>
+
+                                    </View>
+                                    
+                                )}
+                                {this.state.succes===true &&(
+                                    <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
+                                        <Image
+                                            style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
+                                            source={require('../../img/check.png')}
+                                        />
+                                        < Text style={{marginTop: 20}}>Modificdo correctamente</Text>
+                                        <TouchableOpacity
+                                            style={styles.botonModal}
+                                            onPress={() => {
+                                            this.setModalVisible(!this.state.modalVisible);
+                                            }}>
+                                            <Text style={{color: 'white'}}>Aceptar</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                            </View>
+        </Modal>
+                         <View style={styles.container}>
+                            <ScrollView style={{flex:1, width:'100%',padding:30}}>
+                                    <View style={styles.caja}>
+                                        <View style={styles.imgCaja}>
+                                            <Image/>
+                                        </View>
+                                        <View style={styles.datosCaja}>
+                                            <Text style={styles.titulo1}>Nombre de la promoción</Text>
+                                            <View style={styles.inputs}>
+                                                <TextInput style={styles.titulo} 
+                                                    placeholder='Nombre'
+                                                    onChangeText={(nombre)=>this.setState({nombre})}/>
+                                            </View>
+                                            <Text style={styles.titulo1}>Establecimiento</Text>
+                                               <TouchableOpacity style={styles.inputsA}
+                                                    onPress={()=>{this.setState({clickEst:true})}}
                                                 >
-                                                foto
-                                                </Text>
+                                                    <Text style={{flex:4,justifyContent:'center',fontSize:18 ,alignContent:'center',alignItems:'center',alignSelf:'center',textAlign:'left'}}>{this.state.establecimiento}</Text>
+                                                     <Icon name="menu-down" size={30} color={'#707070'} style={{flex:1}} />
+                                                </TouchableOpacity>
+                                                {this.state.clickEst === true && (
+                                                <View style={{width:200,zIndex:1,backgroundColor:'white',marginRight:300,marginTop:200, position:'absolute'}}>
+                                                     <FlatList
+                                                        style={styles.flat}
+                                                        data={est}
+                                                        renderItem={this.caja3}
+                                                        keyExtractor={item => item.id}
+                                                    />
+                                                </View>
+                                                )}
+                                            <Text style={styles.titulo1}>costo</Text>
+                                            <View style={styles.inputs}>
+                                                <TextInput style={styles.titulo} 
+                                                    onChangeText={(costo)=>this.setState({costo})}
+                                                    keyboardType='numeric'
+                                                    placeholder='costo'/>
+                                            </View>
+                                            <Text style={styles.titulo1}>Descripción</Text>
+                                            <View style={styles.grande}>
+                                                <TextInput style={ styles.titulo} 
+                                                    onChangeText={(descripcion)=>this.setState({descripcion})}
+                                                    placeholder='descripcion'/>
+                                            </View>
+                                            <Text style={styles.titulo1}>Fecha de inicio</Text>
+                                            <View style={styles.inputs}>
+                                                <TextInput style={styles.titulo} 
+                                                 onChangeText={(fechaInicio)=>this.setState({fechaInicio})}
+                                                    placeholder='Fecha de inicio'/>
+                                            </View>
+                                            <Text style={styles.titulo1}>Fecha de vencimiento</Text>
+                                            <View style={styles.grande}>
+                                                <TextInput style={styles.titulo}
+                                                 onChangeText={(fechaVencimiento)=>this.setState({fechaVencimiento})} 
+                                                    placeholder='Fecha de vencimiento'/>
+                                            </View>
+                                        </View>
+                                    </View>
+                                     <View style={styles.botones}>
+                                        <View style={styles.botonesA}>
+                                            <TouchableOpacity style={styles.editI}
+                                            onPress={this._aceptarE}>
+                                                <Text>Aceptar</Text>
                                             </TouchableOpacity>
                                         </View>
-                                </Camera>
-                            )}
-                            {this.state.take===true && (
-                                <Image
-                                    style={styles.imgCaja2}
-                                    source={{uri:this.state.photo}}
-                                />
-                            )}
-                            </TouchableOpacity>
-                           
-                            <View style={styles.datosCaja}>
-                            
-                                <Text style={styles.titulo1}>Categoría</Text>
-                                <Picker
-                                    selectedValue={this.state.categoria}
-                                    style={{height: 50, width: "100%"}}
-                                    onValueChange={(itemValue, itemIndex) => this._selectCategoria(itemValue, itemIndex)
-                                    }>
-                                    {this.state.categorias.map(
-                                        c => (<Picker.Item key={c.id} label={c.nombre} value={c.id} />)
-                                    )}
-                                </Picker>
-                                <Text style={styles.titulo1}>Producto</Text>
-                                <Picker
-                                    selectedValue={this.state.producto}
-                                    style={{height: 50, width: "100%"}}
-                                    // onValueChange={ () => this.selectCategoria(itemValue, itemIndex)
-                                    // }>
-                                    onValueChange={(itemValue, itemIndex) =>
-                                         this.setState({producto: itemValue})
-                                     }>
-                                        {this.state.productos.map(
-                                            p => (<Picker.Item key={p.id} label={p.descripcion} value={p.id} />)
-                                        )}
-                                </Picker>
-                                <Text style={styles.titulo1}>Tienda</Text>
-                                <Picker
-                                    selectedValue={1}
-                                    style={{height: 50, width: "100%"}}
-                                    // onValueChange={ () => this.selectCategoria(itemValue, itemIndex)
-                                    // }>
-                                    onValueChange={(itemValue, itemIndex) =>
-                                         this.setState({tienda: itemValue})
-                                     }>
-                                        {this.state.tiendas.map(
-                                            t => (<Picker.Item key={t.id} label={t.nombre} value={t.id} />)
-                                        )}
-                                </Picker>
-                                <Text style={styles.titulo1}>Descripción</Text>
-                                <View style={styles.grande}>
-                                    <TextInput multiline style={ styles.titulo2}
-                                     placeholder="Descripción"
-                                        placeholderTextColor="#848482"
-                                        onChangeText={(descrip) => this.setState({ descrip })}></TextInput>
-                                </View>
-                                <Text style={styles.titulo1}>Costo</Text>
-                                <View style={styles.inputs}>
-                                    <TextInput style={styles.titulo2} 
-                                        placeholder="Costo"
-                                        placeholderTextColor="#848482"
-                                        keyboardType='numeric'
-                                        onChangeText={(costo) => this.setState({ costo })}
-                                    ></TextInput>
-                                </View>
-                                <Text style={styles.titulo1}>Fecha de inicio</Text>
-                                <View >
-                                    {/* <TextInput style={styles.titulo2}
-                                        placeholder="2019-12-10"
-                                        placeholderTextColor="#848482"
-                                        onChangeText={(inicio) => this.setState({ inicio })}
-                                    ></TextInput> */}
-                                    <DatePicker
-                                        style={{width: '100%',backgroundColor:'#F0F0F0', borderRadius:10}}
-                                        date={this.state.fechaInicio} //initial date from state
-                                        mode="date" //The enum of date, datetime and time
-                                        placeholder="Fecha de inicio "
-                                        format="DD-MM-YYYY"
-                                        minDate="01-12-2019"
-                                        maxDate="31-12-2019"
-                                        confirmBtnText="Aceptar"
-                                        cancelBtnText="Cancel"
-                                        customStyles={{
-                                            dateIcon: {
-                                            position: 'absolute',
-                                            left: 0,
-                                            top: 4,
-                                            marginLeft: 0
-                                            },
-                                            dateInput: {
-                                            marginLeft: 36
-                                            }
-                                        }}
-                                        onDateChange={(fechaInicio) => {this.setState({fechaInicio: fechaInicio})}}
-                                        />
-                                </View>
-                                
-                                <Text style={styles.titulo1}>Fecha de vencimiento</Text>
-                                <View>
-                                    {/* <TextInput multiline style={styles.titulo2} 
-                                        placeholder = "2019-12-20"
-                                        placeholderTextColor="#848482"
-                                        onChangeText={(vencimiento) => this.setState({ vencimiento })}
-                                    ></TextInput> */}
-                                    <DatePicker
-                                        style={{width: '100%',backgroundColor:'#F0F0F0', borderRadius:10}}
-                                        date={this.state.fechaExpiracion} //initial date from state
-                                        mode="date" //The enum of date, datetime and time
-                                        placeholder="Fecha de vencimiento "
-                                        format="DD-MM-YYYY"
-                                        minDate={this.state.fechaInicio}
-                                        maxDate="31-12-2019"
-                                        confirmBtnText="Aceptar"
-                                        cancelBtnText="Cancel"
-                                        customStyles={{
-                                            dateIcon: {
-                                            position: 'absolute',
-                                            left: 0,
-                                            top: 4,
-                                            marginLeft: 0
-                                            },
-                                            dateInput: {
-                                            marginLeft: 36
-                                            }
-                                        }}
-                                        onDateChange={(fechaExpiracion) => {this.setState({fechaExpiracion: fechaExpiracion})}}
-                                        />
-                                </View>
-                                
-                            </View>
+                                    </View>
+                            </ScrollView>
                         </View>
-                    <View style={styles.send}>
-                        <TouchableOpacity
-                            style={styles.enviar}
-                             onPress={ this._enviar}
-                        >
-                            <Text style={{color:'white', width:'100%',height:'100%',textAlign:'center', fontSize:15, alignSelf:'center'}}>Enviar</Text>
-                        </TouchableOpacity>
                     </View>
-                </ScrollView>
-            </View>
-        </View>
-    )
-  }
-  }
+                
+               
+    );
+    }
 }
 
-
-
-
-    
-// console.log(datos[0].inicio)
-
-
 const styles = StyleSheet.create({
-    todo:{
+    todo: {
         flex: 1,
-        width: '100%',
-        // backgroundColor: 'red',
     },
-    arriba:{
+    arriba: {
         // flex:1,
         marginTop: 25,
-        width:'100%',
-        height: '10%',
+        width: '100%',
+        height: '12%',
         paddingLeft: 10,
         paddingRight: 10,
         // backgroundColor: '#FAFAFA',
         // backgroundColor:'yellow',
     },
-    botones:{
+     inputsA: {
+         // flex:1,
+         justifyContent: 'center',
+         flexDirection: 'row',
+         padding: 10,
+         // alignItems: 'center',
+         textAlign: 'left',
+         width: '100%',
+         height: 60,
+         backgroundColor: '#F0F0F0',
+         borderRadius: 10,
+         marginTop: 10,
+         // marginBottom: 20,
+     },
+     imgCaja: {
+         // flex: 2,
+         width: '100%',
+         height: '25%',
+         borderRadius: 10,
+         backgroundColor: 'gray',
+         marginBottom: 10,
+     },
+    botones: {
         // flex:1,
-        flexDirection:'row',
+        flexDirection: 'row',
         alignContent: 'center',
         // justifyContent: 'center',
         width: '100%',
-        height:'50%',
+        height: '50%',
         padding: 5,
         // backgroundColor:'red'
     },
-    tituloP:{
+    tituloP: {
         fontSize: 20
     },
-    textoP:{
-        flexDirection:'row',
-        alignItems:'center',
+    textoP: {
+        flexDirection: 'row',
+        alignItems: 'center',
         // justifyContent:'center',
         width: '100%',
-        height:'30%',
+        height: '30%',
         marginTop: 15
 
         // backgroundColor:'blue'
     },
-    container: {
-        flex: 1,
-        // alignItems: 'center',
-        // flexDirection:'column',
-        // justifyContent: 'center',
-        backgroundColor:'#FAFAFA',
-        // backgroundColor:'purple',
-        // marginTop: '20%',
-        height: 500,
-        width:'100%',
-    },
-    container2: {
-        // flex: 4,
-        // alignItems: 'center',
-        // flexDirection:'column',
-        // justifyContent: 'center',
-        // backgroundColor:'blue',
-        // backgroundColor:'#FAFAFA',
-        // marginTop: '20%',
-        height: 400,
-        width:'100%',
-    },
-    titulo:{
+        container: {
+            // flex: 4,
+            // alignItems: 'center',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            backgroundColor: '#FAFAFA',
+            // marginTop: '20%',
+            height: '100%',
+            width: '100%',
+        },
+    titulo: {
         // flex: 3,
-        alignSelf:'center',
-        justifyContent:'center',
-         fontSize: 16,
-        padding:'5%',
+        // alignSelf: 'center',
+        justifyContent: 'center',
+        fontSize: 16,
+        padding: '5%',
         // color: 'white'
     },
-    caja:{
-        // flex:4,
+    caja: {
         flexDirection: 'column',
         width:'100%',
-        height: 1000,
+        height: 1100,
         // height: '100%',
-        paddingLeft: '5%',
-        paddingRight: '5%',
-        // backgroundColor:'orange'
+        // paddingLeft: '5%',
+        // paddingRight: '5%',
     },
-    flat:{
+    flat: {
         // flex: 1,
         // alignItems: 'center',
         flexDirection: 'column',
@@ -549,103 +320,141 @@ const styles = StyleSheet.create({
         height: '100%',
         // backgroundColor: 'purple'
     },
-    imgCaja:{
+    imgCaja: {
         // flex: 2,
-        width:'100%',
+        width: '100%',
         height: '25%',
         borderRadius: 10,
-        backgroundColor:'gray',
+        backgroundColor: 'gray',
         marginBottom: 10,
     },
-    imgCaja2:{
-        // flex: 2,
-        width:'100%',
-        height: '100%',
-        borderRadius: 10,
-        // backgroundColor:'gray',
-        // marginBottom: 10,
-    },
-    datosCaja:{
-        // flex:3,
+    datosCaja: {
+        flex:1,
         // justifyContent:'center',
-        alignContent:'center',
-        width:'100%',
-        height: 500,
+        // alignContent: 'center',
+        width: '100%',
+        height: '100%',
         // backgroundColor: 'pink',
         // marginLeft: 10,
         // padding: 10,
     },
-    inputs:{
+    inputs: {
         // flex:1,
-        justifyContent:'center',
-        alignItems:'center',
-        textAlign:'center',
+        justifyContent: 'center',
+        // alignItems: 'center',
+        textAlign: 'left',
         width: '100%',
         height: 60,
         backgroundColor: '#F0F0F0',
         borderRadius: 10,
         marginTop: 10,
-        padding: 10,
         // marginBottom: 20,
     },
-    grande:{
+    grande: {
         // flex:2,
         // justifyContent:'center',
-        alignItems:'center',
-        textAlign:'center',
+        // alignItems: 'center',
+        textAlign: 'left',
         width: '100%',
         height: '15%',
         backgroundColor: '#F0F0F0',
         // backgroundColor: 'green',
         borderRadius: 10,
         marginTop: 10,
-        flexDirection: 'row',
-        padding: 10,
         // marginBottom: '20%',
     },
-    titulo1:{
+    titulo1: {
         width: '100%',
         height: 30,
-        textAlign:'left',
+        textAlign: 'left',
         // backgroundColor:'blue',
         marginTop: 10,
         marginBottom: 2,
         fontSize: 18
     },
-    titulo2:{
-        flex: 1,
-        flexWrap: 'wrap',
-        flexGrow: 2,
-        width: '100%',
-        height: '100%',
-        textAlign:'left',
-        fontSize: 18,
+     botones:{
+        flex:2,
+        width:'100%',
+        marginTop:20,
+        marginBottom:40,
+        // backgroundColor:'magenta'
     },
-    send:{
-        // flex: 1,
-        alignItems:'center',
+    botones2:{
+        flex:2,
         justifyContent:'center',
-        width: '100%',
-        height: 30,
-        marginBottom:20
-        // backgroundColor:'purple',
-        // marginTop: 20
+        alignItems:'center',
+        alignContent:'center',
+        width:'100%',
+        marginTop:20,
+        marginBottom:40,
+        // backgroundColor:'magenta'
     },
-    enviar:{
-        // flex:1,
+    botonesA:{
+        flex:1,
         justifyContent:'center',
         alignContent:'center',
         alignItems:'center',
-        backgroundColor: '#FEDB6B',
-        width: 80,
-        height: 30,
-        color: 'white',
-        fontSize: 18,
-        borderRadius: 10,
-        textAlign:'center',
-        padding:5
+        paddingLeft: 10,
+        paddingRight: 10,
     },
-    botonModal:{
+    botonesA2:{
+        flex:1,
+        justifyContent:'center',
+        alignContent:'center',
+        alignItems:'center',
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+    botonesC:{
+        flex:1,
+        justifyContent:'center',
+        alignContent:'center',
+        alignItems:'center',
+        marginTop:20
+    },
+    cerrarS:{
+        justifyContent:'center',
+        alignItems:'center',
+        alignContent:'center',
+        width: '60%',
+        height:30,
+        backgroundColor:'#DE4C63',
+        borderRadius: 10
+    },
+    editI:{
+        // flex:1,
+        justifyContent:'center',
+        alignItems:'center',
+        alignContent:'center',
+        backgroundColor:'#FEDB6B',
+        borderRadius:10,
+        width:'60%',
+        height:30,
+        marginRight:5,
+    },
+    editI2:{
+        // flex:1,
+        justifyContent:'center',
+        alignItems:'center',
+        alignContent:'center',
+        backgroundColor:'#FEDB6B',
+        borderRadius:10,
+        width:'60%',
+        height:30,
+        marginRight:5,
+    },
+    editP:{
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center',
+        alignContent:'center',
+        backgroundColor:'#FEDB6B',
+        borderRadius:10,
+        width: '60%',
+        height:30,
+        marginLeft:5
+    },
+     botonModal:{
         alignSelf: 'center',
         justifyContent: 'center',
         backgroundColor: '#FEDB6B',
@@ -654,16 +463,41 @@ const styles = StyleSheet.create({
         height: 30,
         padding: 5,
         borderRadius: 8,
-        marginTop: 40,
+        marginTop: 20,
+    },
+     botonModalA:{
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#71C0F2',
+        color: 'white',
+        width: 70,
+        height: 30,
+        padding: 5,
+        borderRadius: 8,
+        marginTop: 20,
+        marginRight:10
+    },
+     botonModalC:{
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#DE4C63',
+        color: 'white',
+        width: 70,
+        height: 30,
+        marginLeft: 10,
+        padding: 5,
+        borderRadius: 8,
+        marginTop: 20,
     },
     modal: {
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 22,
+        textAlign:'center',
         // backgroundColor: '#F0F0F0',
         backgroundColor: 'white',
         width: '80%',
-        height: 200,
+        height: 230,
         borderRadius: 10,
         marginLeft: '10%',
         marginTop: '10%',
@@ -677,5 +511,4 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
     }
-    
 });

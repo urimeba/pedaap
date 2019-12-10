@@ -25,8 +25,6 @@ export default class App extends Component{
             error1: false, //campos
             error2: false, //correo
             error3: false, //contra
-            error4:false,
-            messageE:''
         };
     }
 
@@ -49,8 +47,7 @@ export default class App extends Component{
                 AsyncStorage.setItem("userId",res.data.id);
                 this.props.navigation.navigate("Confirm");
           }).catch(err => {
-            // Alert.alert("Error", err.response.data.Error);
-            this.setState({error4:true,messageE:err.response.data.Error})
+            Alert.alert("Error", err.response.data.Error);
           });
     }
     
@@ -203,9 +200,6 @@ export default class App extends Component{
                         )}
                         {this.state.error3=== true && (
                             <Text style={styles.error}>*Las contraseñas no coinciden</Text>
-                        )}
-                        {this.state.error4=== true && (
-                            <Text style={styles.error}>{this.state.messageE}</Text>
                         )}
                     </View>
                     <View style={styles.InputsNav}>

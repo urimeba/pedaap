@@ -303,10 +303,10 @@ const styles = StyleSheet.create({
     },
     tituloCajas:{
         width:'100%',
-        height:45,
+        height:30,
         fontSize:18,
         // marginBottom:20,
-        marginTop:10,
-        padding:10
+        marginTop:20,
+        padding:20
     }
 });
