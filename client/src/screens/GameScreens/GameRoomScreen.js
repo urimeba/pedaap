@@ -75,6 +75,13 @@ export default class App extends Component{
 
     }
 
+    _getUsuarios = async() =>{
+        idSal = JSON.stringify(this.props.navigation.getParam('idSala', 'NO-ID'));
+        idSala = idSal;
+        
+
+    }
+
     _verificarEstado = (url1) =>{
         // setTimeout(function(){
             axios({
