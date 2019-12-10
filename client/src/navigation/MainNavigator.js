@@ -1,4 +1,5 @@
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import {AsyncStorage} from 'react-native';
 
 //screens
 import LoginScreen from '../screens/LoginScreen';

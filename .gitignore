@@ -21,4 +21,8 @@ Back/pedaap/Apps/Usuarios/migrations/
 
 Back/pedaap/Apps/Juegos/migrations/
 
+Back/pedaap/Static/
+
+Back/pedaap/media/
+
 *.log

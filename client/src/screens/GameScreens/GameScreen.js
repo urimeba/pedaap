@@ -29,6 +29,11 @@ export default class App extends Component{
             resCo:0,
             resIn:0,
             presionado:false,
+            respuesta:null,
+            res1:false,
+            res2:false,
+            res3:false,
+            res4:false,
         }
     }
 
@@ -51,11 +56,14 @@ export default class App extends Component{
 
     }
 
-    res=(num)=>{
-        if (num == preg.correcta) {
-            this.setState({presionado:true,resCo:num})
+    res(num){
+        if (num === preg.correcta) {
+              this.setState({presionado:true})
+            this._correcta(num)
         }
-        
+    }
+    _correcta(num){
+        this.setState({resCo:num})
     }
 
     render(){
@@ -84,27 +92,79 @@ export default class App extends Component{
                             ¿Quién escribió los miserables?
                         </Text>
                     </View>
+                    {this.state.respuesta==null? (
                         <View style={styles.respuestas}>
                             <TouchableOpacity style={styles.respuesta}
-                                onPress={this.res(this)}
+                                onPress={()=>{this.setState({res1:true, respuesta:true,resCo:preg.correcta})}}
                             >
                                 <Text style={styles.textoRes}>{preg.respuestas[1]}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.respuesta}
-                                onPress={this.res(2)}>
+                                onPress={()=>{this.setState({res2:true,respuesta:true,resCo:preg.correcta})}}>
                                 <Text style={styles.textoRes}>{preg.respuestas[2]}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.respuesta}
-                                onPress={this.res(3)}
+                                onPress={()=>{this.setState({res3:true,respuesta:true,resCo:preg.correcta})}}
                             >
                                 <Text style={styles.textoRes}>{preg.respuestas[3]}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.respuesta}
-                                onPress={this.res(4)}
+                                onPress={()=>{this.setState({res4:true,respuesta:true,resCo:preg.correcta})}}
                             >
                                 <Text style={styles.textoRes}>{preg.respuestas[4]}</Text>
                             </TouchableOpacity>
                         </View>
+                    ):(
+                        <View style={styles.respuestas}>
+                            {this.state.res1== true && this.state.resCo==1?(
+                                <TouchableOpacity style={styles.respuestaCo}
+                                >
+                                    <Text style={styles.textoRes}>{preg.respuestas[1]}</Text>
+                                </TouchableOpacity>
+                            ):(
+                                <TouchableOpacity style={styles.respuestaIn}
+                                >
+                                    <Text style={styles.textoRes}>{preg.respuestas[1]}</Text>
+                                </TouchableOpacity>
+                            )}
+                            {this.state.res2== true && this.state.resCo==2?(
+                                <TouchableOpacity style={styles.respuestaCo}
+                                >
+                                    <Text style={styles.textoRes}>{preg.respuestas[2]}</Text>
+                                </TouchableOpacity>
+                            ):(
+                                <TouchableOpacity style={styles.respuestaIn}
+                                >
+                                    <Text style={styles.textoRes}>{preg.respuestas[2]}</Text>
+                                </TouchableOpacity>
+                            )}
+                            {this.state.res3== true && this.state.resCo==3?(
+                                <TouchableOpacity style={styles.respuestaCo}
+                                >
+                                    <Text style={styles.textoRes}>{preg.respuestas[3]}</Text>
+                                </TouchableOpacity>
+                            ):(
+                                <TouchableOpacity style={styles.respuestaIn}
+                                >
+                                    <Text style={styles.textoRes}>{preg.respuestas[3]}</Text>
+                                </TouchableOpacity>
+                            )}
+                            {this.state.res4== true && this.state.resCo==4?(
+                                <TouchableOpacity style={styles.respuestaCo}
+                                >
+                                    <Text style={styles.textoRes}>{preg.respuestas[4]}</Text>
+                                </TouchableOpacity>
+                            ):(
+                                <TouchableOpacity style={styles.respuestaIn}
+                                >
+                                    <Text style={styles.textoRes}>{preg.respuestas[4]}</Text>
+                                </TouchableOpacity>
+                            )}
+
+                       
+                        </View>
+                    )}
+                        
                     </View>
                     <View style={styles.abajo}>
                     {this.state.puntos >= 50 &&(
@@ -214,6 +274,17 @@ const styles= StyleSheet.create({
         width: '100%',
         borderRadius: 10,
         backgroundColor:'#71C0F2'
+        // backgroundColor:'pink'
+    },
+    respuestaIn:{
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center',
+        alignContent:'center',
+        marginTop: 7,
+        width: '100%',
+        borderRadius: 10,
+        backgroundColor:'#DE4C63'
         // backgroundColor:'pink'
     },
     respuestaCo:{

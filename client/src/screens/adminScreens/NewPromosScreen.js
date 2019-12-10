@@ -182,7 +182,6 @@ export default class App extends Component{
                         <View style={styles.arriba}>
                             <View style={styles.textoP}>
                                 <Text style={styles.tituloP}>Promociones nuevas</Text>
-                                <Icon name="bell-outline" size={22} color={'#707070'} style={styles.iconB} />
                             </View>
                             <View style={styles.botones}>
                                 <TouchableOpacity 
