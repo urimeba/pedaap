@@ -49,6 +49,7 @@ export default (props) => {
     const [presupuesto, setPresupuesto] = React.useState('')
 
 
+<<<<<<< HEAD
     const next = (p) => async() => {
         // Alert.alert('back')
         url = await AsyncStorage.getItem("server");
@@ -95,14 +96,22 @@ export default (props) => {
         servidor = await AsyncStorage.getItem("server")
         
         idUser = await AsyncStorage.getItem("userId");
+=======
+    _next=async()=>{
+        // Alert.alert('back')
+        url = await AsyncStorage.getItem("server");
+>>>>>>> uriel
         token = await AsyncStorage.getItem("userToken");
         idUser = await AsyncStorage.getItem("userId");
         // console.log(presupuesto)
 
+<<<<<<< HEAD
         for(categoria in obj){
             if(obj[categoria]==true){
                 // console.log(categoria);
                 url = servidor+'categoriasCompartido/';
+=======
+>>>>>>> uriel
 
         if(isNaN(presupuesto)){
             Alert.alert("Error","Ingresa un numero válido");
@@ -112,17 +121,29 @@ export default (props) => {
                 // console.log(true)
                 axios({
                     method: 'POST',
+<<<<<<< HEAD
                     url: url,
                     data: {
                         presupuestoCompartido:servidor+"compartidos/"+pID+"/",
                         categoria: servidor+"categoriaProductos/"+categoria+"/"
                     },
+=======
+                    url: url+"compartidos/",
+                    data: {usuarioPropietario:url+"usuarios/"+idUser+"/", monto:presupuesto},
+>>>>>>> uriel
                     headers: {
                         "content-type":"application/json",
                         "Authorization":"Token "+ token
                     }, 
                 }).then( res => {
+<<<<<<< HEAD
                     console.log('ok');
+=======
+                    console.log(res.data.id, res.data.monto, res.data.codigo);
+                    sendData(selected);
+
+                    // props.navigation.navigate('ShareBudget',{idPresupuesto: res.data.id, monto: res.data.monto, codigo:res.data.codigo })
+>>>>>>> uriel
                 }).catch(err => {
                     console.log(err)
                 });
@@ -139,7 +160,38 @@ export default (props) => {
         for (let [k,v] of s) {
             obj[k] = v;
         }
+<<<<<<< HEAD
         goNext(pID, m, c);
+=======
+        console.log(JSON.stringify(obj));
+        console.log(idPresupuesto)
+
+        // servidor = await AsyncStorage.getItem("server")
+        // idUser = await AsyncStorage.getItem("userId");
+        // token = await AsyncStorage.getItem("userToken");
+
+        // for(categoria in obj){
+        //     if(obj[categoria]==true){
+        //         console.log(categoria);
+        //         url = servidor+'categoriasCompartido/';
+
+        //         axios({
+        //             method: 'POST',
+        //             url: url,
+        //             data: {presupuestoCompartido:servidor+"compartidos/"+idPresupuesto+"/", categoria: servidor+"categoriaProductos/"+categoria+"/"},
+        //             headers: {
+        //                 "content-type":"application/json",
+        //                 "Authorization": "Token "+token
+        //             }, 
+        //         }).then( res => {
+        //             console.log(res.data);
+        //         }).catch(err => {
+        //             console.log(err.response.data);
+        //         });
+        //     }
+        // }
+        // goNext();
+>>>>>>> uriel
     }
 
     const goNext = (pID, m, c) => {
@@ -184,7 +236,11 @@ export default (props) => {
                         </View>
                     <TouchableOpacity 
                         style={styles.InputsNavEnter}
+<<<<<<< HEAD
                         onPress={next(presupuesto)}>
+=======
+                        onPress={sendData}>
+>>>>>>> uriel
                         <Text style={[styles.TextColorOne, styles.TextButton]}>Crear</Text>
                     </TouchableOpacity>
                 </ScrollView>
