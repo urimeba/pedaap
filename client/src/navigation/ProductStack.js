@@ -5,7 +5,7 @@ import {
 
 import Products from '../screens/adminScreens/ProductScreen';
 import ViewProduct from '../screens/adminScreens/ViewProduct';
-import NewProduct from '../screens/ProfileScreens/ProfileScreen';
+import NewProduct from '../screens/adminScreens/NewProduct';
 
 const ProductStack = createStackNavigator({
     ViewProduct: {

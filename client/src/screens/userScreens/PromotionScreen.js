@@ -29,41 +29,6 @@ export default class App extends Component{
     }
     
 
-     cajas=({item})=>(
-        <View style={styles.caja}>
-            <View style={styles.imgCaja}>
-                <Image/>
-            </View>
-            <View style={styles.datosCaja}>
-                 <Text style={styles.titulo1}>Nombre de la promoción</Text>
-                <View style={styles.inputs}>
-                     <Text style={styles.titulo}>{item.nombre}</Text>
-                </View>
-                <Text style={styles.titulo1}>Costo</Text>
-                <View style={styles.inputs}>
-                     <Text style={styles.titulo}>{item.costo}</Text>
-                </View>
-                 <Text style={styles.titulo1}>Descripción</Text>
-                <View style={styles.grande}>
-                     <Text style={ styles.titulo}>{item.descripcion}</Text>
-                </View>
-                 <Text style={styles.titulo1}>Fecha de inicio</Text>
-                <View style={styles.inputs}>
-                     <Text style={styles.titulo}>{item.vigenciaIn}</Text>
-                </View>
-                 <Text style={styles.titulo1}>Fecha de vencimiento</Text>
-                <View style={styles.inputs}>
-                     <Text style={styles.titulo}>{item.vigenciaVen}</Text>
-                </View>
-                 <Text style={styles.titulo1}>Establecimiento</Text>
-                <View style={styles.inputs}>
-                     <Text style={styles.titulo}>{item.lugar}</Text>
-                </View>
-            </View>
-        </View>
-    )
-
-
 
     render(){
         return (

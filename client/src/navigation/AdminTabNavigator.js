@@ -14,7 +14,7 @@ const AdminTabs = createBottomTabNavigator({
         navigationOptions: {
                 tabBarLabel: 'Productos',
                 tabBarIcon: ({tintColor}) => (
-                    <Icon name="bottle" size={24} color={tintColor} />
+                    <Icon name="food-variant" size={24} color={tintColor} />
                 ),
             },
     },
