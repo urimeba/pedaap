@@ -11,6 +11,7 @@ class Sala(models.Model):
     creador = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     codigo = models.CharField(max_length=6,default=random_generator)
     participantes = models.PositiveIntegerField()
+    estado = models.SmallIntegerField()
 
 class Preguntas(models.Model):
     pregunta = models.CharField(max_length=150, unique=True)
