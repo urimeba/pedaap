@@ -22,7 +22,7 @@ export default class App extends Component{
             filter:false,
             datos: [],
             establecimientos: [],
-            loading: true,
+            loading: false,
             clave: '',
         };
     }
