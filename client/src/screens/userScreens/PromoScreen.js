@@ -144,11 +144,11 @@ export default class App extends Component{
         .then(response => response.json())
         .then((responseJson)=>{
             let j = responseJson.Datos.replace(/'/g,'"');
-            console.log(j)
+            // console.log(j)
             let json_data = JSON.parse(j);
-            console.log(json_data)
+            // console.log(json_data)
             let data = [];
-            // console.log(json_data[1]);
+            // console.log(json_data[1] );
 
             for(var i in json_data){
                 data.push(json_data[i]);

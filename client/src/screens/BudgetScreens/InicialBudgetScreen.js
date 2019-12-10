@@ -8,33 +8,6 @@ import axios from 'axios';
 import Circle from '../../components/Circle';
 
 export default (props) => {
-    // const dataP = [
-    //     {
-    //         id: '1',
-    //         name: 'Vodka'
-    //     },
-    //     {
-    //         id: '2',
-    //         name: 'Tequila'
-    //     },
-    //     {
-    //         id: '3',
-    //         name: 'Vodka'
-    //     },
-    //     {
-    //         id: '4',
-    //         name: 'Tequila'
-    //     },
-    //     {
-    //         id: '5',
-    //         name: 'Tequila'
-    //     },
-    //     {
-    //         id: '6',
-    //         name: 'Vodka'
-    //     },
-    // ];
-
     //Data
     const [dataP, setDataP] = React.useState([]);
     React.useEffect(() => {
@@ -76,41 +49,43 @@ export default (props) => {
     const [presupuesto, setPresupuesto] = React.useState('')
 
 
-    // _next=async()=>{
-    //     // Alert.alert('back')
-    //     url = await AsyncStorage.getItem("server");
-    //     token = await AsyncStorage.getItem("userToken");
-    //     idUser = await AsyncStorage.getItem("userId");
-    //     // console.log(this.state.presupuesto)
+    _next=async()=>{
+        // Alert.alert('back')
+        url = await AsyncStorage.getItem("server");
+        token = await AsyncStorage.getItem("userToken");
+        idUser = await AsyncStorage.getItem("userId");
+        // console.log(presupuesto)
 
 
-    //     if(isNaN(this.state.presupuesto)){
-    //         // console.log(false)
-    //         Alert.alert("Error","Ingresa un numero válido");
-    //     }else{
-    //         if(this.state.presupuesto>0){
-    //             // console.log(true)
-    //             axios({
-    //                 method: 'POST',
-    //                 url: url+"compartidos/",
-    //                 data: {usuarioPropietario:url+"usuarios/"+idUser+"/", monto:this.state.presupuesto},
-    //                 headers: {
-    //                     "content-type":"application/json",
-    //                     "Authorization":"Token "+ token
-    //                 }, 
-    //             }).then( res => {
-    //                 console.log(res.data.id, res.data.monto, res.data.codigo);
-    //                 this.props.navigation.navigate('ShareBudget',{idPresupuesto: res.data.id, monto: res.data.monto, codigo:res.data.codigo })
-    //             }).catch(err => {
-    //                 console.log(err)
-    //             });
-    //         }
-    //         else{
-    //             // console.log("Igual a 0")
-    //             Alert.alert("Error","Debes ingresar un número mayor a 0");
-    //         }
-    //     }        
-    // }
+        if(isNaN(presupuesto)){
+            Alert.alert("Error","Ingresa un numero válido");
+        }else{
+            console.log(presupuesto)
+            if(presupuesto>0){
+                // console.log(true)
+                axios({
+                    method: 'POST',
+                    url: url+"compartidos/",
+                    data: {usuarioPropietario:url+"usuarios/"+idUser+"/", monto:presupuesto},
+                    headers: {
+                        "content-type":"application/json",
+                        "Authorization":"Token "+ token
+                    }, 
+                }).then( res => {
+                    console.log(res.data.id, res.data.monto, res.data.codigo);
+                    sendData(selected);
+
+                    // props.navigation.navigate('ShareBudget',{idPresupuesto: res.data.id, monto: res.data.monto, codigo:res.data.codigo })
+                }).catch(err => {
+                    console.log(err)
+                });
+            }
+            else{
+                // console.log("Igual a 0")
+                Alert.alert("Error","Debes ingresar un número mayor a 0");
+            }
+        }        
+    }
 
     const sendData = (s) => async() => {
         let obj = Object.create(null);
@@ -118,33 +93,33 @@ export default (props) => {
             obj[k] = v;
         }
         console.log(JSON.stringify(obj));
+        console.log(idPresupuesto)
 
-        servidor = await AsyncStorage.getItem("server")
-        
-        idUser = await AsyncStorage.getItem("userId");
-        token = await AsyncStorage.getItem("userToken");
+        // servidor = await AsyncStorage.getItem("server")
+        // idUser = await AsyncStorage.getItem("userId");
+        // token = await AsyncStorage.getItem("userToken");
 
-        for(categoria in obj){
-            if(obj[categoria]==true){
-                console.log(categoria);
-                url = servidor+'userCategorias/';
+        // for(categoria in obj){
+        //     if(obj[categoria]==true){
+        //         console.log(categoria);
+        //         url = servidor+'categoriasCompartido/';
 
-                axios({
-                    method: 'POST',
-                    url: url,
-                    data: {user:servidor+"usuarios/"+idUser+"/", categoria: servidor+"categoriaProductos/"+categoria+"/"},
-                    headers: {
-                        "content-type":"application/json",
-                        "Authorization": "Token "+token
-                    }, 
-                }).then( res => {
-                    console.log(res.data);
-                }).catch(err => {
-                    console.log(err.response.data);
-                });
-            }
-        }
-        goNext();
+        //         axios({
+        //             method: 'POST',
+        //             url: url,
+        //             data: {presupuestoCompartido:servidor+"compartidos/"+idPresupuesto+"/", categoria: servidor+"categoriaProductos/"+categoria+"/"},
+        //             headers: {
+        //                 "content-type":"application/json",
+        //                 "Authorization": "Token "+token
+        //             }, 
+        //         }).then( res => {
+        //             console.log(res.data);
+        //         }).catch(err => {
+        //             console.log(err.response.data);
+        //         });
+        //     }
+        // }
+        // goNext();
     }
 
     const goNext = () => {
@@ -185,7 +160,7 @@ export default (props) => {
                         </View>
                     <TouchableOpacity 
                         style={styles.InputsNavEnter}
-                        onPress={sendData(selected)}>
+                        onPress={sendData}>
                         <Text style={[styles.TextColorOne, styles.TextButton]}>Crear</Text>
                     </TouchableOpacity>
                 </ScrollView>
