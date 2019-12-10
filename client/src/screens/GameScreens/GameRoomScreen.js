@@ -77,7 +77,7 @@ export default class App extends Component{
                 </View>
                 <View style={styles.cajaCodigo}>
                     <Text style={styles.tituloCodigo}>Comparte tu código</Text>
-                    <Text style={styles.codigo}>CY678900</Text>
+                    <Text style={styles.codigo}>{JSON.stringify(this.props.navigation.getParam('codigo', 'NO-CD')) }</Text>
                 </View>
                 <View style={styles.tituloJugadores}>
                     <View style={styles.tituloJ}>

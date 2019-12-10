@@ -8,7 +8,11 @@ import Profile from '../screens/ProfileScreens/ProfileScreen';
 const ProfileStack = createStackNavigator(
     {
         Profile: {
-            screen: Profile
+            screen: Profile,
+            navigationOptions: {
+                title: 'Perfil',
+                header: null
+            }
         },
         Prefer: {
             screen: Prefer,

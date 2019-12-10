@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View,Alert, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
+import { SafeAreaView, View, Alert, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Asset } from 'expo-asset';
@@ -8,63 +8,60 @@ import axios from 'axios';
 import Circle from '../../components/Circle';
 
 export default (props) => {
-    
-    // const [dataP, setDataP] = React.useState([]);
+    // const dataP = [
+    //     {
+    //         id: '1',
+    //         name: 'Vodka'
+    //     },
+    //     {
+    //         id: '2',
+    //         name: 'Tequila'
+    //     },
+    //     {
+    //         id: '3',
+    //         name: 'Vodka'
+    //     },
+    //     {
+    //         id: '4',
+    //         name: 'Tequila'
+    //     },
+    //     {
+    //         id: '5',
+    //         name: 'Tequila'
+    //     },
+    //     {
+    //         id: '6',
+    //         name: 'Vodka'
+    //     },
+    // ];
 
-    
-const dataP = [
-    {
-        id: '1',
-        name: 'Vodka'
-    },
-    {
-        id: '2',
-        name: 'Tequila'
-    },
-    {
-        id: '3',
-        name: 'Vodka'
-    },
-    {
-        id: '4',
-        name: 'Tequila'
-    },
-    {
-        id: '5',
-        name: 'Tequila'
-    },
-    {
-        id: '6',
-        name: 'Vodka'
-    },
-];
+    //Data
+    const [dataP, setDataP] = React.useState([]);
+    React.useEffect(() => {
+        async function _prefLis() {
+            url = await AsyncStorage.getItem("server")+'categoriaProductos/';
+            token = await AsyncStorage.getItem('userToken');
 
-    // React.useEffect(() => {
-    //     async function _prefLis() {
-    //         url = await AsyncStorage.getItem("server")+'categoriaProductos/';
-    //         token = await AsyncStorage.getItem('userToken');
-
-    //         try {
-    //             let request = await fetch(url, {
-    //                 method: 'GET',
-    //                 mode: 'cors',
-    //                 credentials: 'include',
-    //                 headers: {
-    //                     'Authorization': 'Token '+token, 
-    //                 }
-    //             });
-    //             let resp = await request.json();
-    //             setDataP(resp.results);
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     }
-    //     _prefLis();
-    // }, [setDataP]);
+            try {
+                let request = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Token '+token, 
+                    }
+                });
+                let resp = await request.json();
+                setDataP(resp.results);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        _prefLis();
+    }, [setDataP]);
 
     //Cirulos
     const [selected, setSelected] = React.useState(new Map());
-
     const onSelect = React.useCallback(
         (id) => {
             const newSelected = new Map(selected);
@@ -75,53 +72,83 @@ const dataP = [
         [selected]
     );
 
-    const goNext = () => {
-        props.navigation.navigate('ShareBudget');
-    }
-    _next=async()=>{
-        // Alert.alert('back')
-        url = await AsyncStorage.getItem("server");
-        token = await AsyncStorage.getItem("userToken");
+    //Presupuesto
+    const [presupuesto, setPresupuesto] = React.useState('')
+
+
+    // _next=async()=>{
+    //     // Alert.alert('back')
+    //     url = await AsyncStorage.getItem("server");
+    //     token = await AsyncStorage.getItem("userToken");
+    //     idUser = await AsyncStorage.getItem("userId");
+    //     // console.log(this.state.presupuesto)
+
+
+    //     if(isNaN(this.state.presupuesto)){
+    //         // console.log(false)
+    //         Alert.alert("Error","Ingresa un numero válido");
+    //     }else{
+    //         if(this.state.presupuesto>0){
+    //             // console.log(true)
+    //             axios({
+    //                 method: 'POST',
+    //                 url: url+"compartidos/",
+    //                 data: {usuarioPropietario:url+"usuarios/"+idUser+"/", monto:this.state.presupuesto},
+    //                 headers: {
+    //                     "content-type":"application/json",
+    //                     "Authorization":"Token "+ token
+    //                 }, 
+    //             }).then( res => {
+    //                 console.log(res.data.id, res.data.monto, res.data.codigo);
+    //                 this.props.navigation.navigate('ShareBudget',{idPresupuesto: res.data.id, monto: res.data.monto, codigo:res.data.codigo })
+    //             }).catch(err => {
+    //                 console.log(err)
+    //             });
+    //         }
+    //         else{
+    //             // console.log("Igual a 0")
+    //             Alert.alert("Error","Debes ingresar un número mayor a 0");
+    //         }
+    //     }        
+    // }
+
+    const sendData = (s) => async() => {
+        let obj = Object.create(null);
+        for (let [k,v] of s) {
+            obj[k] = v;
+        }
+        console.log(JSON.stringify(obj));
+
+        servidor = await AsyncStorage.getItem("server")
+        
         idUser = await AsyncStorage.getItem("userId");
-        // console.log(this.state.presupuesto)
+        token = await AsyncStorage.getItem("userToken");
 
+        for(categoria in obj){
+            if(obj[categoria]==true){
+                console.log(categoria);
+                url = servidor+'userCategorias/';
 
-        if(isNaN(this.state.presupuesto)){
-            // console.log(false)
-            Alert.alert("Error","Ingresa un numero válido");
-        }else{
-            if(this.state.presupuesto>0){
-                // console.log(true)
                 axios({
                     method: 'POST',
-                    url: url+"compartidos/",
-                    data: {usuarioPropietario:url+"usuarios/"+idUser+"/", monto:this.state.presupuesto},
+                    url: url,
+                    data: {user:servidor+"usuarios/"+idUser+"/", categoria: servidor+"categoriaProductos/"+categoria+"/"},
                     headers: {
                         "content-type":"application/json",
-                        "Authorization":"Token "+ token
+                        "Authorization": "Token "+token
                     }, 
                 }).then( res => {
-                    console.log(res.data.id, res.data.monto, res.data.codigo);
-                    this.props.navigation.navigate('ShareBudget',{idPresupuesto: res.data.id, monto: res.data.monto, codigo:res.data.codigo })
+                    console.log(res.data);
                 }).catch(err => {
-                    console.log(err)
+                    console.log(err.response.data);
                 });
             }
-            else{
-                // console.log("Igual a 0")
-                Alert.alert("Error","Debes ingresar un número mayor a 0");
-            }
-            
-
-            
-
         }
+        goNext();
+    }
 
-        
-
-
-
-        
+    const goNext = () => {
+        props.navigation.navigate('ShareBudget');
     }
 
     return (
@@ -134,7 +161,8 @@ const dataP = [
                         keyboardType = 'numeric'
                         placeholderTextColor="#848482"
                         maxLength={6}
-                        onChangeText={(presupuesto) => this.setState({ presupuesto })}
+                        onChangeText={(presupuesto) => setPresupuesto(presupuesto)}
+                        value={presupuesto}
                     />
                 </View>
                 <ScrollView style={styles.abajoNegro}>
@@ -157,7 +185,7 @@ const dataP = [
                         </View>
                     <TouchableOpacity 
                         style={styles.InputsNavEnter}
-                        onPress={goNext}>
+                        onPress={sendData(selected)}>
                         <Text style={[styles.TextColorOne, styles.TextButton]}>Crear</Text>
                     </TouchableOpacity>
                 </ScrollView>

@@ -35,7 +35,7 @@ export default class App extends Component{
         axios({
           method: 'POST',
           url: url,
-          data: {usuario:this.state.usuario, password: this.state.contra, correo: this.state.correo, telefono: this.state.tel, },
+          data: {usuario:this.state.usuario, password: this.state.contra, correo: this.state.correo, telefono: this.state.tel },
           headers: {
             "content-type":"application/json",
           },

@@ -18,13 +18,14 @@ export default (props) => {
 
     React.useEffect(() => {
         async function _prefLis() {
-            url = await AsyncStorage.getItem("server")+'categoriaProductos/';
-            // AsyncStorage.setItem('userId',"1")
+            url = await AsyncStorage.getItem("server");
+            url2 = url +'categoriaProductos/';
+            idUser = await AsyncStorage.getItem('userId')
             token = await AsyncStorage.getItem('userToken');
 
             try {
                 console.log(token)
-                let request = await fetch(url, {
+                let request = await fetch(url2, {
                     method: 'GET',
                     mode: 'cors',
                     credentials: 'include',
@@ -35,6 +36,22 @@ export default (props) => {
                 let resp = await request.json();
                 console.log(resp.results);
                 setDataP(resp.results);
+
+                axios({
+                    method: 'POST',
+                    url: url+"userCategorias/eliminarCategoria/",
+                    data: {idUser:idUser},
+                    headers: {
+                        "content-type":"application/json",
+                        "Authorization": "Token "+token
+                    }, 
+                }).then( res => {
+                    console.log(res.data);
+                }).catch(err => {
+                    console.log(err.response.data);
+                });
+
+
             } catch (error) {
                 console.log(error);
             }
@@ -58,6 +75,9 @@ export default (props) => {
             // }).catch(err => {
             //     console.error(err);
             // });
+
+            
+
         }
         _prefLis();
     }, [setDataP]);

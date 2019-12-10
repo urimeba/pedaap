@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
     FlatList,
     StyleSheet,
@@ -8,115 +8,80 @@ import {
     TouchableOpacity,
     AsyncStorage,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import axios from 'axios';
 
-import Circle from '../../components/Circle';
-const dataP = [
-    {
-        id: '1',
-        name: 'Familiar'
-    },
-    {
-        id: '2',
-        name: 'Reunion'
-    },
-    {
-        id: '3',
-        name: 'Formal'
-    },
-    {
-        id: '4',
-        name: 'Romantico'
-    },
-    {
-        id: '5',
-        name: 'Negocios'
-    },
-    {
-        id: '6',
-        name: 'Amigos'
-    },
-    {
-        id: '7',
-        name: 'Informal'
-    },
-    {
-        id: '8',
-        name: 'Otro'
-    },
-];
-
-export default (props) => {
-    //Data
-    // const [dataP, setDataP] = React.useState([]);
-
-
-    const [selected, setSelected] = React.useState(new Map());
-
-    const onSelect = React.useCallback(
-        (id) => {
-            const newSelected = new Map(selected);
-            newSelected.set(id, !selected.get(id));
-
-            setSelected(newSelected);
-        },
-        [selected]
-    );
-
-
-    //Send Data
-    const sendData = (s) => () => {
-        // console.log(Array.from(selected.entries()));
-        /*
-            Se convierte el MAP en un JSON que se puede enviar a la API
-        */
-        let obj = Object.create(null);
-        for (let [k,v] of s) {
-            obj[k] = v;
+export default class App extends Component{
+    constructor(props){
+        super(props);
+        this.state={
+            selectedItem: null,
+            datos: [
+                {id: '1', text: 'Familiar', icono: 'account-group'},
+                {id: '2', text: 'Amigos', icono: 'account-group-outline'},
+                {id: '3', text: 'Formal', icono: 'shoe-formal'},
+                {id: '4', text: 'Romántico', icono: 'heart-circle'},
+                {id: '5', text: 'Otro', 'icono': 'star-circle-outline'},
+            ]
         }
-        console.log(JSON.stringify(obj));
-        goNext();
     }
 
-    const goNext = () => {
-        props.navigation.navigate('NumAsis');
+    async _choosen(selectedItem) {
+        await this.setState({ selectedItem: selectedItem });
+        console.log(this.state.selectedItem);
     }
-
-    return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.title}>
-                <Text style={styles.titleWhite}>Selecciona el tipo de evento</Text>
-            </View>
-            <View style={styles.flatContainer}>
-                <FlatList 
-                    style={styles.flat} 
-                    data={dataP}
-                    renderItem={({item}) => (
-                        <Circle 
-                            data={item}
-                            selected={!!selected.get(item.id)}
-                            onSelect={onSelect}
-                        />
-                    )}
-                    keyExtractor={item => item.id}
-                    extraData={selected}
-                    numColumns={3}
-                />
-            </View>
-            <View style={styles.next}>
-                <View style={{flex: 1}}></View>
-                <View style={styles.viewContinue}>
-                    <TouchableOpacity 
-                        style={styles.continue} 
-                        onPress={sendData(selected)}
-                        // onPress={() => props.navigation.navigate('Stores')}
+      
+    _renderList = ({ item }) => {        
+        return (
+            <View style={styles.dataBox}>
+                <View style={styles.topBox}>
+                    <TouchableOpacity
+                        onPress={() => this._choosen(item.id)}
+                        style={styles.circle}          
                     >
-                        <Text style={styles.white}>Continuar</Text>
+                        <Icon name={item.icono} size={50} color={'#707070'} />
                     </TouchableOpacity>
                 </View>
+                <View style={styles.bottomBox}>
+                    <Text style={styles.bottomBoxText}>{item.text}</Text>
+                </View>
             </View>
-        </SafeAreaView>
-    );
+        );
+    }
+    
+    _continuar = () => {
+        this.props.navigation.navigate('NumAsis');
+    }
+
+    render(){
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={styles.title}>
+                    <Text style={styles.titleWhite}>Selecciona el tipo de evento</Text>
+                </View>
+                <View style={styles.flatContainer}>
+                    <FlatList 
+                        style={styles.flat} 
+                        data={this.state.datos}
+                        renderItem={this._renderList}
+                        keyExtractor={item => item.id.toString()}
+                        numColumns={3}
+                    />
+                </View>
+                <View style={styles.next}>
+                    <View style={{flex: 1}}></View>
+                    <View style={styles.viewContinue}>
+                        <TouchableOpacity 
+                            style={styles.continue} 
+                            onPress={this._continuar}
+                        >
+                            <Text style={styles.white}>Continuar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </SafeAreaView>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -129,6 +94,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        textAlign:'center'
     },
     flatContainer:{
         flex: 6,
@@ -168,5 +134,33 @@ const styles = StyleSheet.create({
     white:{
         color: '#FFFFFF',
         fontSize: 18
-    }
+    },
+    dataBox:{
+        flex: 1,
+        marginBottom: 15,
+    },
+    topBox:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    circle:{
+        backgroundColor: '#393939',
+        height: 100,
+        width: 100,
+        borderRadius: 400,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    bottomBox:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 5,
+        textAlign: 'center',
+    },
+    bottomBoxText:{
+        color: '#FFFFFF',
+        fontSize: 18,
+    },
 });

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 export default class App extends Component{
     constructor(props){
@@ -11,13 +12,36 @@ export default class App extends Component{
         }
     }
 
-    _create=()=>{
-        this.props.navigation.navigate('GameRoom')
+    _create=async(props)=>{
+        url = await AsyncStorage.getItem("server");
+        token =  await AsyncStorage.getItem("userToken");
+        idUser =  await AsyncStorage.getItem("userId");
+        url2 = url+"usuarios/"+idUser+"/";
+
+        // console.log(url2);
+
+        axios({
+            method: 'POST',
+            url: url+"salas/",
+            data: {creador:url2, participantes:1},
+            headers: {
+                "content-type":"application/json",
+                "Authorization":"Token " +token
+            }, 
+        }).then( res => {
+            console.log(res.data);
+            this.props.navigation.navigate('GameRoom', {idSala:res.data.id, codigo:res.data.codigo, participantes:res.data.participantes})
+        }).catch(err => {
+            console.log(err)
+        });
+
+        
     }
 
-    _join=()=>{
+    _join=async()=>{
          this.props.navigation.navigate('JoinGame')
     }
+
     render(){
         return(
             <View style={styles.todo}>

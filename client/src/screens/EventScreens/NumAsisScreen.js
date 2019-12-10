@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
     FlatList,
     StyleSheet,
@@ -8,115 +8,79 @@ import {
     TouchableOpacity,
     AsyncStorage,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import axios from 'axios';
 
-import Circle from '../../components/Circle';
-const dataP = [
-    {
-        id: '1',
-        name: '2 +'
-    },
-    {
-        id: '2',
-        name: '4 +'
-    },
-    {
-        id: '3',
-        name: '6 +'
-    },
-    {
-        id: '4',
-        name: '8 +'
-    },
-    {
-        id: '5',
-        name: '10 +'
-    },
-    {
-        id: '6',
-        name: '12 +'
-    },
-    {
-        id: '7',
-        name: '16 +'
-    },
-    {
-        id: '8',
-        name: 'Otro'
-    },
-];
-
-export default (props) => {
-    //Data
-    // const [dataP, setDataP] = React.useState([]);
-
-
-    const [selected, setSelected] = React.useState(new Map());
-
-    const onSelect = React.useCallback(
-        (id) => {
-            const newSelected = new Map(selected);
-            newSelected.set(id, !selected.get(id));
-
-            setSelected(newSelected);
-        },
-        [selected]
-    );
-
-
-    //Send Data
-    const sendData = (s) => () => {
-        // console.log(Array.from(selected.entries()));
-        /*
-            Se convierte el MAP en un JSON que se puede enviar a la API
-        */
-        let obj = Object.create(null);
-        for (let [k,v] of s) {
-            obj[k] = v;
+export default class App extends Component{
+    constructor(props){
+        super(props);
+        this.state={
+            selectedItem: null,
+            datos: [
+                {id: '1', text: 'Hasta 10 personas', 'icono': 'dice-1'},
+                {id: '2', text: 'Hasta 30 personas', 'icono': 'dice-2'},
+                {id: '3', text: 'Hasta 50 personas', 'icono': 'dice-3'},
+                {id: '4', text: 'Más de 50 personas', 'icono': 'dice-4'},
+            ]
         }
-        console.log(JSON.stringify(obj));
-        goNext();
     }
 
-    const goNext = () => {
-        props.navigation.navigate('Need');
+    async _choosen(selectedItem) {
+        await this.setState({ selectedItem: selectedItem });
+        console.log(this.state.selectedItem);
     }
-
-    return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.title}>
-                <Text style={styles.titleWhite}>Selecciona el numero de personas</Text>
-            </View>
-            <View style={styles.flatContainer}>
-                <FlatList 
-                    style={styles.flat} 
-                    data={dataP}
-                    renderItem={({item}) => (
-                        <Circle 
-                            data={item}
-                            selected={!!selected.get(item.id)}
-                            onSelect={onSelect}
-                        />
-                    )}
-                    keyExtractor={item => item.id}
-                    extraData={selected}
-                    numColumns={3}
-                />
-            </View>
-            <View style={styles.next}>
-                <View style={{flex: 1}}></View>
-                <View style={styles.viewContinue}>
-                    <TouchableOpacity 
-                        style={styles.continue} 
-                        onPress={sendData(selected)}
-                        // onPress={() => props.navigation.navigate('Stores')}
+      
+    _renderList = ({ item }) => {        
+        return (
+            <View style={styles.dataBox}>
+                <View style={styles.topBox}>
+                    <TouchableOpacity
+                        onPress={() => this._choosen(item.id)}
+                        style={styles.circle}          
                     >
-                        <Text style={styles.white}>Continuar</Text>
+                        <Icon name={item.icono} size={50} color={'#707070'} />
                     </TouchableOpacity>
                 </View>
+                <View style={styles.bottomBox}>
+                    <Text style={styles.bottomBoxText}>{item.text}</Text>
+                </View>
             </View>
-        </SafeAreaView>
-    );
+        );
+    }
+    
+    _goNext = () => {
+        this.props.navigation.navigate('Need');
+    }
+
+    render(){
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={styles.title}>
+                    <Text style={styles.titleWhite}>Selecciona el numero de personas</Text>
+                </View>
+                <View style={styles.flatContainer}>
+                    <FlatList 
+                        style={styles.flat} 
+                        data={this.state.datos}
+                        renderItem={this._renderList}
+                        keyExtractor={item => item.id.toString()}
+                        numColumns={3}
+                    />
+                </View>
+                <View style={styles.next}>
+                    <View style={{flex: 1}}></View>
+                    <View style={styles.viewContinue}>
+                        <TouchableOpacity 
+                            style={styles.continue} 
+                            onPress={this._goNext}
+                        >
+                            <Text style={styles.white}>Continuar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </SafeAreaView>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -169,5 +133,33 @@ const styles = StyleSheet.create({
     white:{
         color: '#FFFFFF',
         fontSize: 18
-    }
+    },
+    dataBox:{
+        flex: 1,
+        marginBottom: 15,
+    },
+    topBox:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    circle:{
+        backgroundColor: '#393939',
+        height: 100,
+        width: 100,
+        borderRadius: 400,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    bottomBox:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 5,
+        textAlign: 'center',
+    },
+    bottomBoxText:{
+        color: '#FFFFFF',
+        fontSize: 18,
+    },
 });

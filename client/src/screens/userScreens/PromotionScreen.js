@@ -31,60 +31,61 @@ export default class App extends Component{
 
 
     render(){
-        // const item = this.props.navigation.getParam('datos', 'data');
-        // id = this.props.navigation.getParam('id', 'n')
-        // console.log(item)
-    return (
-        <View style={styles.todo}>
-            <View style={styles.container}>
-                <View style={styles.arriba}>
-                    <View style={styles.textoP}>
-                        <TouchableOpacity onPress={this._user} >
-                             <Icon name="arrow-left" size={22} color={'#707070'} style={styles.icon} />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.botones}>
-                        <Text style={styles.tituloP}>Promoción</Text>
-                    </View>
-                </View>
-                <ScrollView>
-                        <View style={styles.caja}>
-                            <View style={styles.imgCaja}>
-                                <Image/>
-                            </View>
-                            <View style={styles.datosCaja}>
-                                <Text style={styles.titulo1}>Nombre de la promoción</Text>
-                                <View style={styles.inputs}>
-                                    <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('nombre', 'promo'))}</Text>
-                                </View>
-                                <Text style={styles.titulo1}>Costo</Text>
-                                <View style={styles.inputs}>
-                                    <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('costo', 'promo'))}</Text>
-                                </View>
-                                <Text style={styles.titulo1}>Descripción</Text>
-                                <View style={styles.grande}>
-                                    <Text style={ styles.titulo}>{JSON.stringify(this.props.navigation.getParam('descripcion', 'promo'))}</Text>
-                                </View>
-                                <Text style={styles.titulo1}>Fecha de inicio</Text>
-                                <View style={styles.inputs}>
-                                    <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('inicio', 'promo'))}</Text>
-                                </View>
-                                <Text style={styles.titulo1}>Fecha de vencimiento</Text>
-                                <View style={styles.grande}>
-                                    <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('vencimiento', 'promo'))}</Text>
-                                </View>
-                                <Text style={styles.titulo1}>Establecimiento</Text>
-                                <View style={styles.inputs}>
-                                    <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('establecimiento', 'promo'))}</Text>
-                                </View>
-                            </View>
+        return (
+            <View style={styles.todo}>
+                <View style={styles.container}>
+                    <View style={styles.arriba}>
+                        <View style={styles.textoP}>
+                            <TouchableOpacity onPress={this._user} >
+                                <Icon name="arrow-left" size={22} color={'#707070'} style={styles.icon} />
+                            </TouchableOpacity>
                         </View>
-                </ScrollView>
+                        <View style={styles.botones}>
+                            <Text style={styles.tituloP}>Promoción</Text>
+                        </View>
+                    </View>
+                    <ScrollView>
+                            <View style={styles.caja}>
+                                <View style={styles.imgCaja}>
+                                    <Image/>
+                                </View>
+                                <View style={styles.datosCaja}>
+                                    <Text style={styles.titulo1}>Nombre de la promoción</Text>
+                                    <View style={styles.inputs}>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('nombre', 'promo'))}</Text>
+                                    </View>
+                                    <Text style={styles.titulo1}>Promocion</Text>
+                                    <View style={styles.inputs}>
+                                        <Text style={styles.tituloCosto}>${JSON.stringify(this.props.navigation.getParam('costo', 'promo'))}</Text>
+                                    </View>
+                                    <Text style={styles.titulo1}>categoría</Text>
+                                    <View style={styles.inputs}>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('categoria', 'promo'))}</Text>
+                                    </View>
+                                    <Text style={styles.titulo1}>Descripción</Text>
+                                    <View style={styles.grande}>
+                                        <Text style={ styles.titulo}>{JSON.stringify(this.props.navigation.getParam('descripcion', 'promo'))}</Text>
+                                    </View>
+                                    <Text style={styles.titulo1}>Vigencia</Text>
+                                    <View style={styles.inputs}>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('vigencia', 'promo'))}</Text>
+                                    </View>
+                                    <Text style={styles.titulo1}>Direccion</Text>
+                                    <View style={styles.grande}>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('direccion', 'promo'))}</Text>
+                                    </View>
+                                    <Text style={styles.titulo1}>Lugar</Text>
+                                    <View style={styles.inputs}>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('lugar', 'promo'))}</Text>
+                                    </View>
+                                </View>
+                            </View>
+                    </ScrollView>
+                </View>
             </View>
-        </View>
-        
-    );
-}
+            
+        );
+    }
 }
 
 
@@ -146,6 +147,14 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         justifyContent:'center',
          fontSize: 16,
+        padding:'5%',
+        // color: 'white'
+    },
+    tituloCosto:{
+        // flex: 3,
+        alignSelf:'center',
+        justifyContent:'center',
+        fontSize: 20,
         padding:'5%',
         // color: 'white'
     },

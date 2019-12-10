@@ -13,29 +13,6 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 
-const estable=[
-    {
-        id:'1',
-        nombre:'Oxxo',
-        direccion:'centro'
-    },
-    {
-        id:'2',
-        nombre:'Oxxovv',
-        direccion:'centro'
-    },
-    {
-        id:'3',
-        nombre:'Oxxoww',
-        direccion:'centro'
-    },
-    {
-        id:'4',
-        nombre:'Oxxoqq',
-        direccion:'centro'
-    },
-]
-
 export default class App extends Component{
     constructor(props) {
         super(props);
@@ -44,7 +21,8 @@ export default class App extends Component{
             filter:false,
             datos: [],
             establecimientos: [],
-            loading: false,
+            loading: true,
+            clave: '',
         };
     }
 
@@ -55,91 +33,167 @@ export default class App extends Component{
         if(this.state.establecimieniemtos===true){
             this.setState({establecimieniemtos:false})
         }
-        
     }
 
     _filtro=()=>{
-        if(this.state.filter===false){
-            this.setState({filter:true})
-        }
-        if(this.state.filter===true){
-            this.setState({filter:false})
+        if(this.state.establecimieniemtos===true){
+            if(this.state.filter===false){
+                let sortData = this.state.establecimientos;
+                sortData.sort((a, b) => ((a.nombre === b.nombre) ? 0 : ((a.nombre > b.nombre) ? 1 : -1)));
+                this.setState({
+                    establecimientos: sortData,
+                    filter:true
+                })
+            }
+            if(this.state.filter===true){
+                let sortData = this.state.establecimientos;
+                sortData.sort((a, b) => ((b.nombre === a.nombre) ? 0 : ((b.nombre > a.nombre) ? 1 : -1)));
+                this.setState({
+                    establecimientos: sortData,
+                    filter:false
+                })
+            }
+        }else{
+            if(this.state.filter===false){
+                let sortData = this.state.datos;
+                sortData.sort((a, b) => parseFloat(a.costo) - parseFloat(b.costo));
+                this.setState({
+                    datos: sortData,
+                    filter:true
+                })
+            }
+            if(this.state.filter===true){
+                let sortData = this.state.datos;
+                sortData.sort((a, b) => parseFloat(b.costo) - parseFloat(a.costo));
+                this.setState({
+                    datos: sortData,
+                    filter:false
+                })
+            }
         }
     }
 
-    async componentDidMount() {
-        // url = await AsyncStorage.getItem("server")+'promociones/';
-        // url2 = await AsyncStorage.getItem("server")+'tiendas/';
-        // token = await AsyncStorage.getItem('userToken');
+    _busqueda=async(value)=>{
+        this.setState({
+            clave: value,
+        });
 
-        // fetch(url, {
-        //     method: 'GET',
-        //     mode: 'cors',
-        //     credentials: 'include',
-        //     headers: {
-        //         'Authorization': 'Token '+token, 
-        //     }
-        // })
-        // .then(response => response.json())
-        // .then((responseJson)=>{
-        //     this.setState({
-        //         datos: responseJson.results
-        //     });
-        //     fetch(url2, {
-        //         method: 'GET',
-        //         mode: 'cors',
-        //         credentials: 'include',
-        //         headers: {
-        //             'Authorization': 'Token '+token, 
-        //         }
-        //     })
-        //     .then(response => response.json())
-        //     .then((responseJson)=>{
-        //         this.setState({
-        //             establecimientos: responseJson.results,
-        //             loading: false
-        //         });
-        //     })
-        //     .catch(error=>console.error(error))
-        // })
-        // .catch(error=>console.error(error))
-
-        url = await AsyncStorage.getItem("server")+"promociones/getPromos/";
+        url = await AsyncStorage.getItem("server")+'promociones/busqueda/'
         token = await AsyncStorage.getItem('userToken');
 
         axios({
-            method: 'GET',
+            method: 'POST',
             url: url,
-            data: {},
+            data: {"clave":this.state.clave},
             headers: {
                 "content-type":"application/json",
-                "Authorization":"Token "+token
+                "Authorization": 'Token '+token
+
             }, 
-        }).then( res => {
-            // PROMOCIONESs
-            // console.log(res.data);
-        }).catch(err => {
+        }).then(res => {
+            // console.log(res.data.Datos)
+            let j = res.data.Datos.replace(/'/g,'"');
+            let json_data = JSON.parse(j);
+            let data = [];
+            // console.log(json_data);
+
+            for(var i in json_data){
+                data.push(json_data[i]);
+            }
+
+            // console.log(data);
+
             this.setState({
-                error1: false,
-                error2: true,
+                datos: data,
             });
-        });
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+
+    async componentDidMount() {
+        url = await AsyncStorage.getItem("server")+"promociones/getPromos/";
+        token = await AsyncStorage.getItem('userToken');
+        url2 = await AsyncStorage.getItem("server")+"tiendas/";
+
+        // console.log(token)
+
+        // axios({
+        //     method: 'GET',
+        //     url: url,
+        //     data: {},
+        //     headers: {
+        //         "content-type":"application/json",
+        //         "Authorization":"Token dfdce0d7017730f1ce446333b458f6c7f4b22157"
+        //     }, 
+        // }).then( res => {
+        //     // PROMOCIONESs
+        //     console.log(res.Datos);
+        // }).catch(err => console.log(err));
+
+        fetch(url, {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token '+token,
+                }
+            }
+        )
+        .then(response => response.json())
+        .then((responseJson)=>{
+            let j = responseJson.Datos.replace(/'/g,'"');
+            let json_data = JSON.parse(j);
+            let data = [];
+            // console.log(json_data[1]);
+
+            for(var i in json_data){
+                data.push(json_data[i]);
+            }
+
+            // console.log(data);
+
+            this.setState({
+                datos: data,
+            });
+
+            fetch(url2, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Token '+token,
+                    }
+                }
+            )
+            .then(response => response.json())
+            .then((responseJson)=>{
+                // console.log(responseJson.results);
+                this.setState({
+                    establecimientos: responseJson.results,
+                    loading: false,
+                });
+            })
+            .catch(error=>console.log(error))
+        })
+        .catch(error=>console.log(error))
     }
 
     caja=({item})=>{
-        let fechaSplit = item.fechaVencimiento.split("-");
+        let fechaSplit = item.vigencia.split("-");
         let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
         return(
             <TouchableOpacity 
                 onPress={() => this.props.navigation.navigate('Promotion', {
-                    datos: item, 
+                    datos: item,
                     id: item.id,
-                    nombre: item.descripcion,
-                    descripcion: item.descripcion,//pendiente checar
-                    inicio: item.fechaInicio,
-                    vencimiento: item.fechaVencimiento,//pendiente checar
+                    nombre: item.nombre,
+                    lugar: item.lugar,
+                    vigencia: item.vigencia,
+                    categoria: item.categoria,
+                    descripcion: item.descripcion,
+                    direccion: item.direccion,
                     costo: item.costo,
-                    foto:item.foto
                 })}
                 style={styles.caja}
             >
@@ -147,7 +201,7 @@ export default class App extends Component{
                     <Image/>
                 </View>
                 <View style={styles.datosCaja}>
-                    <Text style={styles.titulo}>{item.descripcion}</Text>
+                    <Text style={styles.titulo}>{item.nombre}</Text>
                     {item.costo == '0.00' &&(
                         <Text style={styles.titulo}>Promoción</Text>
                     )}
@@ -167,7 +221,7 @@ export default class App extends Component{
             </View>
             <View style={styles.datosCaja}>
                 <Text style={styles.titulo}>{item.nombre}</Text>
-                <Text style={styles.titulo}>{item.lugar}</Text>
+                <Text style={styles.titulo}>{item.direccion}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -176,7 +230,6 @@ export default class App extends Component{
         if(!this.state.loading){
             return (
                 <View style={styles.todo}>
-                    {console.log(this.state.establecimieniemtos)}
                     <View style={styles.container}>
                         <View style={styles.arriba}>
                             <View style={styles.textoP}>
@@ -188,6 +241,7 @@ export default class App extends Component{
                                     style={styles.TInput}
                                     placeholder="Buscar"
                                     placeholderTextColor="#848482"
+                                    onChangeText={(value)=>this._busqueda(value)}
                                 />
                                 <TouchableOpacity style={styles.iconF}
                                     onPress={this._filtro}
@@ -203,13 +257,24 @@ export default class App extends Component{
                                     style={styles.iconE}  
                                     onPress={this._estable}
                                 >
-                                    <Icon name="store" size={24} color={'#DE4C63'}/>
+                                    {this.state.establecimieniemtos===false &&(
+                                        <Icon name="store" size={24} color={'#707070'}/>
+                                    )}
+                                    {this.state.establecimieniemtos===true &&(
+                                        <Icon name="store" size={24} color={'#DE4C63'}/>
+                                    )}
                                 </TouchableOpacity>
                                 <TouchableOpacity 
                                     style={styles.iconA}
                                     onPress={() => this.props.navigation.navigate('New')}
                                 >
-                                    <Icon name="plus" size={24} color={'#FEDB6B'}  />
+                                    {this.state.establecimieniemtos===false &&(
+                                        <Icon name="plus" size={24} color={'#FEDB6B'}  />
+                                    )}
+                                    {this.state.establecimieniemtos===true &&(
+                                        <Icon name="plus" size={24} color={'#FAFAFA'}  />
+                                    )}
+                                    
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -218,15 +283,17 @@ export default class App extends Component{
                                 style={styles.flat}
                                 data={this.state.datos}
                                 renderItem={this.caja}
-                                keyExtractor={(item) => item.id.toString()}
+                                keyExtractor={item => item.id.toString()}
+                                extraData={this.state}
                             />
                         )}
                         {this.state.establecimieniemtos===true && (
                             <FlatList
                                 style={styles.flat}
-                                data={estable}
+                                data={this.state.establecimientos}
                                 renderItem={this.caja2}
-                                keyExtractor={item => item.id}
+                                keyExtractor={item => item.id.toString()}
+                                extraData={this.state}
                             />
                         )}
                     </View>
