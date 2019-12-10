@@ -23,7 +23,7 @@ export default class App extends Component{
         axios({
             method: 'POST',
             url: url+"salas/",
-            data: {creador:url2, participantes:1, estado:0},
+            data: {creador:url2, participantes:1},
             headers: {
                 "content-type":"application/json",
                 "Authorization":"Token " +token

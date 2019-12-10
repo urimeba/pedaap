@@ -4,7 +4,7 @@ from rest_framework import serializers
 class SalaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sala
-        fields=['id', 'creador', 'codigo', 'participantes', 'estado']
+        fields=['id', 'creador', 'codigo', 'participantes']
 
 class PreguntasSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

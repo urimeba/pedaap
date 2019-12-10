@@ -60,9 +60,7 @@ class PromocionesViewSet(viewsets.ModelViewSet):
         dic = {}
 
         for p in promociones:
-            # id = str(p.id)
-            # id = '""' + id + '""'
-            dic[str(p.id)]={"id":str(p.id), "nombre":str(p.descripcion), 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
+            dic[str(p.id)]={'id':p.id, "nombre":p.descripcion, 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
         return Response({"Datos": str(dic)}, status=HTTP_200_OK)
 
     @action(detail=False, methods=['post'])
