@@ -30,7 +30,7 @@ const GameStack = createStackNavigator(
         },
     },
     {
-        initialRouteName: 'CreateGame',
+        initialRouteName: 'Game',
         headerMode: 'float',
         navigationOptions: {
             headerVisible: false,
