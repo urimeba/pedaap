@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     AsyncStorage,
     ActivityIndicator,
+    RefreshControl
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
@@ -22,7 +23,7 @@ export default class App extends Component{
             filter:false,
             datos: [],
             establecimientos: [],
-            loading: false,
+            loading: true,
             clave: '',
         };
     }
@@ -112,7 +113,7 @@ export default class App extends Component{
         })
     }
 
-    async componentDidMount() {
+     componentDidMount = async() => {
         url = await AsyncStorage.getItem("server")+"promociones/getPromos/";
         token = await AsyncStorage.getItem('userToken');
         url2 = await AsyncStorage.getItem("server")+"tiendas/";
@@ -286,6 +287,12 @@ export default class App extends Component{
                         </View>
                         {this.state.establecimieniemtos===false && (
                             <FlatList
+                                refreshControl={
+                                    <RefreshControl
+                                        refreshing={this.state.loading}
+                                        onRefresh={this.componentDidMount}
+                                    />
+                                }
                                 style={styles.flat}
                                 data={this.state.datos}
                                 renderItem={this.caja}

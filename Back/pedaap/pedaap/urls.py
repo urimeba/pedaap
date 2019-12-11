@@ -14,8 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework import routers
+from django.conf import settings
 from Apps.Notificaciones import views as views_notificacion
 from Apps.Usuarios import views as views_usuarios
 from Apps.Tiendas import views as views_tienda
@@ -24,6 +25,8 @@ from Apps.Promociones import views as views_promociones
 from Apps.Presupuestos import views as views_presupuestos
 from Apps.PresupuestosCompartidos import views as views_compartidos
 from Apps.Juegos import views as views_juego
+from django.conf.urls import *
+from django.views.static import serve
 
 router = routers.DefaultRouter()
 router.register(r'usuarios', views_usuarios.UsuariosViewSet)
@@ -56,3 +59,11 @@ urlpatterns = [
     path('verificar/', views_usuarios.verificar),
     path('enviar_correo/', views_usuarios.enviar_correo),
 ]
+
+if settings.DEBUG:
+    urlpatterns.append(
+        re_path(r'media/(?P<path>.*)$', serve,{
+            'document_root':settings.MEDIA_ROOT,
+            'show_indexes': True
+        })
+    )

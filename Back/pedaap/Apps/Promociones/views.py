@@ -93,14 +93,14 @@ class PromocionesViewSet(viewsets.ModelViewSet):
         tienda = (request.data.get("tienda"))
         idUser = (request.data.get("idUser"))
 
-        print(costo, descripcion)
+        # print(foto.name)
 
         prod = Producto.objects.get(id=producto)
         tien = Tienda.objects.get(id=tienda)
         user = User.objects.get(id=idUser)
 
         productoTienda, created1 = TiendaProducto.objects.get_or_create(producto=prod, tienda=tien)
-        print(productoTienda)
+        # print(productoTienda)
 
         if(descripcion=="" or fechaInicio=="" or fechaVencimiento=="" or costo=="" or producto=="" or tienda==""):
             return Response({"Error":"Favor de completar los datos"}, status=HTTP_404_NOT_FOUND)

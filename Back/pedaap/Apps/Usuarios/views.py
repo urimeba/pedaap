@@ -229,18 +229,15 @@ class UsuariosViewSet(viewsets.ModelViewSet):
         usuario = User.objects.get(username=username)
 
         try:
-            # pass
             tel = int(telefono)
-
         except Exception as e:
-            # raise
             return Response({'Error':'Favor de ingresar un teléfono válido'}, status=HTTP_400_BAD_REQUEST)
 
         try:
             telefono="+52"+telefono
-            print(telefono)
+            # print(telefono)
             usuario2 = User.objects.get(email=correo)
-            print(usuario2)
+            # print(usuario2)
             if(usuario!=usuario2):
                 return Response({'Error':'El correo ya esta siendo usado'}, status=HTTP_400_BAD_REQUEST)
         except Exception as e:

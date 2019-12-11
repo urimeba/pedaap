@@ -60,23 +60,23 @@ export default class App extends Component{
             this.setState({error2:false})
             this.setState({succes:false})
             this.setModalVisible(true);
-            console.log("AAAA");
+            // console.log("AAAA");
         } else {
             this.setState({correcto:true})
-            console.log("BBBB");
+            // console.log("BBBB");
 
             this.setState({succes:true})
             this.setState({error1:false})
             this.setState({error1:false})
             this.setModalVisible(true);
-            console.log("CCCCC");
+            // console.log("CCCCC");
 
             this._sendPromo();
         }
 
     }
 
-    async componentDidMount() {
+     componentDidMount = async() => {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
         this.setState({ hasPermission: status === 'granted' });
 
@@ -133,8 +133,8 @@ export default class App extends Component{
     snap = async () => {
         if (this.camera) {
             let photo = await this.camera.takePictureAsync();
-            console.log(photo)
-            console.log(photo.uri);
+            // console.log(photo)
+            // console.log(photo.uri);
             this.setState({camera:false});
             this.setState({photo: photo.uri})
             this.setState({take: true})
@@ -190,7 +190,7 @@ export default class App extends Component{
         f1A = f1.substring(6,10);
 
         fechaIni = f1A + "-" + f1M + "-" + f1D;
-        console.log(fechaIni);
+        // console.log(fechaIni);
 
         f2 = this.state.fechaExpiracion;
         // console.log(f2)
@@ -199,7 +199,11 @@ export default class App extends Component{
         f2A = f2.substring(6,10);
 
         fechaExp = f2A + "-" + f2M + "-" + f2D;
-        console.log(fechaExp);
+        // console.log(fechaExp);
+
+        if(f2D>f1D){
+            Alert.alert("Error", "La fecha de expiración no puede ser menor");
+        }
 
         const data = new FormData();
         data.append('descripcion', this.state.descrip);
@@ -210,6 +214,8 @@ export default class App extends Component{
         data.append('producto', this.state.producto);
         data.append('tienda', this.state.tienda);
         data.append('idUser', idUser);
+
+        // console.log("NOMBRE : " + this.state.photo.name);
 
         // {descripcion:this.state.descrip, 
         //  fechaInicio:fechaIni, 
@@ -249,7 +255,7 @@ export default class App extends Component{
             
         }).catch(err => {
             console.log(err.response.data.Error)
-            // Alert.alert("Error",);
+            Alert.alert("Error",);
         });
 
     }
