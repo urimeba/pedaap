@@ -20,13 +20,19 @@ export default class Event extends Component{
         super(props);
         this.state={
             nameE:'',
-            presu:''
+            presu:'',
+            error1:false
 
         }
     }
 
     _crear=()=>{
-        this.props.navigation.navigate('EventK')
+        if(this.state.nameE=="" || this.state.presu==""){
+            this.setState({error1:true})
+        }else{
+            this.props.navigation.navigate('EventK')
+        }
+        
     }
 
     render(){
@@ -47,8 +53,8 @@ export default class Event extends Component{
                         </View>
                     </View>
                     <View style={styles.titulo2}>
-                        <View style={styles.container}>
-                            <Text style={styles.text2}>Ingresa el presupuesto inicial</Text>
+                        <View style={styles.container2}>
+                            <Text style={styles.text2}>Ingresa el presupuesto para este evento</Text>
                         </View>
                         <View style={styles.container}>
                             <TextInput
@@ -60,6 +66,9 @@ export default class Event extends Component{
                             />
                         </View>
                     </View>
+                     {this.state.error1=== true &&(
+                    <Text style={styles.warning}>Completa los campos</Text>
+                )}
                     <View style={styles.titulo3}>
                         <View style={styles.container}>
                             <TouchableOpacity
@@ -71,6 +80,14 @@ export default class Event extends Component{
                         </View>
                         <View style={styles.container}></View>
                     </View>
+                    <View style={styles.abajo}>
+                    <TouchableOpacity
+                        style={styles.btnMy}
+                        onPress={()=>{this.props.navigation.navigate("MyBudget")}}
+                    >
+                        <Text style={{fontSize: 15, color:'#6930BF',textDecorationLine:'underline'}}>Ver mis eventos</Text>
+                    </TouchableOpacity>
+                </View>
                 </View>
             </SafeAreaView>
         )
@@ -85,8 +102,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#FAFAFA',
     },
+    container2: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingLeft:20,
+        paddingRight:20,
+        backgroundColor: '#FAFAFA',
+    },
     caja1:{
         flex: 3,
+        marginTop:40,
         justifyContent:'center',
         alignItems:'center',
         width: '100%'
@@ -98,7 +125,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     titulo3: {
-        flex: 4,
+        flex: 2,
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%'
@@ -119,6 +146,9 @@ const styles = StyleSheet.create({
     },
     text2:{
         fontSize: 18,
+        paddingRight:20,
+        paddingLeft:20,
+        textAlign:'center'
     },
     presu:{
         width:'80%',
@@ -134,11 +164,41 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#393939',
         width: '30%',
-        height: '30%'
+        height: '60%'
     },
     textC:{
         textAlign:'center',
         color: 'white',
         fontSize: 18
+    },
+      warning: {
+        color: '#FEDB6B',
+        fontSize: 16,
+        // marginLeft: 120,
+    },
+    error: {
+        color: '#DE4C63',
+        fontSize: 16,
+        // marginLeft: 70,
+    },
+    abajo:{
+        flex:2,
+        justifyContent:'center',
+        alignItems:'center',
+        alignContent:'center',
+        width:'100%',
+        // height: 50,
+        // marginTop:20,
+        // backgroundColor:'magenta'
+    },
+    btnMy:{
+        justifyContent:'center',
+        alignContent:'center',
+        alignItems:'center',
+        width: 180,
+        height:30,
+        borderRadius:10,
+        // backgroundColor: '#FEDB6B'
+
     }
 })

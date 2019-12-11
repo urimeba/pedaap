@@ -40,6 +40,14 @@ export default class App extends Component{
                         <Text style={styles.btnText}>Unirse a un presupuesto</Text>
                     </TouchableOpacity>
                 </View>
+                <View style={styles.abajo}>
+                    <TouchableOpacity
+                        style={styles.btnMy}
+                        onPress={()=>{this.props.navigation.navigate("MyBudget")}}
+                    >
+                        <Text style={{fontSize: 15, color:'#6930BF',textDecorationLine:'underline'}}>Ver mis presupuestos</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         )
     }
@@ -57,7 +65,7 @@ const styles= StyleSheet.create({
         width:'100%',
         paddingLeft: 40,
         paddingRight: 40,
-        marginTop: 40
+        marginTop: 60
 
     },
     textTitulo:{
@@ -98,5 +106,24 @@ const styles= StyleSheet.create({
         textAlign:'center',
         fontSize: 20,
         color:'white'
+    },
+    abajo:{
+        justifyContent:'center',
+        alignItems:'center',
+        alignContent:'center',
+        width:'100%',
+        height: 50,
+        marginTop:20,
+        // backgroundColor:'magenta'
+    },
+    btnMy:{
+        justifyContent:'center',
+        alignContent:'center',
+        alignItems:'center',
+        width: 180,
+        height:30,
+        borderRadius:10,
+        // backgroundColor: '#FEDB6B'
+
     }
 })

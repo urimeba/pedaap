@@ -43,15 +43,6 @@ const UserTabs = createBottomTabNavigator(
                 ),
             },
         },
-        Game: {
-            screen: GameStack,
-            navigationOptions: {
-                tabBarLabel: 'Juego',
-                tabBarIcon: ({tintColor}) => (
-                    <Icon name="gamepad-variant" size={24} color={tintColor} />
-                ),
-            },
-        },
         Profile: {
             screen: ProfileStack,
             navigationOptions: {

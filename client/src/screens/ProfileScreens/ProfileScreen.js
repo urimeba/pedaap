@@ -234,16 +234,10 @@ export default class App extends Component{
                             <TextInput style={styles.inputData} secureTextEntry={true} onChangeText={(newPass2) => this.setState({newPass2})} />
                         </View>
                         <View style={styles.botones2}>
-                            {/* <View style={styles.botonesA2}>
-                                <TouchableOpacity style={styles.editI}
-                                onPress={()=>{this.setState({edit:true})}}>
-                                    <Text>Cancelar</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.botonesA2}>
-                                <TouchableOpacity style={styles.editI}
+                            <View style={styles.botonesA}>
+                                <TouchableOpacity style={styles.editIP}
                                 onPress={this._saveChanges}>
-                                    <Text>Aceptar</Text>
+                                    <Text style={{color:'white'}}>Aceptar</Text>
                                 </TouchableOpacity>
                             </View> */}
 
@@ -259,7 +253,12 @@ export default class App extends Component{
                                     <Text>Aceptar</Text>
                                 </TouchableOpacity>
                             </View>
-                            
+                            <View style={styles.botonesA}>
+                                <TouchableOpacity style={styles.cerrarS}
+                                onPress={()=>{this.setState({edit:false})}}>
+                                    <Text style={{color:'white'}}>Cancelar</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </KeyboardAwareScrollView>
                 </View>
@@ -308,19 +307,19 @@ export default class App extends Component{
                             <View style={styles.botonesA}>
                                 <TouchableOpacity style={styles.editI}
                                 onPress={()=>{this.setState({edit:true})}}>
-                                    <Text>Editar información</Text>
+                                    <Text style={{color:'white'}}>Editar información</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity 
                                 onPress={this._editarPref}
                                 style={styles.editP}>
-                                    <Text>Editar preferencias</Text>
+                                    <Text style={{color:'white'}}>Editar preferencias</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.botonesC}>
                                 <TouchableOpacity 
                                 onPress={this._cerrarSesion}
                                 style={styles.cerrarS}>
-                                    <Text>Cerrar sesión</Text>
+                                    <Text style={{color:'white'}}>Cerrar sesión</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -438,7 +437,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         alignContent:'center',
-        width: 100,
+        width: 120,
         height:30,
         backgroundColor:'#DE4C63',
         borderRadius: 10
@@ -450,9 +449,22 @@ const styles = StyleSheet.create({
         alignContent:'center',
         backgroundColor:'#FEDB6B',
         borderRadius:10,
-        width:'60%',
+        width: 100,
         height:30,
         marginRight:5,
+        // marginBottom:20
+    },
+    editIP:{
+        // flex:1,
+        justifyContent:'center',
+        alignItems:'center',
+        alignContent:'center',
+        backgroundColor:'#FEDB6B',
+        borderRadius:10,
+        width: 120,
+        height:30,
+        marginRight:5,
+        marginBottom:20
     },
     editI2:{
         // flex:1,
