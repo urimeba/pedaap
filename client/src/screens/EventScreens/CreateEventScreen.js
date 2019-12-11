@@ -48,7 +48,7 @@ export default class Event extends Component{
                     </View>
                     <View style={styles.titulo2}>
                         <View style={styles.container}>
-                            <Text style={styles.text2}>Ingresa el presupuesto inicial</Text>
+                            <Text style={styles.text2}>Ingresa el presupuesto para este evento</Text>
                         </View>
                         <View style={styles.container}>
                             <TextInput
