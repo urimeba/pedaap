@@ -45,7 +45,7 @@ export default class App extends Component{
                         style={styles.btnMy}
                         onPress={()=>{this.props.navigation.navigate("MyBudget")}}
                     >
-                        <Text style={{fontSize: 15, color:'white'}}>Ver mis presupuestos</Text>
+                        <Text style={{fontSize: 15, color:'#6930BF',textDecorationLine:'underline'}}>Ver mis presupuestos</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -123,7 +123,7 @@ const styles= StyleSheet.create({
         width: 180,
         height:30,
         borderRadius:10,
-        backgroundColor: '#FEDB6B'
+        // backgroundColor: '#FEDB6B'
 
     }
 })

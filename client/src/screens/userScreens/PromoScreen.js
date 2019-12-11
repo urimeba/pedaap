@@ -13,6 +13,16 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 
+const dat=[
+    {
+        id:'1',
+        nombre:'Oxxo kk',
+        direccion:'nrnrifrnekjkjkjkincernvn kdmckdmc njniohui',
+        horaApertura:'10:30',
+        horaCierre:'23:30'
+    }
+]
+
 export default class App extends Component{
     constructor(props) {
         super(props);
@@ -215,15 +225,21 @@ export default class App extends Component{
     }
 
     caja2=({item})=>(
-        <TouchableOpacity style={styles.caja}>
+        <View style={styles.caja2}>
             <View style={styles.imgCaja}>
                 <Image/>
             </View>
             <View style={styles.datosCaja}>
-                <Text style={styles.titulo}>{item.nombre}</Text>
-                <Text style={styles.titulo}>{item.direccion}</Text>
+                <View style={{flex:4}}>
+                    <Text style={styles.titulo}>{item.nombre}</Text>
+                    <Text style={styles.titulod}>{item.direccion}</Text>
+                </View>
+                <View style={{flex:1,flexDirection:'row'}}>
+                    <Text style={styles.titulo11}>Apertura:{item.horaApertura}</Text>
+                    <Text style={styles.titulo12}>Cierre:{item.horaCierre}</Text>
+                </View>
             </View>
-        </TouchableOpacity>
+        </View>
     )
 
     render(){
@@ -383,11 +399,45 @@ const styles = StyleSheet.create({
         fontSize: 16,
         // color: 'white'
     },
+    titulod:{
+        flex: 2,
+        fontSize: 16,
+        // color: 'white'
+    },
+    titulo11:{
+        flex: 1,
+        fontSize: 12,
+        color: '#71C0F2'
+    },
+    titulo12:{
+        flex: 1,
+        fontSize: 12,
+        color: '#6930BF'
+    },
     caja:{
         flex:1,
         flexDirection: 'row',
         width:'90%',
         height: 100,
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        padding: 8,
+        marginLeft:'5%',
+        marginTop: 20,
+        backgroundColor: 'white',
+    },
+    caja2:{
+        flex:1,
+        flexDirection: 'row',
+        width:'90%',
+        height: 120,
         borderRadius: 10,
         shadowColor: "#000",
         shadowOffset: {
