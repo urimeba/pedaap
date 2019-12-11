@@ -147,7 +147,7 @@ export default class App extends Component{
                         <TouchableOpacity
                             onPress={() => this.props.navigation.navigate('Forgot')}
                         >
-                            <Text style={styles.TextColorOne}>¿Olvidaste tu contraseña?</Text>
+                            {/* <Text style={styles.TextColorOne}>¿Olvidaste tu contraseña?</Text> */}
                         </TouchableOpacity>
                     </View>
                     <View style={styles.InputsNav}>

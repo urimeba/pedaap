@@ -20,7 +20,7 @@ export default class App extends Component {
     }
     
     _initdata = async() =>{
-      AsyncStorage.setItem("server", "http://urimeba.pythonanywhere.com/")
+      AsyncStorage.setItem("server", "http://148.220.211.199:8000/")
       AsyncStorage.getItem("server").then((obj)=>{
 
           

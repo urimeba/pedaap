@@ -86,7 +86,7 @@ class PromocionesViewSet(viewsets.ModelViewSet):
         descripcion = request.data.get("descripcion")
         fechaInicio = request.data.get("fechaInicio")
         fechaVencimiento = request.data.get("fechaVencimiento")
-        foto = request.data.get("foto")
+        foto = request.FILES["foto"]
         estado = 0
         costo = request.data.get("costo")
         producto = (request.data.get("producto"))

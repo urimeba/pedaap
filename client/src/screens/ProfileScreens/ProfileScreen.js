@@ -169,7 +169,7 @@ export default class App extends Component{
     _cerrarSesion=async()=>{
         await AsyncStorage.removeItem("userToken");
         await AsyncStorage.removeItem("userId");
-        this.props.navigation.navigate('Login')
+        this.props.navigation.navigate('Login');
     }
 
 // ------------------------------------------Imagen--------------

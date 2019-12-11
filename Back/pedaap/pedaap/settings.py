@@ -91,10 +91,10 @@ WSGI_APPLICATION = 'pedaap.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'urimeba$default',
-        'HOST':'urimeba.mysql.pythonanywhere-services.com',
-        'USER':'urimeba',
-        'PASSWORD':'mochila1',
+        'NAME': 'fiestaap',
+        'HOST':'localhost',
+        'USER':'root',
+        'PASSWORD':'',
         'PORT':'3306'
     }
 }
@@ -136,7 +136,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'Static'),)
-STATIC_ROOT = os.path.join(BASE_DIR, 'Static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'Static')
 AUTH_USER_MODEL = 'Usuarios.User'
 
 TWILIO_ACCOUNT_SID = 'AC5770f9d44bc5f3ad36f3839537c832db'
@@ -162,5 +162,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'fiestaapqueretaro@gmail.com'
 EMAIL_HOST_PASSWORD = 'mochila1'
 
-MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
