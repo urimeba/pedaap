@@ -46,6 +46,7 @@ export default class App extends Component{
         }else{
             // console.log(this.state.username, this.state.password);
             url = await AsyncStorage.getItem("server")+'login/'
+            // console.log(url);
             axios({
                 method: 'POST',
                 url: url,

@@ -122,7 +122,7 @@ export default class App extends Component{
             server: await AsyncStorage.getItem("server"),
         });
 
-        console.log(url);
+        // console.log(url);
 
         fetch(url, {
                 method: 'GET',

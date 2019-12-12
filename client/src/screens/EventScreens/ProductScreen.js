@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList,SectionList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView} from 'react-native';
+import { SafeAreaView, View, FlatList,SectionList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 const item=[
     {
@@ -86,7 +87,39 @@ export default class App extends Component{
         super(props);
         this.state={
             filter: false,
+            item: [],
         }
+    }
+
+    componentDidMount(){
+        // console.log(this.props.navigation.getParam('idEvento', 'Error ID'));
+
+        this._getPromos();
+
+
+    }
+
+    _getPromos = async() =>{
+        server = await AsyncStorage.getItem("server");
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+
+        axios({
+            method: 'POST',
+            url: server+"presupuestosCategorias/busqueda/",
+            // data: {idPresupuesto: "AQUI VA EL ID DEL EVENTO"},
+            data: {idPresupuesto: 37},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": "Token "+token
+                }, 
+            }).then( res => {
+                console.log(res.data);
+            }).catch(err => {
+                console.log(err.response.data);
+            });
+
+
     }
 
     _filtro=()=>{
@@ -124,8 +157,8 @@ export default class App extends Component{
     )
 
     render(){
-        console.log(item)
-        console.log(item.productos)
+        // console.log(item)
+        // console.log(item.productos)
         return(
             <View style={styles.todo}>
             <View style={styles.container}>

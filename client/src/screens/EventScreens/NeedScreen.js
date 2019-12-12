@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
     AsyncStorage,
 } from 'react-native';
-// import axios from 'axios';
+import axios from 'axios';
 
 import Circle from '../../components/Circle';
 
@@ -20,6 +20,7 @@ export default (props) => {
     const [presupuesto, setPresupuesto] = useState('');
     const [tipo, setTipo] = useState('');
     const [numAsis, setNumAsis] = useState('');
+    const [idEvento, setIdEvento] = useState('');
 
     //** selected ** variable equivalente a this.state.selected que es un []
     const [selected, setSelected] = useState(new Map());
@@ -43,7 +44,7 @@ export default (props) => {
             token = await AsyncStorage.getItem('userToken');
 
             try {
-                console.log(token)
+                // console.log(token)
                 let request = await fetch(url, {
                     method: 'GET',
                     mode: 'cors',
@@ -53,7 +54,7 @@ export default (props) => {
                     }
                 });
                 let resp = await request.json();
-                console.log(resp.results);
+                // console.log(resp.results);
                 setDataP(resp.results);
 
                 //set de todos los state
@@ -63,7 +64,7 @@ export default (props) => {
                 setNumAsis(JSON.stringify(props.navigation.getParam('numAsis', 'Error numAsis')).replace(/"/g, ''));
 
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             }
         }
         _prefLis();
@@ -72,47 +73,74 @@ export default (props) => {
 
     //Send Data
     const sendData = (s) => async() => {
-        console.log(nombre+'-'+presupuesto+'-'+tipo+'-'+numAsis);
-        /*
-            Se convierte el MAP en un JSON que se puede enviar a la API
-        */
-        let obj = Object.create(null);
-        for (let [k,v] of s) {
-            obj[k] = v;
-        }
-        console.log(JSON.stringify(obj));
-
-        servidor = await AsyncStorage.getItem("server")
-        
+        server = await AsyncStorage.getItem("server");
         idUser = await AsyncStorage.getItem("userId");
-        token = await AsyncStorage.getItem("userToken");
+        token = await AsyncStorage.getItem('userToken');
 
-        // for(categoria in obj){
-        //     if(obj[categoria]==true){
-        //         console.log(categoria);
-        //         url = servidor+'userCategorias/';
 
-        //         axios({
-        //             method: 'POST',
-        //             url: url,
-        //             data: {user:servidor+"usuarios/"+idUser+"/", categoria: servidor+"categoriaProductos/"+categoria+"/"},
-        //             headers: {
-        //                 "content-type":"application/json",
-        //                 "Authorization": "Token "+token
-        //             }, 
-        //         }).then( res => {
-        //             console.log(res.data);
-        //         }).catch(err => {
-        //             console.log(err.response.data);
-        //         });
-        //     }
-        // }
+        // console.log(nombre+'-'+presupuesto+'-'+tipo+'-'+numAsis);
+        urlUser = server + "usuarios/"+idUser+"/";
+        urlTipo = server + "tiposEvento/"+tipo+"/";
+
+
+
+        a = "";
+        axios({
+            method: 'POST',
+            url: server+"presupuestos/",
+            data: {usuario:urlUser, tipoEvento:urlTipo, nombre:nombre, montoMaximo:presupuesto, numeroPersonas:numAsis},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": "Token "+token
+            }, 
+        }).then( res => {
+            // console.log(res.data);
+            // console.log("IDAAAA: "  + (res.data.id.toString()));
+            a = res.data.id
+            setIdEvento(res.data.id);
+
+            for(categoria in obj){
+                if(obj[categoria]==true){
+                    // console.log(categoria);
+    
+                    urlPresupuesto = server+"presupuestos/"+res.data.id+"/";
+                    urlCategoria = server+"categoriaProductos/"+categoria+"/";
+    
+                    // console.log(urlPresupuesto)
+                    // console.log(urlCategoria)
+
+                    axios({
+                    method: 'POST',
+                    url: server+"presupuestosCategorias/",
+                    data: {presupuesto:urlPresupuesto, categoria:urlCategoria},
+                    headers: {
+                        "content-type":"application/json",
+                        "Authorization": "Token "+token
+                        }, 
+                    }).then( res => {
+                        // console.log(res.data);
+                    }).catch(err => {
+                        console.log(err.response);
+                    });
+    
+                   
+                }
+            }
+
+            
+
+        }).catch(err => {
+            console.log(err.response);
+        });
 
         goNext();
+
+        
     }
 
     const goNext = () => {
         props.navigation.navigate('Product');
+
     }
 
     return (

@@ -52,8 +52,8 @@ export default class App extends Component{
     
     _continuar = () => {
         let x = this.props.navigation;
-        console.log(JSON.stringify(x.getParam('nombre', 'Error nombre')).replace(/"/g,''));
-        console.log(JSON.stringify(x.getParam('presupuesto', 'Error presupuesto')).replace(/"/g,''));
+        // console.log(JSON.stringify(x.getParam('nombre', 'Error nombre')).replace(/"/g,''));
+        // console.log(JSON.stringify(x.getParam('presupuesto', 'Error presupuesto')).replace(/"/g,''));
         
         this.props.navigation.navigate('NumAsis', {
             nombre: JSON.stringify(x.getParam('nombre', 'Error nombre')).replace(/"/g,''),

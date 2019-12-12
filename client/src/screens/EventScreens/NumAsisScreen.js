@@ -27,7 +27,7 @@ export default class App extends Component{
 
     async _choosen(selectedItem) {
         await this.setState({ selectedItem: selectedItem });
-        console.log(this.state.selectedItem);
+        // console.log(this.state.selectedItem);
         this._continuar();
     }
       
@@ -51,9 +51,9 @@ export default class App extends Component{
     
     _continuar = () => {
         let x = this.props.navigation;
-        console.log(JSON.stringify(x.getParam('nombre', 'Error nombre')).replace(/"/g,''));
-        console.log(JSON.stringify(x.getParam('presupuesto', 'Error presupuesto')).replace(/"/g,''));
-        console.log(JSON.stringify(x.getParam('tipo', 'Error presupuesto')).replace(/"/g,''));
+        // console.log(JSON.stringify(x.getParam('nombre', 'Error nombre')).replace(/"/g,''));
+        // console.log(JSON.stringify(x.getParam('presupuesto', 'Error presupuesto')).replace(/"/g,''));
+        // console.log(JSON.stringify(x.getParam('tipo', 'Error presupuesto')).replace(/"/g,''));
         
         this.props.navigation.navigate('Need', {
             nombre: JSON.stringify(x.getParam('nombre', 'Error nombre')).replace(/"/g,''),
