@@ -339,27 +339,16 @@ export default class App extends Component{
                 </View>
         </Modal>
             <View style={styles.container}>
-                <View style={styles.arriba}>
-                    <View style={styles.textoP}>
-                        <TouchableOpacity onPress={this._user} >
-                             <Icon name="arrow-left" size={22} color={'#707070'} style={styles.icon} />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.botones}>
-                        <Text style={styles.tituloP}>Promoción</Text>
-                    </View>
-                </View>
-           
-                                <View style={{ flex: 1 }}>
+                                {/* <View style={{ height:40 }}>
                                     
-                                </View>
+                                </View> */}
                 <ScrollView style={styles.container2}>
                         <View style={styles.caja}>
                             <TouchableOpacity
                              style={styles.imgCaja}
                               onPress={()=>{this.setState({camera:true})}}>
                             {this.state.camera===true && (
-                                <Camera style={{ flex: 1, flexDirection: "row", justifyContent: "space-evenly", alignItems: "flex-end" }} type={this.state.cameraType} ref={ref => { this.camera = ref; }}>
+                                <Camera style={{ flex: 1, flexDirection: "row", justifyContent: "space-evenly", alignItems: "flex-end"}} type={this.state.cameraType} ref={ref => { this.camera = ref; }}>
                                         <View style={styles.camerabuttonview}>
                                             <TouchableOpacity
                                                 style={styles.cameraButtons}
@@ -415,7 +404,7 @@ export default class App extends Component{
                                 <Text style={styles.titulo1}>Tienda</Text>
                                 <Picker
                                     selectedValue={1}
-                                    style={{height: 50, width: "100%"}}
+                                    style={{height: 50, width: "100%",fontSize:15}}
                                     // onValueChange={ () => this.selectCategoria(itemValue, itemIndex)
                                     // }>
                                     onValueChange={(itemValue, itemIndex) =>
@@ -622,6 +611,7 @@ const styles = StyleSheet.create({
         // flex: 2,
         width:'100%',
         height: '25%',
+        marginTop: 10,
         borderRadius: 10,
         backgroundColor:'gray',
         marginBottom: 10,
