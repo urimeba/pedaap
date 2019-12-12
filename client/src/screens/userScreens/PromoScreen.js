@@ -15,16 +15,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import Logo from '../../components/StoreIcons'
 
-const dat=[
-    {
-        id:'1',
-        nombre:'Oxxo kk',
-        direccion:'nrnrifrnekjkjkjkincernvn kdmckdmc njniohui',
-        horaApertura:'10:30',
-        horaCierre:'23:30'
-    }
-]
-
 export default class App extends Component{
     constructor(props) {
         super(props);
@@ -35,6 +25,7 @@ export default class App extends Component{
             establecimientos: [],
             loading: true,
             clave: '',
+            server: '',
         };
     }
 
@@ -127,6 +118,11 @@ export default class App extends Component{
         url = await AsyncStorage.getItem("server")+"promociones/getPromos/";
         token = await AsyncStorage.getItem('userToken');
         url2 = await AsyncStorage.getItem("server")+"tiendas/";
+        this.setState({
+            server: await AsyncStorage.getItem("server"),
+        });
+
+        console.log(url);
 
         fetch(url, {
                 method: 'GET',
@@ -149,9 +145,7 @@ export default class App extends Component{
             for(var i in json_data){
                 data.push(json_data[i]);
             }
-
-            // console.log(data);
-
+            
             this.setState({
                 datos: data,
             });
@@ -178,54 +172,82 @@ export default class App extends Component{
         .catch(error=>console.log(error))
     }
 
-    caja=({item})=>{
-        // console.log(item.foto)
-
-        
-
-        photo = ""
-        if(item.foto!="None"){
-            photo = <Image style={{flex:1}} source={{uri: 'http://148.220.211.199:8000/media/' +item.foto}}/>
-        }else{
-            console.log(item.icono)
-            photo = <Image style={{flex:1}} source={Logo[item.icono]}  />
-        }
-
-
+    caja= ({item})=>{
         let fechaSplit = item.vigencia.split("-");
         let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
-        return(
-            <TouchableOpacity 
-                onPress={() => this.props.navigation.navigate('Promotion', {
-                    datos: item,
-                    id: item.id,
-                    nombre: item.nombre,
-                    lugar: item.lugar,
-                    vigencia: item.vigencia,
-                    categoria: item.categoria,
-                    descripcion: item.descripcion,
-                    direccion: item.direccion,
-                    costo: item.costo,
-                })}
-                style={styles.caja}
-            >
-                {/* <View style={styles.imgCaja}> */}
 
-                    <Image style={{flex:1}} source={{uri: 'http://148.220.211.199:8000/media/' +item.foto}}/>
-                    {/* {photo} */}
-                {/* </View> */}
-                <View style={styles.datosCaja}>
-                    <Text style={styles.titulo}>{item.nombre}</Text>
-                    {item.costo == '0.00' &&(
-                        <Text style={styles.titulo}>Promoción</Text>
-                    )}
-                    {item.costo != '0.00' &&(
-                        <Text style={styles.titulo}>${item.costo}</Text>
-                    )}
-                    <Text style={styles.titulo}>Vigencia: {fechaFormat}</Text>
-                </View>
-            </TouchableOpacity>
-        );
+        if(item.foto == "None"){
+            return(
+                <TouchableOpacity 
+                    onPress={() => this.props.navigation.navigate('Promotion', {
+                        datos: item,
+                        id: item.id,
+                        nombre: item.nombre,
+                        lugar: item.lugar,
+                        vigencia: item.vigencia,
+                        categoria: item.categoria,
+                        descripcion: item.descripcion,
+                        direccion: item.direccion,
+                        costo: item.costo,
+                    })}
+                    style={styles.caja}
+                >
+                    <View style={styles.imgCaja}>
+                        <Image
+                            style={styles.pngImage}
+                            source={Logo[item.icono]}
+                            resizeMode="center"
+                        />
+                    </View>
+                    <View style={styles.datosCaja}>
+                        <Text style={styles.titulo}>{item.nombre}</Text>
+                        {item.costo == '0.00' &&(
+                            <Text style={styles.tituloPromo}>Promoción</Text>
+                        )}
+                        {item.costo != '0.00' &&(
+                            <Text style={styles.tituloCosto}>${item.costo}</Text>
+                        )}
+                        <Text style={styles.titulo}>Vigencia: {fechaFormat}</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        }else{
+            return(
+                <TouchableOpacity 
+                    onPress={() => this.props.navigation.navigate('Promotion', {
+                        datos: item,
+                        id: item.id,
+                        nombre: item.nombre,
+                        lugar: item.lugar,
+                        vigencia: item.vigencia,
+                        categoria: item.categoria,
+                        descripcion: item.descripcion,
+                        direccion: item.direccion,
+                        costo: item.costo,
+                        foto: this.state.server+'media/'+item.foto
+                    })}
+                    style={styles.caja}
+                >
+                    <View style={styles.imgCaja}>
+                        <Image
+                            style={styles.pngImagePhoto}
+                            source={{uri: this.state.server+'media/'+item.foto}}
+                            resizeMode="center"
+                        />
+                    </View>
+                    <View style={styles.datosCaja}>
+                        <Text style={styles.titulo}>{item.nombre}</Text>
+                        {item.costo == '0.00' &&(
+                            <Text style={styles.tituloPromo}>Promoción</Text>
+                        )}
+                        {item.costo != '0.00' &&(
+                            <Text style={styles.tituloCosto}>${item.costo}</Text>
+                        )}
+                        <Text style={styles.titulo}>Vigencia: {fechaFormat}</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        }
     }
 
     caja2=({item})=>(
@@ -413,6 +435,18 @@ const styles = StyleSheet.create({
         fontSize: 16,
         // color: 'white'
     },
+    tituloCosto:{
+        flex: 1,
+        fontSize: 16,
+        color: '#6930BF'
+        // color: 'white'
+    },
+    tituloPromo:{
+        flex: 1,
+        fontSize: 16,
+        color: '#71C0F2'
+        // color: 'white'
+    },
     titulod:{
         flex: 2,
         fontSize: 16,
@@ -501,5 +535,10 @@ const styles = StyleSheet.create({
     pngImage:{
         height: 50,
         width: 50,
+    },
+    pngImagePhoto:{
+        height: '100%',
+        width: '100%',
+        borderRadius: 10,
     }
 });
