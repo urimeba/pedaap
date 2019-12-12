@@ -7,7 +7,8 @@ import {
     SafeAreaView,
     TouchableOpacity,
     AsyncStorage,
-    Alert
+    Alert,
+    Modal
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
@@ -129,11 +130,12 @@ export default (props) => {
 
             }
         }
-        Alert.alert('Preferencias actualizadas')
-
-        props.navigation.navigate('Profile');
+        // this.setState({succes:true,msgSucces:"Datos correctamente actualizados",error:false,modalVisible:true})
+        props.navigation.navigate('Profile',{msg:'preferencias actualizadas'})  
+        // Alert.alert('Preferencias actualizadas')
     }
 
+    
     _eliminarCategorias = async() =>{
 
         servidor = await AsyncStorage.getItem("server")

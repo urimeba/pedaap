@@ -54,11 +54,11 @@ export default class App extends Component{
                                     <View style={styles.inputs}>
                                         <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('nombre', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
-                                    <Text style={styles.titulo1}>Promocion</Text>
+                                    <Text style={styles.titulo1}>Promoción</Text>
                                     <View style={styles.inputs}>
                                         <Text style={styles.tituloCosto}>${JSON.stringify(this.props.navigation.getParam('costo', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
-                                    <Text style={styles.titulo1}>categoría</Text>
+                                    <Text style={styles.titulo1}>Categoría</Text>
                                     <View style={styles.inputs}>
                                         <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('categoria', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
@@ -70,7 +70,7 @@ export default class App extends Component{
                                     <View style={styles.inputs}>
                                         <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('vigencia', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
-                                    <Text style={styles.titulo1}>Direccion</Text>
+                                    <Text style={styles.titulo1}>Dirección</Text>
                                     <View style={styles.grande}>
                                         <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('direccion', 'promo')).replace(/"/g, '')}</Text>
                                     </View>

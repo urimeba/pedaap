@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage, Alert, Platform} from 'react-native';
+import { View, StyleSheet, Text, Image, TextInput,Modal,TouchableOpacity, ScrollView, AsyncStorage, Alert, Platform} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
@@ -29,11 +29,19 @@ export default class App extends Component{
             newPass:"",
             newPass2:"",
             image:null,
-            uri:''
+            uri:'',
+            modalVisible:false,
+            msgError:'',
+            msgSucces:'',
+            succes:false,
+            error:false,
+            preferAct:JSON.stringify(this.props.navigation.getParam('msg', 'no'))
+
         }
     }
 
     async componentDidMount(){
+        // Alert.alert(this.state.preferAct)
         url = await AsyncStorage.getItem("server");
         token = await AsyncStorage.getItem("userToken");
         idUsuario = await AsyncStorage.getItem("userId");
@@ -83,9 +91,11 @@ export default class App extends Component{
             let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
             if(reg.test(correo) === false){
-                Alert.alert("Error", "Ingresa un correo válido")
+                this.setState({error:true,msgError:"Ingresa un correo válido",succes:false,modalVisible:true})
+                // Alert.alert("Error", "Ingresa un correo válido")
             }else if(telefono.length<10 || telefono.length>10 ){
-                Alert.alert("Error", "Ingresa un télefono válido")
+                this.setState({error:true,msgError:"Ingresa un télefono válido",succes:false,modalVisible:true})
+                // Alert.alert("Error", "Ingresa un télefono válido")
             }else{
                 // AXIOS
                 axios({
@@ -98,13 +108,15 @@ export default class App extends Component{
                     },
                 }).then( res => {
                     // console.log(res.data)
-                    Alert.alert("Datos guardado", "Datos correctamente actualizados");
+                    this.setState({succes:true,msgSucces:"Datos correctamente actualizados",error:false,modalVisible:true})
+                    // Alert.alert("Datos guardado", "Datos correctamente actualizados");
                     this.setState({edit:false})
                     // this.setState({nombre:res.data.first_name, apellido:res.data.last_name, username: res.data.username, correo:res.data.email, telefono:tel})
                 }).catch(err => {
                     console.log("Error");
                     console.log(err.response.data.Error);
-                    Alert.alert("Error", err.response.data.Error);
+                    this.setState({error:true,msgError:err.response.data.Error,succes:false,modalVisible:true})
+                    // Alert.alert("Error", err.response.data.Error);
                 });
             }
         }else if(pass1==pass2){
@@ -112,9 +124,11 @@ export default class App extends Component{
             let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
             if(reg.test(correo) === false){
-                alert("Error", "Ingresa un correo válido")
+                this.setState({error:true,msgError:"Ingresa un correo válido",succes:false,modalVisible:true})
+                // alert("Error", "Ingresa un correo válido")
             }else if(telefono.length<10){
-                alert("Error", "Ingresa un télefono válido")
+                this.setState({error:true,msgError:"Ingresa un télefono válido",succes:false,modalVisible:true})
+                // alert("Error", "Ingresa un télefono válido")
             }else{
                 // AXIOS
                 axios({
@@ -127,25 +141,32 @@ export default class App extends Component{
                     },
                 }).then( res => {
                     // console.log(res.data)
-                    Alert.alert("Datos guardado", "Datos correctamente actualizados");
+                     this.setState({succes:true,msgSucces:"Datos correctamente actualizados",error:false,modalVisible:true})
+                    // Alert.alert("Datos guardado", "Datos correctamente actualizados");
                     this.setState({edit:false})
                    
                 }).catch(err => {
                     console.log("Error");
                     // console.log(err);
-                    Alert.alert("Error", err.response.data.Error)
+                     this.setState({error:true,msgError:err.response.data.Error,succes:false,modalVisible:true})
+                    // Alert.alert("Error", err.response.data.Error)
                 });
             }
 
         }else{
             // console.log("contraseñas no igauales")
-            Alert.alert("Error", "Las contraseñas no coinciden");
+             this.setState({error:true,msgError:"Las contraseñas no coinciden",succes:false,modalVisible:true})
+            // Alert.alert("Error", "Las contraseñas no coinciden");
         }
     }
 
     _editarPref=()=>{
         this.props.navigation.navigate('Prefer')
     }
+
+     setModalVisible(visible) {
+        this.setState({modalVisible: visible});
+    } 
 
     _cerrarSesion=async()=>{
         await AsyncStorage.removeItem("userToken");
@@ -190,6 +211,67 @@ export default class App extends Component{
     render(){
         return(
             <ScrollView style={styles.todo}>
+
+
+
+            <Modal
+                            animationType="slide"
+                            transparent={true}
+                            // transparent={false}
+                            style={{width: 80, height: 80, backgroundColor: 'pink'}}
+                            visible={this.state.modalVisible}
+                            onRequestClose={() => {
+                                Alert.alert('Modal has been closed.');
+                                this.setState({modalVisible:false})
+                            }}>
+                            <View style = {styles.modal} >
+                                
+                                {this.state.error===true &&(
+                                    <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
+                                        <Image
+                                            style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
+                                            source={require('../../img/remove.png')}
+                                        />
+                                            < Text style={{marginTop: 20}} >{this.state.msgError}</Text>
+                                        <TouchableOpacity
+                                        style={styles.botonModal}
+                                        onPress={() => {
+                                        this.setModalVisible(!this.state.modalVisible);
+                                        }}>
+                                        <Text style={{color: 'white'}}>Aceptar</Text>
+                                    </TouchableOpacity>
+
+                                    </View>
+                                    
+                                )}
+                                {this.state.succes===true &&(
+                                    <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
+                                        <Image
+                                            style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
+                                            source={require('../../img/check.png')}
+                                        />
+                                            < Text style={{marginTop: 20}}>{this.state.msgSucces}</Text>
+                                        <TouchableOpacity
+                                            style={styles.botonModal}
+                                            onPress={() => {
+                                            this.setModalVisible(!this.state.modalVisible);
+                                            }}>
+                                            <Text style={{color: 'white'}}>Aceptar</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                            </View>
+        </Modal>
+
+
+
+
+
+
+
+
+
+
                 {this.state.edit ? (
                     <View>
                     <KeyboardAwareScrollView
@@ -307,7 +389,7 @@ export default class App extends Component{
                         <View style={styles.botones}>
                             <View style={styles.botonesA}>
                                 <TouchableOpacity style={styles.editI}
-                                onPress={()=>{this.setState({edit:true})}}>
+                                onPress={()=>{this.setState({edit:true,})}}>
                                     <Text style={{color:'white'}}>Editar información</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity 
@@ -489,6 +571,63 @@ const styles = StyleSheet.create({
         width: '60%',
         height:30,
         marginLeft:5
+    },
+     botonModal:{
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FEDB6B',
+        color: 'white',
+        width: 70,
+        height: 30,
+        padding: 5,
+        borderRadius: 8,
+        marginTop: 20,
+    },
+     botonModalA:{
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#71C0F2',
+        color: 'white',
+        width: 70,
+        height: 30,
+        padding: 5,
+        borderRadius: 8,
+        marginTop: 20,
+        marginRight:10
+    },
+     botonModalC:{
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#DE4C63',
+        color: 'white',
+        width: 70,
+        height: 30,
+        marginLeft: 10,
+        padding: 5,
+        borderRadius: 8,
+        marginTop: 20,
+    },
+    modal: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+        textAlign:'center',
+        // backgroundColor: '#F0F0F0',
+        backgroundColor: 'white',
+        width: '80%',
+        height: 230,
+        borderRadius: 10,
+        marginLeft: '10%',
+        marginTop: '10%',
+        padding: 20,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     }
 
 })
