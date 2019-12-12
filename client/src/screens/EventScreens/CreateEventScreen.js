@@ -83,7 +83,7 @@ export default class Event extends Component{
                     <View style={styles.abajo}>
                     <TouchableOpacity
                         style={styles.btnMy}
-                        onPress={()=>{this.props.navigation.navigate("MyBudget")}}
+                        onPress={()=>{this.props.navigation.navigate("MyEvents")}}
                     >
                         <Text style={{fontSize: 15, color:'#6930BF',textDecorationLine:'underline'}}>Ver mis eventos</Text>
                     </TouchableOpacity>

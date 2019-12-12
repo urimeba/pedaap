@@ -6,6 +6,9 @@ import EventKind from '../screens/EventScreens/EventKindScreen';
 import Need from '../screens/EventScreens/NeedScreen';
 import NumAsis from '../screens/EventScreens/NumAsisScreen';
 import Product from '../screens/EventScreens/ProductScreen';
+import MyEvents from '../screens/EventScreens/MyEvents';
+import PromosEvent from '../screens/EventScreens/promosEvent';
+
 
 const EventStack = createStackNavigator(
     {
@@ -27,6 +30,12 @@ const EventStack = createStackNavigator(
         },
         Product:{
             screen: Product,
+        },
+        MyEvents:{
+            screen: MyEvents,
+        },
+        PromosEvent:{
+            screen: PromosEvent,
         },
     },
     {

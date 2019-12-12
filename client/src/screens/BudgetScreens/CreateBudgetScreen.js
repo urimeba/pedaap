@@ -43,7 +43,7 @@ export default class App extends Component{
                 <View style={styles.abajo}>
                     <TouchableOpacity
                         style={styles.btnMy}
-                        onPress={()=>{this.props.navigation.navigate("MyBudget")}}
+                        onPress={()=>{this.props.navigation.navigate("MyBudgets")}}
                     >
                         <Text style={{fontSize: 15, color:'#6930BF',textDecorationLine:'underline'}}>Ver mis presupuestos</Text>
                     </TouchableOpacity>
