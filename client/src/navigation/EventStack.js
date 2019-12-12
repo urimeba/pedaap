@@ -31,10 +31,6 @@ const EventStack = createStackNavigator(
     },
     {
         initialRouteName: 'CreateEvent',
-        headerMode: 'float',
-        navigationOptions: {
-            headerVisible: false,
-        }
     }
 );
 
