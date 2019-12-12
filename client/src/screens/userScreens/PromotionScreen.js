@@ -28,9 +28,9 @@ export default class App extends Component{
         this.props.navigation.goBack()
     }
     
-
-
     render(){
+        let uriImage = JSON.stringify(this.props.navigation.getParam('foto', 'None')).replace(/"/g, '')
+        
         return (
             <View style={styles.todo}>
                 <View style={styles.container}>
@@ -47,53 +47,49 @@ export default class App extends Component{
                     <ScrollView>
                             <View style={styles.caja}>
                                 <View style={styles.imgCaja}>
-                                    <Image/>
+                                    <Image
+                                        style={styles.pngImagePhoto}
+                                        source={{uri: uriImage}}
+                                        resizeMode="center"
+                                    />
                                 </View>
                                 <View style={styles.datosCaja}>
                                     <Text style={styles.titulo1}>Nombre de la promoción</Text>
                                     <View style={styles.inputs}>
-                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('nombre', 'promo'))}</Text>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('nombre', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Promocion</Text>
                                     <View style={styles.inputs}>
-                                        <Text style={styles.tituloCosto}>${JSON.stringify(this.props.navigation.getParam('costo', 'promo'))}</Text>
+                                        <Text style={styles.tituloCosto}>${JSON.stringify(this.props.navigation.getParam('costo', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>categoría</Text>
                                     <View style={styles.inputs}>
-                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('categoria', 'promo'))}</Text>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('categoria', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Descripción</Text>
                                     <View style={styles.grande}>
-                                        <Text style={ styles.titulo}>{JSON.stringify(this.props.navigation.getParam('descripcion', 'promo'))}</Text>
+                                        <Text style={ styles.titulo}>{JSON.stringify(this.props.navigation.getParam('descripcion', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Vigencia</Text>
                                     <View style={styles.inputs}>
-                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('vigencia', 'promo'))}</Text>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('vigencia', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Direccion</Text>
                                     <View style={styles.grande}>
-                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('direccion', 'promo'))}</Text>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('direccion', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Lugar</Text>
                                     <View style={styles.inputs}>
-                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('lugar', 'promo'))}</Text>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('lugar', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                 </View>
                             </View>
                     </ScrollView>
                 </View>
             </View>
-            
         );
     }
 }
-
-
-
-
-    
-// console.log(datos[0].vigencia)
-
 
 const styles = StyleSheet.create({
     todo:{
@@ -146,7 +142,7 @@ const styles = StyleSheet.create({
         // flex: 3,
         alignSelf:'center',
         justifyContent:'center',
-         fontSize: 16,
+         fontSize: 18,
         padding:'5%',
         // color: 'white'
     },
@@ -228,5 +224,10 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 2,
         fontSize: 18
+    },
+    pngImagePhoto:{
+        height: '100%',
+        width: '100%',
+        borderRadius: 10,
     }
 });
