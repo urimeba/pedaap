@@ -89,7 +89,7 @@ export default class App extends Component{
         }
     }
 
-         _filtro=()=>{
+    _filtro=()=>{
         if(this.state.filter===false){
             this.setState({filter:true})
         }

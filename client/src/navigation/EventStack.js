@@ -6,6 +6,7 @@ import EventKind from '../screens/EventScreens/EventKindScreen';
 import Need from '../screens/EventScreens/NeedScreen';
 import NumAsis from '../screens/EventScreens/NumAsisScreen';
 import Product from '../screens/EventScreens/ProductScreen';
+import { NavigationEvents } from 'react-navigation';
 
 const EventStack = createStackNavigator(
     {
@@ -27,6 +28,10 @@ const EventStack = createStackNavigator(
         },
         Product:{
             screen: Product,
+            navigationOptions: {
+                headerMode: 'none',  // doesn't work
+                header: null, // only this works
+              }
         },
     },
     {
