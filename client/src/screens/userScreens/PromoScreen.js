@@ -179,6 +179,19 @@ export default class App extends Component{
     }
 
     caja=({item})=>{
+        // console.log(item.foto)
+
+        
+
+        photo = ""
+        if(item.foto!="None"){
+            photo = <Image style={{flex:1}} source={{uri: 'http://148.220.211.199:8000/media/' +item.foto}}/>
+        }else{
+            console.log(item.icono)
+            photo = <Image style={{flex:1}} source={Logo[item.icono]}  />
+        }
+
+
         let fechaSplit = item.vigencia.split("-");
         let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
         return(
@@ -197,7 +210,9 @@ export default class App extends Component{
                 style={styles.caja}
             >
                 {/* <View style={styles.imgCaja}> */}
+
                     <Image style={{flex:1}} source={{uri: 'http://148.220.211.199:8000/media/' +item.foto}}/>
+                    {/* {photo} */}
                 {/* </View> */}
                 <View style={styles.datosCaja}>
                     <Text style={styles.titulo}>{item.nombre}</Text>

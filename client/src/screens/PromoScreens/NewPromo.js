@@ -14,7 +14,7 @@ export default class App extends Component{
 
                 hasPermission: null,
                 type: Camera.Constants.Type.back,
-                camera: false,
+                camera: true,
                 photo:'',
                 take: false,
                 error1: false, //campos vacios
@@ -359,17 +359,22 @@ export default class App extends Component{
                              style={styles.imgCaja}
                               onPress={()=>{this.setState({camera:true})}}>
                             {this.state.camera===true && (
-                                <Camera style={{ flex: 1 }} type={this.state.cameraType} ref={ref => { this.camera = ref; }}>
+                                <Camera style={{ flex: 1, flexDirection: "row", justifyContent: "space-evenly", alignItems: "flex-end" }} type={this.state.cameraType} ref={ref => { this.camera = ref; }}>
                                         <View style={styles.camerabuttonview}>
                                             <TouchableOpacity
                                                 style={styles.cameraButtons}
                                                 onPress={this.snap}
                                             >
-                                                <Text
+                                                {/* <Text
                                                 style={{ fontSize: 18, marginBottom: 10, color: "white" }}
                                                 >
                                                 foto
-                                                </Text>
+                                                </Text> */}
+                                                <Icon
+                                                    name={'camera'}
+                                                    color="#ccc"
+                                                    size={60}
+                                                />
                                             </TouchableOpacity>
                                         </View>
                                 </Camera>
@@ -740,6 +745,16 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+    },
+
+    cameraButtons:{
+        width: 65,
+        height: 65,
+        backgroundColor: "#393939",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 30
     }
     
 });
