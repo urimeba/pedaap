@@ -28,7 +28,8 @@ export default class App extends Component{
 
     async _choosen(selectedItem) {
         await this.setState({ selectedItem: selectedItem });
-        console.log(this.state.selectedItem);
+        // console.log(this.state.selectedItem);
+        this._continuar()
     }
       
     _renderList = ({ item }) => {        
@@ -50,7 +51,15 @@ export default class App extends Component{
     }
     
     _continuar = () => {
-        this.props.navigation.navigate('NumAsis');
+        let x = this.props.navigation;
+        console.log(JSON.stringify(x.getParam('nombre', 'Error nombre')).replace(/"/g,''));
+        console.log(JSON.stringify(x.getParam('presupuesto', 'Error presupuesto')).replace(/"/g,''));
+        
+        this.props.navigation.navigate('NumAsis', {
+            nombre: JSON.stringify(x.getParam('nombre', 'Error nombre')).replace(/"/g,''),
+            presupuesto: JSON.stringify(x.getParam('presupuesto', 'Error presupuesto')).replace(/"/g,''),
+            tipo: this.state.selectedItem,
+        });
     }
 
     render(){
@@ -68,7 +77,7 @@ export default class App extends Component{
                         numColumns={3}
                     />
                 </View>
-                <View style={styles.next}>
+                {/* <View style={styles.next}>
                     <View style={{flex: 1}}></View>
                     <View style={styles.viewContinue}>
                         <TouchableOpacity 
@@ -78,7 +87,7 @@ export default class App extends Component{
                             <Text style={styles.white}>Continuar</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </View> */}
             </SafeAreaView>
         );
     }
@@ -161,6 +170,8 @@ const styles = StyleSheet.create({
     },
     bottomBoxText:{
         color: '#FFFFFF',
-        fontSize: 18,
+        fontSize: 14,
+        textAlign: 'center',
+        width: '90%'
     },
 });
