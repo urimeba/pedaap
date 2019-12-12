@@ -9,7 +9,11 @@ const PromotionStack = createStackNavigator(
     {
         //Promociones
         Promos: {
-            screen: Promotions
+            screen: Promotions,
+            navigationOptions: {
+                title: 'Promociones',
+                header: null
+            }
         },
         //Promocion
         Promotion: {
@@ -21,10 +25,6 @@ const PromotionStack = createStackNavigator(
     },
     {
         initialRouteName: 'Promos',
-        headerMode: 'flolat',
-        navigationOptions: {
-            headerVisible: false,
-        }
     }
 );
 

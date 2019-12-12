@@ -2,39 +2,26 @@ import React, {Component} from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-const datos=[
-    {
-        id: '1',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo Juriquilla',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    }
-];
+import Logo from '../../components/StoreIcons'
 
 export default class App extends Component{
     constructor(props){
         super(props);
-            this.state={
-                datos: []
-            }
+        this.state={
+            datos: [],
+        }
 
-    }
-
-    _user =async()=>{
-        this.props.navigation.goBack()
     }
     
     render(){
         let uriImage = JSON.stringify(this.props.navigation.getParam('foto', 'None')).replace(/"/g, '')
+        let uriImageRaw = JSON.stringify(this.props.navigation.getParam('fotoRaw', 'None')).replace(/"/g, '')
+        let icono = JSON.stringify(this.props.navigation.getParam('icono', '')).replace(/"/g, '')
         
         return (
-            <View style={styles.todo}>
-                <View style={styles.container}>
-                    <View style={styles.arriba}>
+            <SafeAreaView style={styles.todo}>
+                {/* <View style={{flex: 1}}> */}
+                    {/* <View style={styles.arriba}>
                         <View style={styles.textoP}>
                             <TouchableOpacity onPress={this._user} >
                                 <Icon name="arrow-left" size={22} color={'#707070'} style={styles.icon} />
@@ -43,15 +30,24 @@ export default class App extends Component{
                         <View style={styles.botones}>
                             <Text style={styles.tituloP}>Promoción</Text>
                         </View>
-                    </View>
-                    <ScrollView>
+                    </View> */}
+                    <ScrollView style={styles.Scroll}>
                             <View style={styles.caja}>
                                 <View style={styles.imgCaja}>
-                                    <Image
-                                        style={styles.pngImagePhoto}
-                                        source={{uri: uriImage}}
-                                        resizeMode="center"
-                                    />
+                                    {uriImageRaw == "None" &&(
+                                        <Image
+                                            style={styles.pngImage}
+                                            source={Logo[icono]}
+                                            resizeMode="center"
+                                        />
+                                    )}
+                                    {uriImage != "None" &&(
+                                        <Image
+                                            style={styles.pngImagePhoto}
+                                            source={{uri: uriImage}}
+                                            resizeMode="center"
+                                        />
+                                    )}
                                 </View>
                                 <View style={styles.datosCaja}>
                                     <Text style={styles.titulo1}>Nombre de la promoción</Text>
@@ -85,8 +81,8 @@ export default class App extends Component{
                                 </View>
                             </View>
                     </ScrollView>
-                </View>
-            </View>
+                {/* </View> */}
+            </SafeAreaView>
         );
     }
 }
@@ -94,6 +90,9 @@ export default class App extends Component{
 const styles = StyleSheet.create({
     todo:{
         flex: 1,
+    },
+    Scroll:{
+        paddingTop: 20,
     },
     arriba:{
         // flex:1,
@@ -158,7 +157,7 @@ const styles = StyleSheet.create({
         // flex:4,
         flexDirection: 'column',
         width:'100%',
-        height: 1200,
+        height: 1600,
         // height: '100%',
         paddingLeft: '5%',
         paddingRight: '5%',
@@ -178,8 +177,10 @@ const styles = StyleSheet.create({
         width:'100%',
         height: '25%',
         borderRadius: 10,
-        backgroundColor:'gray',
+        backgroundColor: '#F0F0F0',
         marginBottom: 10,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     datosCaja:{
         // flex:3,
@@ -229,5 +230,11 @@ const styles = StyleSheet.create({
         height: '100%',
         width: '100%',
         borderRadius: 10,
-    }
+    },
+    pngImage:{
+        height: '100%',
+        width: '100%',
+        height: 300,
+        width: 300,
+    },
 });

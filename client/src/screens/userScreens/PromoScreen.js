@@ -114,7 +114,7 @@ export default class App extends Component{
         })
     }
 
-     componentDidMount = async() => {
+    componentDidMount = async() => {
         url = await AsyncStorage.getItem("server")+"promociones/getPromos/";
         token = await AsyncStorage.getItem('userToken');
         url2 = await AsyncStorage.getItem("server")+"tiendas/";
@@ -189,6 +189,7 @@ export default class App extends Component{
                         descripcion: item.descripcion,
                         direccion: item.direccion,
                         costo: item.costo,
+                        icono: item.icono,
                     })}
                     style={styles.caja}
                 >
@@ -224,7 +225,8 @@ export default class App extends Component{
                         descripcion: item.descripcion,
                         direccion: item.direccion,
                         costo: item.costo,
-                        foto: this.state.server+'media/'+item.foto
+                        foto: this.state.server+'media/'+item.foto,
+                        fotoRaw: item.foto
                     })}
                     style={styles.caja}
                 >
