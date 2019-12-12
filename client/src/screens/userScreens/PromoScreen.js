@@ -196,9 +196,9 @@ export default class App extends Component{
                 })}
                 style={styles.caja}
             >
-                <View style={styles.imgCaja}>
-                    <Image/>
-                </View>
+                {/* <View style={styles.imgCaja}> */}
+                    <Image style={{flex:1}} source={{uri: 'http://148.220.211.199:8000/media/' +item.foto}}/>
+                {/* </View> */}
                 <View style={styles.datosCaja}>
                     <Text style={styles.titulo}>{item.nombre}</Text>
                     {item.costo == '0.00' &&(
@@ -465,7 +465,8 @@ const styles = StyleSheet.create({
         width:'10%',
         height: '100%',
         borderRadius: 10,
-        backgroundColor:'#F0F0F0',
+        backgroundColor:'red',
+        // backgroundColor:'#F0F0F0',
         justifyContent: 'center',
         alignItems: 'center'
     },
