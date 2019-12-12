@@ -28,7 +28,7 @@ _unirme=()=>{
          this.setState({error1:false})
         this.setState({error2:false})
         this.setState({succes:true})
-        this.props.navigation.navigate('AportBudget',)
+        this.props.navigation.navigate('ShareBudget',)
         
     }else{
         this.setState({error1:true})

@@ -181,12 +181,6 @@ export default (props) => {
                 />
             </View>
             <View style={styles.next}>
-                <TouchableOpacity 
-                    style={styles.back} 
-                    onPress={_eliminarCategorias}
-                >   
-                    <Icon name="keyboard-backspace" size={40} color={'#707070'} />
-                </TouchableOpacity>
                 <View style={styles.viewContinue}>
                     <TouchableOpacity 
                         style={styles.continue} 
@@ -237,7 +231,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         height: '50%',
-        width: '70%',
+        width: '40%',
         backgroundColor: '#393939',
     },
     back:{

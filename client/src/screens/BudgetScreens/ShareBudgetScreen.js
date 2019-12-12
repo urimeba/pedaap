@@ -132,7 +132,9 @@ export default class App extends Component{
     }
 
     caja= ({item})=>(
-        <View style={styles.caja}>
+        <TouchableOpacity 
+        onPress={()=>{this.props.navigation.navigate('AportBudget')}}
+        style={styles.caja}>
             <View style={styles.imgCaja}>
                 <Image/>
             </View>
@@ -145,7 +147,7 @@ export default class App extends Component{
                     <Icon name="close" size={24} color={'#D5D5D5'}/>
                 </TouchableOpacity>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 
     render(){
@@ -156,7 +158,7 @@ export default class App extends Component{
                     <Text style={styles.BoxPresup}>{JSON.stringify(this.props.navigation.getParam('monto', 'NO-MONTO'))}</Text>
                 </View>
                 <TouchableOpacity style={styles.verCombos} onPress={this._combo}>
-                    <Text style={styles.verCombosText}>Ver combos</Text>
+                    <Text style={styles.verCombosText}>Ver promociones</Text>
                 </TouchableOpacity>
                 <View style={styles.codigoC}>
                     <Text style={styles.titulo1}>Comparte tu código</Text>
@@ -235,7 +237,8 @@ const styles= StyleSheet.create({
          marginLeft:'60%',
      },
      verCombosText:{
-        fontSize: 15
+        fontSize: 15,
+        color:'white'
      },
      codigoC:{
         width: '100%',

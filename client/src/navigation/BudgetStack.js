@@ -8,6 +8,8 @@ import InicialBudget from '../screens/BudgetScreens/InicialBudgetScreen';
 import JoinBudget from '../screens/BudgetScreens/JoinBudgetScreen';
 import ShareBudget from '../screens/BudgetScreens/ShareBudgetScreen';
 import CategoriasS from '../screens/BudgetScreens/CategoScreen';
+import MyBudgets from '../screens/BudgetScreens/MyBudgets';
+
 
 const BudgetStack = createStackNavigator(
     {
@@ -35,7 +37,10 @@ const BudgetStack = createStackNavigator(
         },
         CategoriasS:{
             screen:CategoriasS
-        }
+        },
+        MyBudgets:{
+            screen:MyBudgets
+        },
     },
     {
         initialRouteName: 'CreateBudget',

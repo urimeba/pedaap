@@ -48,7 +48,7 @@ export default class App extends Component{
             const total = parseInt(this.state.pres) - parseInt(this.state.aportes)
             this.setState({pres:total})
         }
-        props.navigation.goBack();
+        this.props.navigation.goBack();
     }
 
     render(){
@@ -61,7 +61,7 @@ export default class App extends Component{
                     </View>
                 </View>
                 <TouchableOpacity style={styles.verCombos} onPress={this._combo}>
-                    <Text style={styles.verCombosText}>Ver combos</Text>
+                    <Text style={styles.verCombosText}>Ver promociones</Text>
                 </TouchableOpacity>
                 <View style={styles.codigoC}>
                     <Text style={styles.titulo3}>Creado por:</Text>
@@ -117,8 +117,8 @@ const styles= StyleSheet.create({
          justifyContent: 'center',
          alignContent:'center',
          alignItems:'center',
-         width:130,
-         height: 30,
+         width:140,
+         height: 40,
          backgroundColor: '#FEDB6B',
          borderRadius: 20,
          textAlign:'center',
@@ -126,7 +126,8 @@ const styles= StyleSheet.create({
          marginTop:20
      },
      verCombosText:{
-        fontSize: 15
+        fontSize: 15,
+        color:'white'
      },
      codigoC:{
         width: '100%',
