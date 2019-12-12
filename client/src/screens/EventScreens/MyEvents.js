@@ -20,7 +20,8 @@ const daata=[
         id:'1',
         nombre:'Fiesta de pancha',
         tipoEvento:'familiar',
-        fecha:'2019-12-12'
+        monto:'2019-12-12',
+        personas: '5'
     }
 ]
 
@@ -38,10 +39,45 @@ export default class App extends Component{
         };
     }
 
+    componentDidMount = async() =>{
+        server = await AsyncStorage.getItem("server");
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+
+        axios({
+            method: 'POST',
+            url: server + "presupuestos/busqueda/",
+            data: {"idUser":idUser},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": 'Token '+token
+            }, 
+        }).then(res => {
+            console.log(res.data.Datos)
+            let j = res.data.Datos.replace(/'/g,'"');
+            let json_data = JSON.parse(j);
+            let data = [];
+            // console.log(json_data);
+
+            for(var i in json_data){
+                data.push(json_data[i]);
+            }
+
+            // console.log(data);
+
+            this.setState({
+                datos: data,
+            });
+            }).catch(err => {
+                console.log(err);
+            })
+
+    }
+
 
     caja= ({item})=>{
-        let fechaSplit = item.fecha.split("-");
-        let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
+        // let fechaSplit = item.fecha.split("-");
+        // let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
             return(
                 <TouchableOpacity 
                     onPress={() => this.props.navigation.navigate('PromosEvent',{idEvento:item.id})}
@@ -50,7 +86,9 @@ export default class App extends Component{
                     <View style={styles.datosCaja}>
                         <Text style={styles.titulo}>{item.nombre}</Text>
                         <Text style={styles.tituloT}>Tipo: {item.tipoEvento}</Text>
-                        <Text style={styles.tituloF}>Creado: {item.fecha}</Text>
+                        {/* <Text style={styles.tituloF}>Creado: {item.fecha}</Text> */}
+                        <Text style={styles.tituloF}>Monto: ${item.montoMaximo}</Text>
+                        <Text style={styles.tituloF}># personas: {item.numeroPersonas}</Text>
                     </View>
                 </TouchableOpacity>
             );
@@ -75,8 +113,8 @@ export default class App extends Component{
                                     />
                                 }
                                 style={styles.flat}
-                                // data={this.state.datos}
-                                data={daata}
+                                data={this.state.datos}
+                                // data={daata}
                                 renderItem={this.caja}
                                 keyExtractor={item => item.id.toString()}
                                 extraData={this.state}

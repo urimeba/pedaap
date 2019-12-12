@@ -50,7 +50,12 @@ export default class App extends Component{
     }
     
     _continuar = () => {
-        this.props.navigation.navigate('NumAsis');
+        
+        nombre = this.props.navigation.getParam('nombre', 'NO-NAME');
+        presupuesto = this.props.navigation.getParam('presupuesto', 'NO-DINERO');
+
+        this.props.navigation.navigate('NumAsis', {nombre: nombre, presupuesto, presupuesto, idTipo: idTipo});
+        
     }
 
     render(){
