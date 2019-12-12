@@ -15,6 +15,7 @@ from rest_framework.status import (
 )
 import datetime
 import dateutil.parser
+from decimal import Decimal
 
 # Create your views here.
 class PromocionesViewSet(viewsets.ModelViewSet):
@@ -62,7 +63,9 @@ class PromocionesViewSet(viewsets.ModelViewSet):
         for p in promociones:
             # id = str(p.id)
             # id = '""' + id + '""'
-            dic[str(p.id)]={"id":str(p.id), "nombre":str(p.descripcion), 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
+            print(p.foto.name)
+            dic[str(p.id)]={"id":str(p.id), "nombre":str(p.descripcion),'foto':str(p.foto.name), 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
+            # dic[str(p.id)]={"id":str(p.id), "nombre":str(p.descripcion), 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
         return Response({"Datos": str(dic)}, status=HTTP_200_OK)
 
     @action(detail=False, methods=['post'])
@@ -92,24 +95,29 @@ class PromocionesViewSet(viewsets.ModelViewSet):
         producto = (request.data.get("producto"))
         tienda = (request.data.get("tienda"))
         idUser = (request.data.get("idUser"))
-
-        # print(foto.name)
-
         prod = Producto.objects.get(id=producto)
         tien = Tienda.objects.get(id=tienda)
         user = User.objects.get(id=idUser)
+
+        print(foto)
+
 
         productoTienda, created1 = TiendaProducto.objects.get_or_create(producto=prod, tienda=tien)
         # print(productoTienda)
 
         if(descripcion=="" or fechaInicio=="" or fechaVencimiento=="" or costo=="" or producto=="" or tienda==""):
+            print("IF")
             return Response({"Error":"Favor de completar los datos"}, status=HTTP_404_NOT_FOUND)
-        elif(len(descripcion)<15):
+        elif(len(descripcion)<5):
+            print("ELIF")
             return Response({"Error":"Mejora la descripción de la promoción"}, status=HTTP_404_NOT_FOUND)
         else:
+            print("ELSE")
 
             try:
-                costo = int(costo)
+                costo = Decimal(costo)
+                print(costo)
+
             except Exception as e:
                 # raise
                 print(e)

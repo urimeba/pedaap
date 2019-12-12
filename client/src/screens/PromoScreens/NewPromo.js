@@ -20,6 +20,7 @@ export default class App extends Component{
                 error1: false, //campos vacios
                 error2: false, //error al mandarlos
                 succes: true, //todo bien
+                msgE:'',
 
 
                 fechaInicio:"01-12-2019",
@@ -62,13 +63,13 @@ export default class App extends Component{
             this.setModalVisible(true);
             // console.log("AAAA");
         } else {
-            this.setState({correcto:true})
+            // this.setState({correcto:true})
             // console.log("BBBB");
 
-            this.setState({succes:true})
-            this.setState({error1:false})
-            this.setState({error1:false})
-            this.setModalVisible(true);
+            // this.setState({succes:true})
+            // this.setState({error1:false})
+            // this.setState({error1:false})
+            // this.setModalVisible(true);
             // console.log("CCCCC");
 
             this._sendPromo();
@@ -205,45 +206,37 @@ export default class App extends Component{
             Alert.alert("Error", "La fecha de expiración no puede ser menor");
         }
 
+
+        var date = new Date(); //Current Date
+        // var month = new Date().getMonth() + 1; //Current Month
+        // var year = new Date().getFullYear(); //Current Year
+        // var hours = new Date().getHours(); //Current Hours
+        // var min = new Date().getMinutes(); //Current Minutes
+        // var sec = new Date().getSeconds(); //Current Seconds
+
+        photoName = idUser.toString() + "_" + date.toString() + "_" + this.state.producto + ".jpg";
+        console.log(idUser.toString())
+        console.log(date.toString())
+        console.log(this.state.producto)
+        console.log(photoName)
+
+
         const data = new FormData();
         data.append('descripcion', this.state.descrip);
         data.append('fechaInicio', fechaIni);
         data.append('fechaVencimiento', fechaExp);
-        data.append('foto', {uri: this.state.photo, type: 'image/jpeg', name:'testPhotoName'});
+        data.append('foto', {uri: this.state.photo, type: 'image/jpeg', name:photoName });
         data.append('costo', this.state.costo);
         data.append('producto', this.state.producto);
         data.append('tienda', this.state.tienda);
         data.append('idUser', idUser);
 
-        // console.log("NOMBRE : " + this.state.photo.name);
-
-        // {descripcion:this.state.descrip, 
-        //  fechaInicio:fechaIni, 
-        //  fechaVencimiento:fechaExp, 
-        //  foto:this.state.photo, 
-        //  costo:this.state.costo, 
-        //  producto:this.state.producto, 
-        //  tienda:this.state.tienda, 
-        //  idUser:idUser},
-
-        // fetch(url+"promociones/alta/", {
-        //     method: 'post',
-        //     body: data
-        // }).then( res => {
-        //     console.log(res.data);
-        // }).catch(err => {
-        //     console.log(err.response)
-        // });
-
-          
-
-
-
-
+        url1 = url+"promociones/alta/"
+        console.log(url1)
 
         axios({
             method: 'POST',
-            url: url+"promociones/alta/",
+            url: url1,
             data: data,
             headers: {
                 "content-type":"multipart/form-data",
@@ -251,11 +244,19 @@ export default class App extends Component{
 
             }, 
         }).then( res => {
-            console.log(res.data);
-            
+            // console.log(res.data);
+            this.setModalVisible(true);
+            this.setState({succes:true,error1:false,error2:false})
         }).catch(err => {
-            console.log(err.response.data.Error)
-            Alert.alert("Error",);
+
+            this.setModalVisible(true);
+            this.setState({error2:true,msgE:err.response.data.Error,error1:false,succes:false})
+
+
+
+            // console.log(err.response.data.Error)
+            console.log(err)
+            // Alert.alert("Error", err.response.data.Error);
         });
 
     }
@@ -293,7 +294,7 @@ export default class App extends Component{
                             <Text style={{marginTop: 20}} >Completa los campos</Text>
                             <TouchableOpacity
                                style={styles.botonModal}
-                                onPress={() => {
+                                onPress={()=>{
                                 this.setModalVisible(!this.state.modalVisible);
                                 }}>
                             <Text style={{color: 'white'}}>Aceptar</Text>
@@ -307,7 +308,7 @@ export default class App extends Component{
                                  style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
                                  source={require('../../img/remove.png')}
                             />
-                            < Text style={{marginTop: 20}} >Error al mandar la promocion</Text>
+                            < Text style={{marginTop: 20}} >{this.state.msgE}</Text>
                             <TouchableOpacity
                             style={styles.botonModal}
                             onPress={() => {
@@ -328,8 +329,8 @@ export default class App extends Component{
                             < Text style={{marginTop: 20}}>Enviado correctamente</Text>
                             <TouchableOpacity
                                 style={styles.botonModal}
-                                onPress={() => {
-                                this.setModalVisible(!this.state.modalVisible);
+                                onPress={() => { this.props.navigation.goBack()
+                                // this.setModalVisible(!this.state.modalVisible);
                                 }}>
                                 <Text style={{color: 'white'}}>Aceptar</Text>
                             </TouchableOpacity>

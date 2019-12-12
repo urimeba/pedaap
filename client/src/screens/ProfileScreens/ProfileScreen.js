@@ -49,10 +49,9 @@ export default class App extends Component{
         )
         .then(response => response.json())
         .then((responseJson)=>{
-            // console.log(responseJson.telefono);
             tele = responseJson.telefono;
             tele = tele.substring(3,13)
-            console.log(responseJson)
+            // console.log(responseJson)
             
             this.setState({
                 nombre:responseJson.first_name, 
@@ -234,10 +233,17 @@ export default class App extends Component{
                             <TextInput style={styles.inputData} secureTextEntry={true} onChangeText={(newPass2) => this.setState({newPass2})} />
                         </View>
                         <View style={styles.botones2}>
-                            <View style={styles.botonesA}>
+                            {/* <View style={styles.botonesA}>
                                 <TouchableOpacity style={styles.editIP}
                                 onPress={this._saveChanges}>
                                     <Text style={{color:'white'}}>Aceptar</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={styles.botonesA}>
+                                <TouchableOpacity style={styles.cerrarS}
+                                onPress={()=>{this.setState({edit:false})}}>
+                                    <Text style={{color:'white'}}>Cancelar</Text>
                                 </TouchableOpacity>
                             </View> */}
 
@@ -245,20 +251,15 @@ export default class App extends Component{
                                 <TouchableOpacity 
                                     style={styles.editI2}
                                     onPress={()=>{this.setState({edit:false})}}>
-                                    <Text>Cancelar</Text>
+                                    <Text style={{color:'white'}}>Cancelar</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity 
                                     onPress={this._saveChanges}
                                     style={styles.editP}>
-                                    <Text>Aceptar</Text>
+                                    <Text style={{color:'white'}}>Aceptar</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={styles.botonesA}>
-                                <TouchableOpacity style={styles.cerrarS}
-                                onPress={()=>{this.setState({edit:false})}}>
-                                    <Text style={{color:'white'}}>Cancelar</Text>
-                                </TouchableOpacity>
-                            </View>
+                            
                         </View>
                     </KeyboardAwareScrollView>
                 </View>

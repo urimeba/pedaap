@@ -128,21 +128,6 @@ export default class App extends Component{
         token = await AsyncStorage.getItem('userToken');
         url2 = await AsyncStorage.getItem("server")+"tiendas/";
 
-        // console.log(token)
-
-        // axios({
-        //     method: 'GET',
-        //     url: url,
-        //     data: {},
-        //     headers: {
-        //         "content-type":"application/json",
-        //         "Authorization":"Token dfdce0d7017730f1ce446333b458f6c7f4b22157"
-        //     }, 
-        // }).then( res => {
-        //     // PROMOCIONESs
-        //     console.log(res.Datos);
-        // }).catch(err => console.log(err));
-
         fetch(url, {
                 method: 'GET',
                 mode: 'cors',
