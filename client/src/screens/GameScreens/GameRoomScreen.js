@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 const datos=[
     {
@@ -45,12 +46,94 @@ export default class App extends Component{
     constructor(props){
         super(props);
         this.state={
+            datos: [],
+            idSala: "",
+            
 
         }
     }
 
-    _iniciar=()=>{
-        this.props.navigation.navigate('Game')
+    async componentDidMount(){
+
+        idSal = JSON.stringify(this.props.navigation.getParam('idSala', 'NO-ID'))
+        idSala = idSal;
+        console.log(idSala);
+        
+        url = await AsyncStorage.getItem("server");
+        token =  await AsyncStorage.getItem("userToken");
+        idUser =  await AsyncStorage.getItem("userId");
+
+        url1 = url + "salas/"+idSala+"/";
+        console.log(url1)
+
+        // this._verificarEstado(url1 )
+
+        this.timer = setInterval(()=>this._verificarEstado(url1), 1000);
+
+
+        
+
+    }
+
+    _getUsuarios = async() =>{
+        idSal = JSON.stringify(this.props.navigation.getParam('idSala', 'NO-ID'));
+        idSala = idSal;
+        
+
+    }
+
+    _verificarEstado = (url1) =>{
+        // setTimeout(function(){
+            axios({
+                method: 'GET',
+                url: url1,
+                data: {},
+                headers: {
+                    "content-type":"application/json",
+                    "Authorization":"Token " +token
+                }, 
+            }).then( res => {
+                console.log(res.data.estado);
+                estado = res.data.estado;
+
+                if(estado==1){
+                    this.props.navigation.navigate('GameRoom', {idSala:res.data.id, codigo:res.data.codigo, participantes:res.data.participantes})
+                }
+
+            }).catch(err => {
+                console.log(err)
+            });
+        // },
+            // 1000);
+
+    }
+
+    _iniciar=async()=>{
+
+        url = await AsyncStorage.getItem("server");
+        token =  await AsyncStorage.getItem("userToken");
+        idUser =  await AsyncStorage.getItem("userId");
+
+        idSal = JSON.stringify(this.props.navigation.getParam('idSala', 'NO-ID'))
+        idSala = idSal;
+        console.log(idSala);
+
+
+        axios({
+            method: 'PATCH',
+            url: url+"salas/"+idSala+"/",
+            data: {estado:1},
+            headers: {
+                "content-type":"application/json",
+                "Authorization":"Token " +token
+            }, 
+        }).then( res => {
+            console.log(res.data);
+            // this.props.navigation.navigate('GameRoom', {idSala:res.data.id, codigo:res.data.codigo, participantes:res.data.participantes})
+        }).catch(err => {
+            console.log(err)
+        });
+
     }
 
         caja= ({item})=>(

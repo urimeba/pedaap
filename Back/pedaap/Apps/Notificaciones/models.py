@@ -11,5 +11,5 @@ from django.conf import settings
 # Create your models here.
 class Notificacion(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    mensaje = models.CharField(max_length=50)
+    mensaje = models.CharField(max_length=100)
     estado = models.CharField(max_length=1)

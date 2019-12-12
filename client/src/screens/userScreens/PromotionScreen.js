@@ -2,39 +2,26 @@ import React, {Component} from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-const datos=[
-    {
-        id: '1',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo Juriquilla',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    }
-];
+import Logo from '../../components/StoreIcons'
 
 export default class App extends Component{
     constructor(props){
         super(props);
-            this.state={
-                datos: []
-            }
+        this.state={
+            datos: [],
+        }
 
-    }
-
-    _user =async()=>{
-        this.props.navigation.goBack()
     }
     
-
-
     render(){
+        let uriImage = JSON.stringify(this.props.navigation.getParam('foto', 'None')).replace(/"/g, '')
+        let uriImageRaw = JSON.stringify(this.props.navigation.getParam('fotoRaw', 'None')).replace(/"/g, '')
+        let icono = JSON.stringify(this.props.navigation.getParam('icono', '')).replace(/"/g, '')
+        
         return (
-            <View style={styles.todo}>
-                <View style={styles.container}>
-                    <View style={styles.arriba}>
+            <SafeAreaView style={styles.todo}>
+                {/* <View style={{flex: 1}}> */}
+                    {/* <View style={styles.arriba}>
                         <View style={styles.textoP}>
                             <TouchableOpacity onPress={this._user} >
                                 <Icon name="arrow-left" size={22} color={'#707070'} style={styles.icon} />
@@ -43,61 +30,69 @@ export default class App extends Component{
                         <View style={styles.botones}>
                             <Text style={styles.tituloP}>Promoción</Text>
                         </View>
-                    </View>
-                    <ScrollView>
+                    </View> */}
+                    <ScrollView style={styles.Scroll}>
                             <View style={styles.caja}>
                                 <View style={styles.imgCaja}>
-                                    <Image/>
+                                    {uriImageRaw == "None" &&(
+                                        <Image
+                                            style={styles.pngImage}
+                                            source={Logo[icono]}
+                                            resizeMode="center"
+                                        />
+                                    )}
+                                    {uriImage != "None" &&(
+                                        <Image
+                                            style={styles.pngImagePhoto}
+                                            source={{uri: uriImage}}
+                                            resizeMode="center"
+                                        />
+                                    )}
                                 </View>
                                 <View style={styles.datosCaja}>
                                     <Text style={styles.titulo1}>Nombre de la promoción</Text>
                                     <View style={styles.inputs}>
-                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('nombre', 'promo'))}</Text>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('nombre', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Promocion</Text>
                                     <View style={styles.inputs}>
-                                        <Text style={styles.tituloCosto}>${JSON.stringify(this.props.navigation.getParam('costo', 'promo'))}</Text>
+                                        <Text style={styles.tituloCosto}>${JSON.stringify(this.props.navigation.getParam('costo', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>categoría</Text>
                                     <View style={styles.inputs}>
-                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('categoria', 'promo'))}</Text>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('categoria', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Descripción</Text>
                                     <View style={styles.grande}>
-                                        <Text style={ styles.titulo}>{JSON.stringify(this.props.navigation.getParam('descripcion', 'promo'))}</Text>
+                                        <Text style={ styles.titulo}>{JSON.stringify(this.props.navigation.getParam('descripcion', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Vigencia</Text>
                                     <View style={styles.inputs}>
-                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('vigencia', 'promo'))}</Text>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('vigencia', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Direccion</Text>
                                     <View style={styles.grande}>
-                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('direccion', 'promo'))}</Text>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('direccion', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Lugar</Text>
                                     <View style={styles.inputs}>
-                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('lugar', 'promo'))}</Text>
+                                        <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('lugar', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                 </View>
                             </View>
                     </ScrollView>
-                </View>
-            </View>
-            
+                {/* </View> */}
+            </SafeAreaView>
         );
     }
 }
 
-
-
-
-    
-// console.log(datos[0].vigencia)
-
-
 const styles = StyleSheet.create({
     todo:{
         flex: 1,
+    },
+    Scroll:{
+        paddingTop: 20,
     },
     arriba:{
         // flex:1,
@@ -146,7 +141,7 @@ const styles = StyleSheet.create({
         // flex: 3,
         alignSelf:'center',
         justifyContent:'center',
-         fontSize: 16,
+         fontSize: 18,
         padding:'5%',
         // color: 'white'
     },
@@ -162,7 +157,7 @@ const styles = StyleSheet.create({
         // flex:4,
         flexDirection: 'column',
         width:'100%',
-        height: 1200,
+        height: 1600,
         // height: '100%',
         paddingLeft: '5%',
         paddingRight: '5%',
@@ -182,8 +177,10 @@ const styles = StyleSheet.create({
         width:'100%',
         height: '25%',
         borderRadius: 10,
-        backgroundColor:'gray',
+        backgroundColor: '#F0F0F0',
         marginBottom: 10,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     datosCaja:{
         // flex:3,
@@ -228,5 +225,16 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 2,
         fontSize: 18
-    }
+    },
+    pngImagePhoto:{
+        height: '100%',
+        width: '100%',
+        borderRadius: 10,
+    },
+    pngImage:{
+        height: '100%',
+        width: '100%',
+        height: 300,
+        width: 300,
+    },
 });

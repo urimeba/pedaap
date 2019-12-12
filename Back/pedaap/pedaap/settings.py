@@ -92,7 +92,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'fiestaap',
-        'HOST':'127.0.0.1',
+        'HOST':'localhost',
         'USER':'root',
         'PASSWORD':'',
         'PORT':'3306'
@@ -135,11 +135,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'Static'),)
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'Static'),
+    os.path.join(BASE_DIR, 'media')
+)
+# STATIC_ROOT = os.path.join(BASE_DIR, 'Static')
 AUTH_USER_MODEL = 'Usuarios.User'
 
-TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+TWILIO_ACCOUNT_SID = 'AC5770f9d44bc5f3ad36f3839537c832db'
+TWILIO_AUTH_TOKEN = 'eb7bed12a3369a6963b8f89137415719'
 TWILIO_PHONE_NUMBER= '+12407861324'
 PHONENUMBER_DB_FORMAT="INTERNATIONAL"
 

@@ -14,12 +14,13 @@ export default class App extends Component{
 
                 hasPermission: null,
                 type: Camera.Constants.Type.back,
-                camera: false,
+                camera: true,
                 photo:'',
                 take: false,
                 error1: false, //campos vacios
                 error2: false, //error al mandarlos
                 succes: true, //todo bien
+                msgE:'',
 
 
                 fechaInicio:"01-12-2019",
@@ -52,27 +53,31 @@ export default class App extends Component{
 
     _enviar =async () => {
         // console.log("kfnvfnk")
-        console.log(this.state.categoria)
+        // console.log(this.state.categoria)
+        // console.log(this.state.fechaExpiracion, this.state.fechaInicio, this.state.costo, this.state.descrip, this.state.producto, this.state.tienda)
         if (this.state.fechaInicio =="" || this.state.fechaExpiracion =="" || this.state.costo =="" || this.state.descrip == "" || this.state.producto == "" || this.state.tienda == "") {
-            console.log(this.state.fechaExpiracion, this.state.fechaInicio, this.state.costo, this.state.descrip, this.state.producto, this.state.tienda)
+            
             this.setState({error1:true})
             this.setState({error2:false})
             this.setState({succes:false})
             this.setModalVisible(true);
-        } else if (this.state.error1 === true) {
-            this.setState({error2:true})
-            this.setState({error1:false})
-            this.setModalVisible(true);
-        } else if (this.state.correcto === true) {
-           this.setState({succes:true})
-            this.setState({error1:false})
-            this.setState({error1:false})
-            this.setModalVisible(true);
+            // console.log("AAAA");
+        } else {
+            // this.setState({correcto:true})
+            // console.log("BBBB");
+
+            // this.setState({succes:true})
+            // this.setState({error1:false})
+            // this.setState({error1:false})
+            // this.setModalVisible(true);
+            // console.log("CCCCC");
+
+            this._sendPromo();
         }
 
     }
 
-    async componentDidMount() {
+     componentDidMount = async() => {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
         this.setState({ hasPermission: status === 'granted' });
 
@@ -91,7 +96,7 @@ export default class App extends Component{
 
             }, 
         }).then( res => {
-            console.log(res.data.results);
+            // console.log(res.data.results);
             this.setState({categorias: res.data.results})
 
             
@@ -109,7 +114,7 @@ export default class App extends Component{
 
             }, 
         }).then( res => {
-            console.log(res.data.results);
+            // console.log(res.data.results);
             this.setState({tiendas: res.data.results, tienda:""})
 
             
@@ -129,7 +134,8 @@ export default class App extends Component{
     snap = async () => {
         if (this.camera) {
             let photo = await this.camera.takePictureAsync();
-            console.log(photo.uri);
+            // console.log(photo)
+            // console.log(photo.uri);
             this.setState({camera:false});
             this.setState({photo: photo.uri})
             this.setState({take: true})
@@ -173,26 +179,84 @@ export default class App extends Component{
     _sendPromo = async() =>{
 
         token = await AsyncStorage.getItem("userToken");
+        idUser = await AsyncStorage.getItem("userId");
         url = await AsyncStorage.getItem("server");
 
-        f1 = this.state.fechaInicio;
-        
+        // console.log("SEND PROMO");
 
+        f1 = this.state.fechaInicio;
+        // console.log(f1)
+        f1D = f1.substring(0,2);
+        f1M = f1.substring(3,5);
+        f1A = f1.substring(6,10);
+
+        fechaIni = f1A + "-" + f1M + "-" + f1D;
+        // console.log(fechaIni);
+
+        f2 = this.state.fechaExpiracion;
+        // console.log(f2)
+        f2D = f2.substring(0,2);
+        f2M = f2.substring(3,5);
+        f2A = f2.substring(6,10);
+
+        fechaExp = f2A + "-" + f2M + "-" + f2D;
+        // console.log(fechaExp);
+
+        if(f2D>f1D){
+            Alert.alert("Error", "La fecha de expiración no puede ser menor");
+        }
+
+
+        var date = new Date(); //Current Date
+        // var month = new Date().getMonth() + 1; //Current Month
+        // var year = new Date().getFullYear(); //Current Year
+        // var hours = new Date().getHours(); //Current Hours
+        // var min = new Date().getMinutes(); //Current Minutes
+        // var sec = new Date().getSeconds(); //Current Seconds
+
+        photoName = idUser.toString() + "_" + date.toString() + "_" + this.state.producto + ".jpg";
+        console.log(idUser.toString())
+        console.log(date.toString())
+        console.log(this.state.producto)
+        console.log(photoName)
+
+
+        const data = new FormData();
+        data.append('descripcion', this.state.descrip);
+        data.append('fechaInicio', fechaIni);
+        data.append('fechaVencimiento', fechaExp);
+        data.append('foto', {uri: this.state.photo, type: 'image/jpeg', name:photoName });
+        data.append('costo', this.state.costo);
+        data.append('producto', this.state.producto);
+        data.append('tienda', this.state.tienda);
+        data.append('idUser', idUser);
+
+        url1 = url+"promociones/alta/"
+        console.log(url1)
 
         axios({
             method: 'POST',
-            url: url+"promociones/altas/",
-            data: {descripcion:this.state.descrip, fechaInicio:this.state.fechaInicio, fechaVencimiento:this.state.fechaExpiracion, foto:this.state.photo, costo:this.state.costo, producto:this.state.producto, tienda:this.state.tienda},
+            url: url1,
+            data: data,
             headers: {
-                "content-type":"application/json",
+                "content-type":"multipart/form-data",
                 "Authorization": "Token "+token
 
             }, 
         }).then( res => {
-            console.log(res.data);
-            
+            // console.log(res.data);
+            this.setModalVisible(true);
+            this.setState({succes:true,error1:false,error2:false})
         }).catch(err => {
-            console.log(err.response.data.Error)
+
+            this.setModalVisible(true);
+            this.setState({error2:true,msgE:err.response.data.Error,error1:false,succes:false})
+
+
+
+            // console.log(err.response.data.Error)
+            console.log(err)
+            // Alert.alert("Error", err.response.data.Error);
         });
 
     }
@@ -230,7 +294,7 @@ export default class App extends Component{
                             <Text style={{marginTop: 20}} >Completa los campos</Text>
                             <TouchableOpacity
                                style={styles.botonModal}
-                                onPress={() => {
+                                onPress={()=>{
                                 this.setModalVisible(!this.state.modalVisible);
                                 }}>
                             <Text style={{color: 'white'}}>Aceptar</Text>
@@ -244,7 +308,7 @@ export default class App extends Component{
                                  style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
                                  source={require('../../img/remove.png')}
                             />
-                            < Text style={{marginTop: 20}} >Error al mandar la promocion</Text>
+                            < Text style={{marginTop: 20}} >{this.state.msgE}</Text>
                             <TouchableOpacity
                             style={styles.botonModal}
                             onPress={() => {
@@ -265,8 +329,8 @@ export default class App extends Component{
                             < Text style={{marginTop: 20}}>Enviado correctamente</Text>
                             <TouchableOpacity
                                 style={styles.botonModal}
-                                onPress={() => {
-                                this.setModalVisible(!this.state.modalVisible);
+                                onPress={() => { this.props.navigation.goBack()
+                                // this.setModalVisible(!this.state.modalVisible);
                                 }}>
                                 <Text style={{color: 'white'}}>Aceptar</Text>
                             </TouchableOpacity>
@@ -295,17 +359,22 @@ export default class App extends Component{
                              style={styles.imgCaja}
                               onPress={()=>{this.setState({camera:true})}}>
                             {this.state.camera===true && (
-                                <Camera style={{ flex: 1 }} type={this.state.cameraType} ref={ref => { this.camera = ref; }}>
+                                <Camera style={{ flex: 1, flexDirection: "row", justifyContent: "space-evenly", alignItems: "flex-end" }} type={this.state.cameraType} ref={ref => { this.camera = ref; }}>
                                         <View style={styles.camerabuttonview}>
                                             <TouchableOpacity
                                                 style={styles.cameraButtons}
                                                 onPress={this.snap}
                                             >
-                                                <Text
+                                                {/* <Text
                                                 style={{ fontSize: 18, marginBottom: 10, color: "white" }}
                                                 >
                                                 foto
-                                                </Text>
+                                                </Text> */}
+                                                <Icon
+                                                    name={'camera'}
+                                                    color="#ccc"
+                                                    size={60}
+                                                />
                                             </TouchableOpacity>
                                         </View>
                                 </Camera>
@@ -676,6 +745,16 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+    },
+
+    cameraButtons:{
+        width: 65,
+        height: 65,
+        backgroundColor: "#393939",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 30
     }
     
 });

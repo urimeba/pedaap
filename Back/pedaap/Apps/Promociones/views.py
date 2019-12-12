@@ -15,6 +15,7 @@ from rest_framework.status import (
 )
 import datetime
 import dateutil.parser
+from decimal import Decimal
 
 # Create your views here.
 class PromocionesViewSet(viewsets.ModelViewSet):
@@ -60,7 +61,11 @@ class PromocionesViewSet(viewsets.ModelViewSet):
         dic = {}
 
         for p in promociones:
-            dic[str(p.id)]={'id':p.id, "nombre":p.descripcion, 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
+            # id = str(p.id)
+            # id = '""' + id + '""'
+            print(p.foto.name)
+            dic[str(p.id)]={"id":str(p.id), "nombre":str(p.descripcion),'foto':str(p.foto.name), 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
+            # dic[str(p.id)]={"id":str(p.id), "nombre":str(p.descripcion), 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
         return Response({"Datos": str(dic)}, status=HTTP_200_OK)
 
     @action(detail=False, methods=['post'])
@@ -84,30 +89,35 @@ class PromocionesViewSet(viewsets.ModelViewSet):
         descripcion = request.data.get("descripcion")
         fechaInicio = request.data.get("fechaInicio")
         fechaVencimiento = request.data.get("fechaVencimiento")
-        foto = request.data.get("foto")
+        foto = request.FILES["foto"]
         estado = 0
         costo = request.data.get("costo")
-        producto = int(request.data.get("producto"))
-        tienda = int(request.data.get("tienda"))
-        idUser = int(request.data.get("idUser"))
-
-        # print(producto, tienda)
-
+        producto = (request.data.get("producto"))
+        tienda = (request.data.get("tienda"))
+        idUser = (request.data.get("idUser"))
         prod = Producto.objects.get(id=producto)
         tien = Tienda.objects.get(id=tienda)
         user = User.objects.get(id=idUser)
 
+        print(foto)
+
+
         productoTienda, created1 = TiendaProducto.objects.get_or_create(producto=prod, tienda=tien)
-        print(productoTienda)
+        # print(productoTienda)
 
         if(descripcion=="" or fechaInicio=="" or fechaVencimiento=="" or costo=="" or producto=="" or tienda==""):
+            print("IF")
             return Response({"Error":"Favor de completar los datos"}, status=HTTP_404_NOT_FOUND)
-        elif(len(descripcion)<15):
+        elif(len(descripcion)<5):
+            print("ELIF")
             return Response({"Error":"Mejora la descripción de la promoción"}, status=HTTP_404_NOT_FOUND)
         else:
+            print("ELSE")
 
             try:
-                costo = int(costo)
+                costo = Decimal(costo)
+                print(costo)
+
             except Exception as e:
                 # raise
                 print(e)
@@ -130,14 +140,19 @@ class PromocionesViewSet(viewsets.ModelViewSet):
                 promo.descripcion=descripcion
                 promo.foto=foto
                 promo.estado=0
+                promo.usuario=user
                 promo.save()
 
-                noti = Notificacion(usuario=user, mensaje="Has enviado una promocion. Espera a que sea verificada", estado=1)
+                noti = Notificacion(usuario=user, mensaje="Has enviado una promocion. Espera a que sea verificada. +100pts", estado=0)
+                noti.save()
 
 
             else:
                 promo.estado=1
                 promo.save()
+
+                noti = Notificacion(usuario=user, mensaje="Has verificado una promocion. +80pts", estado=0)
+                noti.save()
 
             print(promo)
 

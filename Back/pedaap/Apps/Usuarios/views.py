@@ -20,6 +20,9 @@ from rest_framework.status import (
 from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework.decorators import action
+import os
+# from twilio.rest import Client
+from twilio.http.http_client import TwilioHttpClient
 
 # Create your views here.
 @csrf_exempt
@@ -51,11 +54,21 @@ def login(request):
         return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado), "tiendas":str(tiendas), "categorias":str(categorias)}, status=HTTP_200_OK)
     else:
         # print("NO VERIFICADO")
+
+        # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        # client.messages.create(
+        #     body='Codigo de verificación: ' + str(user.codigo),
+        #     to=to, from_=settings.TWILIO_PHONE_NUMBER)}
         to = user.telefono
-        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-        client.messages.create(
-            body='Codigo de verificación: ' + str(user.codigo),
-            to=to, from_=settings.TWILIO_PHONE_NUMBER)
+        proxy_client = TwilioHttpClient()
+        proxy_client.session.proxies = {'https': os.environ['https_proxy']}
+        account_sid = settings.TWILIO_ACCOUNT_SID
+        auth_token = settings.TWILIO_AUTH_TOKEN
+
+        client = Client(account_sid, auth_token, http_client=proxy_client)
+        message = client.messages.create(to=to, from_=settings.TWILIO_PHONE_NUMBER, body='Codigo de verificación: ' + str(user.codigo))
+
+
         return Response({"token":token.key, "id":str(user.id), "verificado":str(user.verificado), "tiendas":str(tiendas), "categorias":str(categorias)}, status=HTTP_200_OK)
 
 
@@ -105,11 +118,19 @@ def registro(request):
 
 
                     try:
-                        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-                        to = number
-                        client.messages.create(
-                            body='Codigo de verificación: ' + str(user.codigo),
-                            to=to, from_=settings.TWILIO_PHONE_NUMBER)
+                        # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+                        # to = number
+                        # client.messages.create(
+                        #     body='Codigo de verificación: ' + str(user.codigo),
+                        #     to=to, from_=settings.TWILIO_PHONE_NUMBER)
+                        to = user.telefono
+                        proxy_client = TwilioHttpClient()
+                        proxy_client.session.proxies = {'https': os.environ['https_proxy']}
+                        account_sid = settings.TWILIO_ACCOUNT_SID
+                        auth_token = settings.TWILIO_AUTH_TOKEN
+
+                        client = Client(account_sid, auth_token, http_client=proxy_client)
+                        message = client.messages.create(to=to, from_=settings.TWILIO_PHONE_NUMBER, body='Codigo de verificación: ' + str(user.codigo))
                     except Exception as e:
                         # raise
                         print("EXCEPT TWILIO")
@@ -208,18 +229,15 @@ class UsuariosViewSet(viewsets.ModelViewSet):
         usuario = User.objects.get(username=username)
 
         try:
-            # pass
             tel = int(telefono)
-
         except Exception as e:
-            # raise
             return Response({'Error':'Favor de ingresar un teléfono válido'}, status=HTTP_400_BAD_REQUEST)
 
         try:
             telefono="+52"+telefono
-            print(telefono)
+            # print(telefono)
             usuario2 = User.objects.get(email=correo)
-            print(usuario2)
+            # print(usuario2)
             if(usuario!=usuario2):
                 return Response({'Error':'El correo ya esta siendo usado'}, status=HTTP_400_BAD_REQUEST)
         except Exception as e:

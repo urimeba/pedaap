@@ -22,6 +22,20 @@ export default class App extends Component{
             error2: false
         };
     }
+
+    componentDidMount(){
+        this._verify();
+
+    }
+
+    _verify = async() =>{
+        const userToken = await AsyncStorage.getItem("userToken");
+        console.log(userToken);
+        this.props.navigation.navigate(
+            userToken ? "User":"Login"
+        );
+
+    }
     
     _singin = async(props)=>{
         if(this.state.username=='' || this.state.password==''){
@@ -133,7 +147,7 @@ export default class App extends Component{
                         <TouchableOpacity
                             onPress={() => this.props.navigation.navigate('Forgot')}
                         >
-                            <Text style={styles.TextColorOne}>¿Olvidaste tu contraseña?</Text>
+                            {/* <Text style={styles.TextColorOne}>¿Olvidaste tu contraseña?</Text> */}
                         </TouchableOpacity>
                     </View>
                     <View style={styles.InputsNav}>

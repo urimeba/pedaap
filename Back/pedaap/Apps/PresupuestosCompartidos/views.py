@@ -16,6 +16,33 @@ class PresupuestosCompartidosViewSet(viewsets.ModelViewSet):
     serializer_class = PresupuestosCompartidoSerializer
 
 
+    @action(methods=['post'], detail=False)
+    def getPresupuesto(self, request):
+        codigo = request.data.get("codigo")
+
+        print("Codigo " , codigo)
+
+
+
+
+
+
+
+        try:
+            presupuesto = PresupuestoCompartido.objects.get(codigo=codigo)
+            print(presupuesto)
+
+            dic = {}
+
+
+            dic[str(presupuesto.id)] = {"id":str(presupuesto.id), "monto":str(presupuesto.monto), "propietario":str(presupuesto.usuarioPropietario.username)}
+
+
+            return Response({"Datos":str(dic)}, status=HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({"Error": "Este presupuesto no existe"}, status=HTTP_400_BAD_REQUEST)
+
 
 class UsuariosPresupuestoCompartidoViewSet(viewsets.ModelViewSet):
     queryset = UsuariosPresupuestoCompartido.objects.all()

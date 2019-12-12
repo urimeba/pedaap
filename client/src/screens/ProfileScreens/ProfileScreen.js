@@ -49,38 +49,19 @@ export default class App extends Component{
         )
         .then(response => response.json())
         .then((responseJson)=>{
-            console.log(responseJson);
+            tele = responseJson.telefono;
+            tele = tele.substring(3,13)
+            // console.log(responseJson)
+            
             this.setState({
                 nombre:responseJson.first_name, 
                 apellido:responseJson.last_name,
                 username:responseJson.username,
                 correo:responseJson.email,
-                telefono:responseJson.telefono
+                telefono:tele
             })
         })
         .catch(error=>console.log(error))
-
-        // axios({
-        //     method: 'GET',
-        //     url: url+"usuarios/"+idUsuario+"/",
-        //     data: {},
-        //     headers: {
-        //         "content-type":"application/json",
-        //         "Authorization": "Token "+ token
-        //     },
-        // }).then( res => {
-        //     // console.log(res.data);
-
-        //     tel = res.data.telefono;
-        //     tel = tel.substring(3, 13);
-        //     // tel = parseInt(tel)
-
-        //     // console.log(tel)
-
-        //     this.setState({nombre:res.data.first_name, apellido:res.data.last_name, username: res.data.username, correo:res.data.email, telefono:tel})
-        // }).catch(err => {
-        //     console.log(err);
-        // });
     }
 
     _saveChanges = async() =>{
@@ -169,7 +150,7 @@ export default class App extends Component{
     _cerrarSesion=async()=>{
         await AsyncStorage.removeItem("userToken");
         await AsyncStorage.removeItem("userId");
-        this.props.navigation.navigate('Login')
+        this.props.navigation.navigate('Login');
     }
 
 // ------------------------------------------Imagen--------------
@@ -252,18 +233,33 @@ export default class App extends Component{
                             <TextInput style={styles.inputData} secureTextEntry={true} onChangeText={(newPass2) => this.setState({newPass2})} />
                         </View>
                         <View style={styles.botones2}>
-                            <View style={styles.botonesA}>
+                            {/* <View style={styles.botonesA}>
                                 <TouchableOpacity style={styles.editIP}
                                 onPress={this._saveChanges}>
                                     <Text style={{color:'white'}}>Aceptar</Text>
                                 </TouchableOpacity>
                             </View>
+
                             <View style={styles.botonesA}>
                                 <TouchableOpacity style={styles.cerrarS}
                                 onPress={()=>{this.setState({edit:false})}}>
                                     <Text style={{color:'white'}}>Cancelar</Text>
                                 </TouchableOpacity>
+                            </View> */}
+
+                            <View style={styles.botonesA}>
+                                <TouchableOpacity 
+                                    style={styles.editI2}
+                                    onPress={()=>{this.setState({edit:false})}}>
+                                    <Text style={{color:'white'}}>Cancelar</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity 
+                                    onPress={this._saveChanges}
+                                    style={styles.editP}>
+                                    <Text style={{color:'white'}}>Aceptar</Text>
+                                </TouchableOpacity>
                             </View>
+                            
                         </View>
                     </KeyboardAwareScrollView>
                 </View>
@@ -422,12 +418,14 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
     botonesA2:{
-        flex:1,
-        justifyContent:'center',
-        alignContent:'center',
+        flex:2,
+        justifyContent:'flex-start',
         alignItems:'center',
-        paddingLeft: 10,
-        paddingRight: 10,
+        alignContent:'center',
+        width:'50%',
+        marginTop:20,
+        marginBottom:40,
+        backgroundColor: 'magenta'
     },
     botonesC:{
         flex:1,
@@ -471,10 +469,11 @@ const styles = StyleSheet.create({
     },
     editI2:{
         // flex:1,
+        flex:1,
         justifyContent:'center',
         alignItems:'center',
         alignContent:'center',
-        backgroundColor:'#FEDB6B',
+        backgroundColor:'#DE4C63',
         borderRadius:10,
         width:'60%',
         height:30,

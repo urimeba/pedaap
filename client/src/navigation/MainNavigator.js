@@ -1,4 +1,5 @@
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import {AsyncStorage} from 'react-native';
 
 //screens
 import LoginScreen from '../screens/LoginScreen';
@@ -34,6 +35,6 @@ export default createAppContainer(createSwitchNavigator(
         },
     },
     {
-        initialRouteName: 'User',
+        initialRouteName: 'Login',
     }
 ));
