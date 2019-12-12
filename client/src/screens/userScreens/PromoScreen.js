@@ -150,8 +150,8 @@ export default class App extends Component{
                 data.push(json_data[i]);
             }
 
-            // console.log(data);
-
+            console.log(data);
+            
             this.setState({
                 datos: data,
             });
@@ -197,15 +197,35 @@ export default class App extends Component{
                 style={styles.caja}
             >
                 <View style={styles.imgCaja}>
-                    <Image/>
+                    {item.foto == "None" &&(
+                        <Image
+                            style={styles.pngImage}
+                            source={Logo[item.icono]}
+                            resizeMode="center"
+                        />
+                    )}
+                    {item.foto !== "None" &&(
+                        <Image
+                            style={styles.pngImage}
+                            source={Logo[item.icono]}
+                            resizeMode="center"
+                        />
+                    )}
+                    {item.foto == "" &&(
+                        <Image
+                            style={styles.pngImage}
+                            source={Logo[item.icono]}
+                            resizeMode="center"
+                        />
+                    )}
                 </View>
                 <View style={styles.datosCaja}>
                     <Text style={styles.titulo}>{item.nombre}</Text>
                     {item.costo == '0.00' &&(
-                        <Text style={styles.titulo}>Promoción</Text>
+                        <Text style={styles.tituloPromo}>Promoción</Text>
                     )}
                     {item.costo != '0.00' &&(
-                        <Text style={styles.titulo}>${item.costo}</Text>
+                        <Text style={styles.tituloCosto}>${item.costo}</Text>
                     )}
                     <Text style={styles.titulo}>Vigencia: {fechaFormat}</Text>
                 </View>
@@ -396,6 +416,18 @@ const styles = StyleSheet.create({
     titulo:{
         flex: 1,
         fontSize: 16,
+        // color: 'white'
+    },
+    tituloCosto:{
+        flex: 1,
+        fontSize: 16,
+        color: '#6930BF'
+        // color: 'white'
+    },
+    tituloPromo:{
+        flex: 1,
+        fontSize: 16,
+        color: '#71C0F2'
         // color: 'white'
     },
     titulod:{
