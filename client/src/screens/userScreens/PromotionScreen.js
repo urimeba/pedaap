@@ -63,7 +63,7 @@ export default class App extends Component{
                                         <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('categoria', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Descripción</Text>
-                                    <View style={styles.grande}>
+                                    <View style={styles.inputs}>
                                         <Text style={ styles.titulo}>{JSON.stringify(this.props.navigation.getParam('descripcion', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Vigencia</Text>
@@ -71,7 +71,7 @@ export default class App extends Component{
                                         <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('vigencia', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Direccion</Text>
-                                    <View style={styles.grande}>
+                                    <View style={styles.inputs}>
                                         <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('direccion', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
                                     <Text style={styles.titulo1}>Lugar</Text>
@@ -92,7 +92,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     Scroll:{
+        flex: 1,
         paddingTop: 20,
+        paddingBottom: 20
     },
     arriba:{
         // flex:1,
@@ -138,10 +140,10 @@ const styles = StyleSheet.create({
         width:'100%',
     },
     titulo:{
-        // flex: 3,
+        // flex: 1,
         alignSelf:'center',
         justifyContent:'center',
-         fontSize: 18,
+        fontSize: 18,
         padding:'5%',
         // color: 'white'
     },
@@ -183,11 +185,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     datosCaja:{
-        // flex:3,
+        flex:1,
         // justifyContent:'center',
         alignContent:'center',
         width:'100%',
         height: '100%',
+        paddingBottom: 20,
         // backgroundColor: 'pink',
         // marginLeft: 10,
         // padding: 10,
@@ -198,7 +201,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
         textAlign:'center',
         width: '100%',
-        height: 60,
+        // height: 60,
         backgroundColor: '#F0F0F0',
         borderRadius: 10,
         marginTop: 10,
