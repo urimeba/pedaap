@@ -30,7 +30,10 @@ export default class Event extends Component{
         if(this.state.nameE=="" || this.state.presu==""){
             this.setState({error1:true})
         }else{
-            this.props.navigation.navigate('EventK', {nombre: this.state.nameE, presupuesto: this.state.presu})
+            this.props.navigation.navigate('EventK', {
+                nombre: this.state.nameE,
+                presupuesto: this.state.presu,
+            })
         }
         
     }

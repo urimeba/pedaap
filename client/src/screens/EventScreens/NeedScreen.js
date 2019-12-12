@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     FlatList,
     StyleSheet,
@@ -11,54 +11,18 @@ import {
 // import axios from 'axios';
 
 import Circle from '../../components/Circle';
-const dataP = [{
-        id: '1',
-        name: 'Vodka'
-    },
-    {
-        id: '2',
-        name: 'Tequila'
-    },
-    {
-        id: '3',
-        name: 'Vodka'
-    },
-    {
-        id: '4',
-        name: 'Tequila'
-    },
-    {
-        id: '5',
-        name: 'Tequila'
-    },
-    {
-        id: '6',
-        name: 'Vodka'
-    },
-    {
-        id: '7',
-        name: 'Tequila'
-    },
-    {
-        id: '8',
-        name: 'Vodka'
-    },
-    {
-        id: '9',
-        name: 'Tequila'
-    },
-    {
-        id: '10',
-        name: 'Tequila'
-    }
-];
 
 export default (props) => {
-    //Data
-    // const [dataP, setDataP] = React.useState([]);
+    //** las de la izquierda son variables que se van a guardar como state
+    // Todas estas variables son equivalentes a this.state.<<variable>> para usarse
+    // cada set<<Variable>> es una funcion equivalente a this.setState()
+    const [nombre, setNombre] = useState('');
+    const [presupuesto, setPresupuesto] = useState('');
+    const [tipo, setTipo] = useState('');
+    const [numAsis, setNumAsis] = useState('');
 
-
-    const [selected, setSelected] = React.useState(new Map());
+    //** selected ** variable equivalente a this.state.selected que es un []
+    const [selected, setSelected] = useState(new Map());
     const onSelect = React.useCallback(
         (id) => {
             const newSelected = new Map(selected);
@@ -69,10 +33,46 @@ export default (props) => {
         [selected]
     );
 
+    //Data
+    //** dataP ** variavle equivalente a this.state.dataP que es un []
+    const [dataP, setDataP] = useState([]);
+    React.useEffect(() => {
+        async function _prefLis() {
+            url = await AsyncStorage.getItem("server")+'categoriaProductos/';
+            // AsyncStorage.setItem('userId',"1")
+            token = await AsyncStorage.getItem('userToken');
+
+            try {
+                console.log(token)
+                let request = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Token '+token, 
+                    }
+                });
+                let resp = await request.json();
+                console.log(resp.results);
+                setDataP(resp.results);
+
+                //set de todos los state
+                setNombre(JSON.stringify(props.navigation.getParam('nombre', 'Error nombre')).replace(/"/g, ''));
+                setPresupuesto(JSON.stringify(props.navigation.getParam('presupuesto', 'Error presupuesto')).replace(/"/g, ''));
+                setTipo(JSON.stringify(props.navigation.getParam('tipo', 'Error tipo')).replace(/"/g, ''));
+                setNumAsis(JSON.stringify(props.navigation.getParam('numAsis', 'Error numAsis')).replace(/"/g, ''));
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        _prefLis();
+    }, [setDataP]);
+
 
     //Send Data
-    const sendData = (s) => () => {
-        // console.log(Array.from(selected.entries()));
+    const sendData = (s) => async() => {
+        console.log(nombre+'-'+presupuesto+'-'+tipo+'-'+numAsis);
         /*
             Se convierte el MAP en un JSON que se puede enviar a la API
         */
@@ -81,6 +81,33 @@ export default (props) => {
             obj[k] = v;
         }
         console.log(JSON.stringify(obj));
+
+        servidor = await AsyncStorage.getItem("server")
+        
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+
+        // for(categoria in obj){
+        //     if(obj[categoria]==true){
+        //         console.log(categoria);
+        //         url = servidor+'userCategorias/';
+
+        //         axios({
+        //             method: 'POST',
+        //             url: url,
+        //             data: {user:servidor+"usuarios/"+idUser+"/", categoria: servidor+"categoriaProductos/"+categoria+"/"},
+        //             headers: {
+        //                 "content-type":"application/json",
+        //                 "Authorization": "Token "+token
+        //             }, 
+        //         }).then( res => {
+        //             console.log(res.data);
+        //         }).catch(err => {
+        //             console.log(err.response.data);
+        //         });
+        //     }
+        // }
+
         goNext();
     }
 

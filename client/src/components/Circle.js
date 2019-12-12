@@ -50,6 +50,8 @@ const styles = StyleSheet.create({
     },
     bottomBoxText:{
         color: '#FFFFFF',
-        fontSize: 18,
+        fontSize: 14,
+        textAlign: 'center',
+        width: '90%'
     },
 });
