@@ -8,57 +8,44 @@ import {
     TouchableOpacity,
     AsyncStorage,
 } from 'react-native';
-// import axios from 'axios';
+import axios from 'axios';
 
 import Circle from '../../components/Circle';
-const dataP = [{
-        id: '1',
-        name: 'Vodka'
-    },
-    {
-        id: '2',
-        name: 'Tequila'
-    },
-    {
-        id: '3',
-        name: 'Vodka'
-    },
-    {
-        id: '4',
-        name: 'Tequila'
-    },
-    {
-        id: '5',
-        name: 'Tequila'
-    },
-    {
-        id: '6',
-        name: 'Vodka'
-    },
-    {
-        id: '7',
-        name: 'Tequila'
-    },
-    {
-        id: '8',
-        name: 'Vodka'
-    },
-    {
-        id: '9',
-        name: 'Tequila'
-    },
-    {
-        id: '10',
-        name: 'Tequila'
-    }
-];
+
 
 export default (props) => {
     //Data
-    // const [dataP, setDataP] = React.useState([]);
+    const [dataP, setDataP] = React.useState([]);
 
+    React.useEffect(() => {
+        async function _prefLis() {
+            url = await AsyncStorage.getItem("server")+'categoriaProductos/';
+            // AsyncStorage.setItem('userId',"1")
+            token = await AsyncStorage.getItem('userToken');
 
+            try {
+                console.log(token)
+                let request = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Token '+token, 
+                    }
+                });
+                let resp = await request.json();
+                console.log(resp.results);
+                setDataP(resp.results);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        _prefLis();
+    }, [setDataP]);
+
+    //Cirulos
     const [selected, setSelected] = React.useState(new Map());
+
     const onSelect = React.useCallback(
         (id) => {
             const newSelected = new Map(selected);
@@ -69,9 +56,10 @@ export default (props) => {
         [selected]
     );
 
+    const [presupuesto, setPresupuesto] = React.useState('')
 
     //Send Data
-    const sendData = (s) => () => {
+    const sendData = (s) => async() => {
         // console.log(Array.from(selected.entries()));
         /*
             Se convierte el MAP en un JSON que se puede enviar a la API
@@ -81,17 +69,44 @@ export default (props) => {
             obj[k] = v;
         }
         console.log(JSON.stringify(obj));
+
+
+        servidor = await AsyncStorage.getItem("server")
+        
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+
+        for(categoria in obj){
+            if(obj[categoria]==true){
+                console.log(categoria);
+                url = servidor+'userCategorias/';
+
+                axios({
+                    method: 'POST',
+                    url: url,
+                    data: {user:servidor+"usuarios/"+idUser+"/", categoria: servidor+"categoriaProductos/"+categoria+"/"},
+                    headers: {
+                        "content-type":"application/json",
+                        "Authorization": "Token "+token
+                    }, 
+                }).then( res => {
+                    console.log(res.data);
+                }).catch(err => {
+                    console.log(err.response.data);
+                });
+            }
+        }
         goNext();
     }
 
-    const goNext = () => {
-        props.navigation.navigate('Product');
-    }
+   const goNext = () => {
+       props.navigation.navigate('Product');
+   }
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.title}>
-                <Text style={styles.titleWhite}>Selecciona lo que necesitas</Text>
+                <Text style={styles.titleWhite}>¿Que vas a necesitar?</Text>
             </View>
             <View style={styles.flatContainer}>
                 <FlatList 
@@ -129,7 +144,6 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         backgroundColor: '#1E1E1E',
-        padding: 20
     },
     title:{
         flex: 1,
@@ -140,6 +154,7 @@ const styles = StyleSheet.create({
         flex: 6,
         justifyContent: 'center',
         alignItems: 'center',
+        padding:5,
     },
     flat:{
         flex: 1,
@@ -169,7 +184,6 @@ const styles = StyleSheet.create({
     titleWhite:{
         color: '#FFFFFF',
         fontSize: 26,
-        textAlign:'center'
     },
     white:{
         color: '#FFFFFF',

@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
     },
     bottomBoxText:{
         color: '#FFFFFF',
-        fontSize: 18,
+        fontSize: 15,
+        textAlign:'center'
     },
 });
