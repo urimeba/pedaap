@@ -125,7 +125,7 @@ export default (props) => {
                 />
             </View>
             <View style={styles.next}>
-                <View style={{flex: 1}}></View>
+                {/* <View style={{flex: 1}}></View> */}
                 <View style={styles.viewContinue}>
                     <TouchableOpacity 
                         style={styles.continue} 
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
         flex: 6,
         justifyContent: 'center',
         alignItems: 'center',
+        padding:5,
     },
     flat:{
         flex: 1,
@@ -177,7 +178,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         height: '50%',
-        width: '70%',
+        width: '40%',
         backgroundColor: '#393939',
     },
     titleWhite:{

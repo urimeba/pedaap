@@ -55,8 +55,8 @@ class PromocionesViewSet(viewsets.ModelViewSet):
 
     @action(detail=False)
     def getPromos(self, request):
-        promociones = Promociones.objects.all()
-        # print(promociones)
+        # promociones = Promociones.objects.all()
+        promociones = Promociones.objects.filter(estado=1)
 
         dic = {}
 
@@ -73,14 +73,14 @@ class PromocionesViewSet(viewsets.ModelViewSet):
         clave = request.data.get("clave")
         # print(clave)
 
-        promociones = Promociones.objects.filter( Q(descripcion__icontains=clave) | Q(productoTienda__tienda__nombre__icontains=clave) | Q(productoTienda__tienda__direccion__icontains=clave) | Q(productoTienda__producto__descripcion__icontains=clave)  | Q(productoTienda__tienda__direccion__icontains=clave) | Q(productoTienda__producto__categoria__nombre__icontains=clave) | Q(productoTienda__producto__categoria__descripcion__icontains=clave)  )
+        promociones = Promociones.objects.filter(estado=1).filter( Q(descripcion__icontains=clave) | Q(productoTienda__tienda__nombre__icontains=clave) | Q(productoTienda__tienda__direccion__icontains=clave) | Q(productoTienda__producto__descripcion__icontains=clave)  | Q(productoTienda__tienda__direccion__icontains=clave) | Q(productoTienda__producto__categoria__nombre__icontains=clave) | Q(productoTienda__producto__categoria__descripcion__icontains=clave))
         # print(promociones)
 
         dic = {}
 
         for p in promociones:
             # dic[str(p.id)]={'id':p.id, "nombre":p.descripcion, 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo)}
-            dic[str(p.id)]={'id':p.id, "nombre":p.descripcion, 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
+            dic[str(p.id)]={'id':p.id, "nombre":p.descripcion, 'foto':str(p.foto.name), 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
 
         return Response({"Datos": str(dic)}, status=HTTP_200_OK)
 

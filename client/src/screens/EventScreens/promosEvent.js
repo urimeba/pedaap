@@ -98,7 +98,7 @@ export default class App extends Component{
     }
 
     caja= ({item})=>(
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionC', {
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionE', {
             datos: item, 
             id: item.id,
             nombre: item.nombre,

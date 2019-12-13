@@ -12,6 +12,7 @@ import axios from 'axios';
 
 import Circle from '../../components/Circle';
 
+
 export default (props) => {
     //** las de la izquierda son variables que se van a guardar como state
     // Todas estas variables son equivalentes a this.state.<<variable>> para usarse
@@ -150,7 +151,7 @@ export default (props) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.title}>
-                <Text style={styles.titleWhite}>Selecciona lo que necesitas</Text>
+                <Text style={styles.titleWhite}>¿Que vas a necesitar?</Text>
             </View>
             <View style={styles.flatContainer}>
                 <FlatList 
@@ -188,7 +189,6 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         backgroundColor: '#1E1E1E',
-        padding: 20
     },
     title:{
         flex: 1,
@@ -199,6 +199,7 @@ const styles = StyleSheet.create({
         flex: 6,
         justifyContent: 'center',
         alignItems: 'center',
+        padding:5,
     },
     flat:{
         flex: 1,
@@ -228,7 +229,6 @@ const styles = StyleSheet.create({
     titleWhite:{
         color: '#FFFFFF',
         fontSize: 26,
-        textAlign:'center'
     },
     white:{
         color: '#FFFFFF',

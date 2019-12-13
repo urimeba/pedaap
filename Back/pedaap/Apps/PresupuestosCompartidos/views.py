@@ -84,6 +84,15 @@ class UsuariosPresupuestoCompartidoViewSet(viewsets.ModelViewSet):
         print(dic)
         return Response({"datos": str(dic)}, status=HTTP_200_OK)
 
+    @action(methods=['post'], detail=False)
+    def eliminarUsuario(self, request):
+        idUsuario = request.data.get("idUsuario")
+
+
+
+        print(idUsuario)
+        return Response(status=HTTP_200_OK)
+
 class CompartidoCategoriasViewSet(viewsets.ModelViewSet):
     queryset = CompartidoCategorias.objects.all()
     serializer_class = CompartidoCategoriasSerializer
