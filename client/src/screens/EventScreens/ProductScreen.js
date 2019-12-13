@@ -95,13 +95,14 @@ export default class App extends Component{
         this.state={
             filter: false,
             item: [],
+            datos: [],
         }
     }
 
-    componentDidMount(){
+    componentDidMount = async() =>{
         // console.log(this.props.navigation.getParam('idEvento', 'Error ID'));
 
-        this._getPromos();
+        setTimeout(this._getPromos, 1500)
 
 
     }
@@ -111,19 +112,35 @@ export default class App extends Component{
         idUser = await AsyncStorage.getItem("userId");
         token = await AsyncStorage.getItem("userToken");
         id = JSON.stringify(this.props.navigation.getParam('id', '0')).replace(/"/g, '');
-        console.log('##################################'+id);
+        // console.log('##################################'+id);
 
         axios({
             method: 'POST',
             url: server+"presupuestosCategorias/busqueda/",
             // data: {idPresupuesto: "AQUI VA EL ID DEL EVENTO"},
-            data: {idPresupuesto: parseInt(id)},
+            data: {idPresupuesto: id},
             headers: {
                 "content-type":"application/json",
                 "Authorization": "Token "+token
             }, 
         }).then( res => {
-            console.log(res.data);
+            console.log(res.data.Datos);
+
+            let j = res.data.Datos.replace(/'/g,'"');
+            let json_data = JSON.parse(j);
+            let data = [];
+
+            for(var i in json_data){
+                data.push(json_data[i]);
+            }
+
+            console.log(data);
+
+            this.setState({
+                datos: data,
+            });
+
+            
         }).catch(err => {
             console.log(err.response.data);
         });
@@ -140,10 +157,10 @@ export default class App extends Component{
 
     prod=({item})=>(
         <View>
-            <Text style={styles.tituloCajas}>{item.nombre}</Text>
+            <Text style={styles.tituloCajas}>{item.descripcion}</Text>
             <FlatList
                 style={styles.flat}
-                data={item.productos}
+                data={this.state.datos}
                 renderItem={this.caja}
                 keyExtractor={item => item.id}
             />
@@ -151,6 +168,10 @@ export default class App extends Component{
     )
 
     caja= ({item})=>(
+
+        
+
+
         <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionE', {
             datos: item, 
             id: item.id,
@@ -159,14 +180,16 @@ export default class App extends Component{
             vigencia: item.vigencia,
             categoria: item.categoria,
             descripcion: item.descripcion,
-            direccion: item.direccion
+            direccion: item.direccion,
+            costo: item.costo,
+            foto: item.foto
              })} style={styles.caja}>
             <View style={styles.imgCaja}>
                 <Image/>
             </View>
             <View style={styles.datosCaja}>
-                <Text style={styles.titulo}>{item.titulo}</Text>
-                <Text style={styles.titulo}>{item.lugar}</Text>
+                <Text style={styles.titulo}>{item.descripcion}</Text>
+                <Text style={styles.titulo}>${item.costo}</Text>
                 <Text style={styles.titulo}>{item.vigencia}</Text>
             </View>
         </TouchableOpacity>
@@ -191,16 +214,10 @@ export default class App extends Component{
                         <View style={styles.textoP}>
                             <Text style={styles.tituloP}>Promociones</Text>
                         </View>
-                            <FlatList
-                            style={styles.flat}
-                            data={this.state.item}
-                            renderItem={this.prod}
-                            keyExtractor={item => item.id}
-                        />
                     </View>
                         <FlatList
                         style={styles.flat}
-                        data={datos}
+                        data={this.state.datos}
                         renderItem={this.caja}
                         keyExtractor={item => item.id}
                     />

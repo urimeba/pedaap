@@ -122,6 +122,7 @@ export default class App extends Component{
                 "Authorization": 'Token '+token
             }, 
         }).then(res => {
+            
             let j = res.data.Datos.replace(/'/g,'"');
             let json_data = JSON.parse(j);
             let data = [];

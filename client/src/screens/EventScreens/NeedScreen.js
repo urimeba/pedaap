@@ -110,8 +110,8 @@ export default (props) => {
                     urlPresupuesto = server+"presupuestos/"+a+"/";
                     urlCategoria = server+"categoriaProductos/"+categoria+"/";
     
-                    // console.log(urlPresupuesto)
-                    // console.log(urlCategoria)
+                    console.log(urlPresupuesto)
+                    console.log(urlCategoria)
 
                     axios({
                     method: 'POST',
@@ -123,7 +123,7 @@ export default (props) => {
                         }, 
                     }).then( res => {
                         // console.log(res.data);
-                        console.log('.')
+                        // console.log('.')
                     }).catch(err => {
                         console.log(err.response);
                     });      
@@ -137,7 +137,7 @@ export default (props) => {
     }
 
     const goNext = (a) => {
-        console.log('#######ID'+a);
+        // console.log('#######ID'+a);
         props.navigation.navigate('Product', {
             nombre: nombre,
             presupuesto: presupuesto,
