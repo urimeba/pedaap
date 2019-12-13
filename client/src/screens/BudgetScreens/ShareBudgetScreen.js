@@ -123,11 +123,12 @@ export default class App extends Component{
     _deleteUser= async(id) =>{
         url = await AsyncStorage.getItem("server");
         token = await AsyncStorage.getItem("userToken");
-        // console.log(id, url);
+        // console.log(id);
+
         axios({
-            method: 'DELETE',
-            url: url+"usuariosCompartido/"+id+"/",
-            data: {},
+            method: 'POST',
+            url: url+"usuariosCompartido/eliminarUsuario/",
+            data: {idUsuario: id},
             headers: {
                 "content-type":"application/json",
                 "Authorization":"Token "+ token
@@ -135,6 +136,7 @@ export default class App extends Component{
         }).then( res => {
             console.log(res.data);
             this._getInfo();
+            this.setState();
         }).catch(err => {
             console.log(err)
         });
