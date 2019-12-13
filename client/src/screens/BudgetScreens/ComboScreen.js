@@ -146,34 +146,68 @@ export default class App extends Component{
 
     }
 
-    caja= ({item})=>(
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionB', {
-            datos: item, 
-            id: item.id,
-            nombre: item.nombre,
-            foto: item.foto,
-            lugar: item.lugar,
-            vigencia: item.vigencia,
-            categoria: item.categoria,
-            descripcion: item.descripcion,
-            direccion: item.direccion,
-            costo: item.costo,
-            icono: item.icono
-             })} style={styles.caja}>
-            <View style={styles.imgCaja}>
-                <Image
-                    // style={styles.pngImage}
-                    source={{uri: this.state.server+'media/'+item.foto}}
-                    resizeMode="center"
-                />
-            </View>
-            <View style={styles.datosCaja}>
-                <Text style={styles.titulo}>{item.nombre}</Text>
-                <Text style={styles.titulo}>{item.lugar}</Text>
-                <Text style={styles.titulo}>{item.vigencia}</Text>
-            </View>
-        </TouchableOpacity>
-    )
+    caja= ({item})=>{
+        if(item.foto == "None"){
+            return(
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionB', {
+                    datos: item, 
+                    id: item.id,
+                    nombre: item.nombre,
+                    foto: item.foto,
+                    lugar: item.lugar,
+                    vigencia: item.vigencia,
+                    categoria: item.categoria,
+                    descripcion: item.descripcion,
+                    direccion: item.direccion,
+                    costo: item.costo,
+                    icono: item.icono
+                    })} style={styles.caja}>
+                    <View style={styles.imgCaja}>
+                        <Image
+                            style={styles.pngImage}
+                           source={Logo[item.icono]}
+                            resizeMode="center"
+                        />
+                    </View>
+                    <View style={styles.datosCaja}>
+                        <Text style={styles.titulo}>{item.nombre}</Text>
+                        <Text style={styles.titulo}>{item.lugar}</Text>
+                        <Text style={styles.titulo}>{item.vigencia}</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        }else{
+            return(
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionB', {
+                    datos: item, 
+                    id: item.id,
+                    nombre: item.nombre,
+                    foto: item.foto,
+                    lugar: item.lugar,
+                    vigencia: item.vigencia,
+                    categoria: item.categoria,
+                    descripcion: item.descripcion,
+                    direccion: item.direccion,
+                    costo: item.costo,
+                    icono: item.icono
+                    })} style={styles.caja}>
+                    <View style={styles.imgCaja}>
+                        <Image
+                            // style={styles.pngImage}
+                            source={{uri: this.state.server+'media/'+item.foto}}
+                            resizeMode="center"
+                        />
+                    </View>
+                    <View style={styles.datosCaja}>
+                        <Text style={styles.titulo}>{item.nombre}</Text>
+                        <Text style={styles.titulo}>{item.lugar}</Text>
+                        <Text style={styles.titulo}>{item.vigencia}</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        }
+        
+    }
 
      _filtro=()=>{
         if(this.state.filter===false){
@@ -184,7 +218,7 @@ export default class App extends Component{
         }
     }
 
-    render(){
+render(){
     return (
         <View style={styles.todo}>
             <View style={styles.container}>
