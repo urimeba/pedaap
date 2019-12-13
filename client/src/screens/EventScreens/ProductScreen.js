@@ -207,6 +207,7 @@ export default class App extends Component{
                     keyExtractor={item => item.id}
                 />
             </View>
+            </View>
         
     );
 }
@@ -214,7 +215,7 @@ export default class App extends Component{
     
 }
 
-console.log(datos[0].vigencia)
+{/* console.log(datos[0].vigencia) */}
 const styles = StyleSheet.create({
     todo:{
         flex: 1,

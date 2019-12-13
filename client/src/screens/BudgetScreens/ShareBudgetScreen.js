@@ -59,7 +59,7 @@ export default class App extends Component{
             aportadorE:'',
             eliminar:false,
             modalVisible:false,
-            datos: []
+            datos: [],
             idPresupuesto: ''
 
         }
