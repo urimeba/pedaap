@@ -103,12 +103,14 @@ export default class App extends Component{
         server = await AsyncStorage.getItem("server");
         idUser = await AsyncStorage.getItem("userId");
         token = await AsyncStorage.getItem("userToken");
+        id = JSON.stringify(this.props.navigation.getParam('id', '0')).replace(/"/g, '');
+        console.log('##################################'+id);
 
         axios({
             method: 'POST',
             url: server+"presupuestosCategorias/busqueda/",
             // data: {idPresupuesto: "AQUI VA EL ID DEL EVENTO"},
-            data: {idPresupuesto: 37},
+            data: {idPresupuesto: parseInt(id)},
             headers: {
                 "content-type":"application/json",
                 "Authorization": "Token "+token
@@ -161,31 +163,31 @@ export default class App extends Component{
         // console.log(item.productos)
         return(
             <View style={styles.todo}>
-            <View style={styles.container}>
-                <View style={styles.arriba}>
-                    <View style={styles.textoP}>
-                        <Text style={styles.tituloP}>Productos</Text>
+                <View style={styles.container}>
+                    <View style={styles.arriba}>
+                        <View style={styles.textoP}>
+                            <Text style={styles.tituloP}>Productos</Text>
+                        </View>
+                        <TouchableOpacity style={styles.iconF}
+                                onPress={this._filtro}
+                            >
+                                {this.state.filter===false &&(
+                                    <Icon name="swap-vertical" size={26} color={'#707070'} />
+                                )}
+                                {this.state.filter===true &&(
+                                    <Icon name="swap-vertical" size={26} color={'#71C0F2'} />
+                                )}
+                                
+                            </TouchableOpacity>
                     </View>
-                     <TouchableOpacity style={styles.iconF}
-                            onPress={this._filtro}
-                        >
-                             {this.state.filter===false &&(
-                                 <Icon name="swap-vertical" size={26} color={'#707070'} />
-                            )}
-                             {this.state.filter===true &&(
-                                 <Icon name="swap-vertical" size={26} color={'#71C0F2'} />
-                            )}
-                            
-                        </TouchableOpacity>
+                        <FlatList
+                        style={styles.flat}
+                        data={item}
+                        renderItem={this.prod}
+                        keyExtractor={item => item.id}
+                    />
                 </View>
-                    <FlatList
-                    style={styles.flat}
-                    data={item}
-                    renderItem={this.prod}
-                    keyExtractor={item => item.id}
-                />
             </View>
-        </View>
         
     );
 }
@@ -197,6 +199,7 @@ export default class App extends Component{
 const styles = StyleSheet.create({
     todo:{
         flex: 1,
+        paddingTop: 20,
     },
      iconE: {
          marginTop: 12.5
