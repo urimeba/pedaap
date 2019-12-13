@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
     AsyncStorage,
     ActivityIndicator,
-    RefreshControl
+    RefreshControl,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
@@ -35,23 +35,62 @@ export default class App extends Component{
             loading: false,
             clave: '',
             server: '',
+            count: ''
         };
+    }
+
+    componentDidMount(){
+        this._getBudgets();
+
+    }
+
+    _getBudgets = async() =>{
+        server = await AsyncStorage.getItem("server");
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+
+        axios({
+            method: 'POST',
+            url: server+"compartidos/getPresupuestos/",
+            data: {idUser:idUser },
+            headers: {
+              "content-type":"application/json",
+              "Authorization": "Token "+token
+            },
+      
+            }).then( res => {
+                //   console.log(res.data.Datos);
+                //   this.setState({datos: res.data, count:res.data.count})
+                
+                a = res.data.Datos;
+                let j = a.replace(/'/g,'"');
+                let json_data = JSON.parse(j);
+                let data = [];
+                for(var i in json_data){
+                    data.push(json_data[i]);
+                }
+                console.log()
+                this.setState({datos: data})
+
+            }).catch(err => {
+                console.log(err.response.data)
+              // Alert.alert("Error", err.response.data.Error);
+            });
     }
 
 
 
     caja= ({item})=>{
-        let fechaSplit = item.fecha.split("-");
-        let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
             return(
                 <TouchableOpacity 
-                    onPress={() => this.props.navigation.navigate('ShareBudget',{idBudget:item.id})}
+                    onPress={() => this.props.navigation.navigate('ShareBudget',{idPresupuesto:item.id, monto:item.monto, codigo:item.codigo})}
                     style={styles.caja}
                 >
                     <View style={styles.datosCaja}>
-                        <Text style={styles.titulo}>{item.nombre}</Text>
-                        <Text style={styles.titulo12}>Creador: {item.usuarioPropietario}</Text>
-                        <Text style={styles.titulo11}>Creado: {fechaFormat}</Text>
+                        <Text style={styles.titulo}>Codigo: {item.codigo}</Text>
+                        <Text style={styles.titulo12}>Creador: {item.propietario}</Text>
+                        <Text style={styles.titulo11}>Monto: {item.monto}</Text>
+
                     </View>
                 </TouchableOpacity>
             );
@@ -75,8 +114,8 @@ export default class App extends Component{
                                     />
                                 }
                                 style={styles.flat}
-                                // data={this.state.datos}
-                                data={daata}
+                                data={this.state.datos}
+                                // data={daata}
                                 renderItem={this.caja}
                                 keyExtractor={item => item.id.toString()}
                                 extraData={this.state}

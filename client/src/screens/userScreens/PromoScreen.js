@@ -122,7 +122,7 @@ export default class App extends Component{
             server: await AsyncStorage.getItem("server"),
         });
 
-        console.log(url);
+        // console.log(url);
 
         fetch(url, {
                 method: 'GET',
@@ -516,8 +516,8 @@ const styles = StyleSheet.create({
         width:'10%',
         height: '100%',
         borderRadius: 10,
-        backgroundColor:'red',
-        // backgroundColor:'#F0F0F0',
+        // backgroundColor:'red',
+        backgroundColor:'#F0F0F0',
         justifyContent: 'center',
         alignItems: 'center'
     },

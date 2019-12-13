@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity} from 'react-native';
+import { SafeAreaView, View, FlatList,SectionList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 const datos=[
     {
@@ -89,13 +90,65 @@ const datos=[
 
 
 export default class App extends Component{
-    constructor(props) {
-            super(props);
-            this.state={
-                establecimieniemtos: false,
-                filter:false
-            };
+    constructor(props){
+        super(props);
+        this.state={
+            filter: false,
+            item: [],
+        }
     }
+
+    componentDidMount(){
+        // console.log(this.props.navigation.getParam('idEvento', 'Error ID'));
+
+        this._getPromos();
+
+
+    }
+
+    _getPromos = async() =>{
+        server = await AsyncStorage.getItem("server");
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+
+        axios({
+            method: 'POST',
+            url: server+"presupuestosCategorias/busqueda/",
+            // data: {idPresupuesto: "AQUI VA EL ID DEL EVENTO"},
+            data: {idPresupuesto: 37},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": "Token "+token
+                }, 
+            }).then( res => {
+                console.log(res.data);
+            }).catch(err => {
+                console.log(err.response.data);
+            });
+
+
+    }
+
+    _filtro=()=>{
+        if(this.state.filter===false){
+            this.setState({filter:true})
+        }
+        if(this.state.filter===true){
+            this.setState({filter:false})
+        }
+    }
+
+    prod=({item})=>(
+        <View>
+            <Text style={styles.tituloCajas}>{item.nombre}</Text>
+            <FlatList
+                style={styles.flat}
+                data={item.productos}
+                renderItem={this.caja}
+                keyExtractor={item => item.id}
+            />
+        </View>
+    )
 
     caja= ({item})=>(
         <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionE', {
@@ -129,8 +182,10 @@ export default class App extends Component{
     }
 
     render(){
-    return (
-        <View style={styles.todo}>
+        // console.log(item)
+        // console.log(item.productos)
+        return(
+            <View style={styles.todo}>
             <View style={styles.container}>
                 <View style={styles.arriba}>
                     <View style={styles.textoP}>

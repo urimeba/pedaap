@@ -10,41 +10,40 @@ import DatePicker from 'react-native-datepicker';
 export default class App extends Component{
     constructor(props){
         super(props);
-            this.state={
-
-                hasPermission: null,
-                type: Camera.Constants.Type.back,
-                camera: true,
-                photo:'',
-                take: false,
-                error1: false, //campos vacios
-                error2: false, //error al mandarlos
-                succes: true, //todo bien
-                msgE:'',
-
-
-                fechaInicio:"01-12-2019",
-                fechaExpiracion:"01-12-2019",
-
-                // establecimiento:'',
-                // nombre: '',
-                costo:'',
-                descrip:'',
-                // inicio:'',
-                // vencimiento:'',
-
-                categorias:[],
-                categoria:'',
-
-                productos: [],
-                producto:'',
-
-                tiendas: [],
-                tienda: '',
+        this.state={
+            hasPermission: null,
+            type: Camera.Constants.Type.back,
+            camera: true,
+            photo:'',
+            take: false,
+            error1: false, //campos vacios
+            error2: false, //error al mandarlos
+            succes: true, //todo bien
+            msgE:'',
 
 
-                 modalVisible: false,
-            }
+            fechaInicio:"01-12-2019",
+            fechaExpiracion:"01-12-2019",
+
+            // establecimiento:'',
+            // nombre: '',
+            costo:'',
+            descrip:'',
+            // inicio:'',
+            // vencimiento:'',
+
+            categorias:[],
+            categoria:'',
+
+            productos: [],
+            producto:'',
+
+            tiendas: [],
+            tienda: '',
+
+
+            modalVisible: false,
+        }
     }
 
     setModalVisible(visible) {
@@ -345,10 +344,15 @@ export default class App extends Component{
                 <ScrollView style={styles.container2}>
                         <View style={styles.caja}>
                             <TouchableOpacity
-                             style={styles.imgCaja}
-                              onPress={()=>{this.setState({camera:true})}}>
+                                style={styles.imgCaja}
+                                onPress={()=>{this.setState({camera:true})}}
+                            >
                             {this.state.camera===true && (
-                                <Camera style={{ flex: 1, flexDirection: "row", justifyContent: "space-evenly", alignItems: "flex-end"}} type={this.state.cameraType} ref={ref => { this.camera = ref; }}>
+                                <Camera 
+                                    style={{ flex: 1, flexDirection: "row", justifyContent: "space-evenly", alignItems: "flex-end",}}
+                                    type={this.state.cameraType} 
+                                    ref={ref => { this.camera = ref; }}
+                                >
                                         <View style={styles.camerabuttonview}>
                                             <TouchableOpacity
                                                 style={styles.cameraButtons}
@@ -361,8 +365,8 @@ export default class App extends Component{
                                                 </Text> */}
                                                 <Icon
                                                     name={'camera'}
-                                                    color="#ccc"
-                                                    size={60}
+                                                    color="#fafafa"
+                                                    size={40}
                                                 />
                                             </TouchableOpacity>
                                         </View>
@@ -499,9 +503,9 @@ export default class App extends Component{
                     <View style={styles.send}>
                         <TouchableOpacity
                             style={styles.enviar}
-                             onPress={ this._enviar}
+                            onPress={ this._enviar}
                         >
-                            <Text style={{color:'white', width:'100%',height:'100%',textAlign:'center', fontSize:15, alignSelf:'center'}}>Enviar</Text>
+                            <Text style={{color:'white', textAlign:'center', fontSize:18, alignSelf:'center', justifyContent: 'center'}}>Enviar</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
@@ -696,13 +700,12 @@ const styles = StyleSheet.create({
         alignContent:'center',
         alignItems:'center',
         backgroundColor: '#FEDB6B',
-        width: 80,
-        height: 30,
+        width: 90,
+        height: 40,
         color: 'white',
         fontSize: 18,
         borderRadius: 10,
         textAlign:'center',
-        padding:5
     },
     botonModal:{
         alignSelf: 'center',
@@ -736,15 +739,15 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
     },
-
     cameraButtons:{
-        width: 65,
-        height: 65,
-        backgroundColor: "#393939",
+        width: 60,
+        height: 60,
+        backgroundColor: "#FEDB6B",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        borderRadius: 30
+        borderRadius: 30,
+        marginBottom: 5,
     }
     
 });
