@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
         flex:1,
         flexDirection: 'row',
         width:'90%',
-        height: 110,
+        height: 120,
         borderRadius: 10,
         shadowColor: "#000",
         shadowOffset: {

@@ -193,7 +193,7 @@ export default class App extends Component{
                         </View>
                             <FlatList
                             style={styles.flat}
-                            data={item}
+                            data={this.state.item}
                             renderItem={this.prod}
                             keyExtractor={item => item.id}
                         />
