@@ -81,19 +81,28 @@ export default class App extends Component{
 
 
     caja= ({item})=>{
-            return(
+        return(
+            <View style={styles.caja}>
                 <TouchableOpacity 
                     onPress={() => this.props.navigation.navigate('ShareBudget',{idPresupuesto:item.id, monto:item.monto, codigo:item.codigo})}
-                    style={styles.caja}
+                    style={styles.cajacaja}
                 >
                     <View style={styles.datosCaja}>
                         <Text style={styles.titulo}>Codigo: {item.codigo}</Text>
                         <Text style={styles.titulo12}>Creador: {item.propietario}</Text>
                         <Text style={styles.titulo11}>Monto: ${item.monto}</Text>
-
                     </View>
                 </TouchableOpacity>
-            );
+                <View style={styles.cajacaja2}>
+                    <TouchableOpacity 
+                        onPress={() => console.log('Eliminar')}
+                        style={styles.caja3Boton}
+                    >
+                            <Icon name={'delete-outline'} size={20} color={'#DE4C63'} />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
     }
 
     render(){
@@ -239,7 +248,7 @@ const styles = StyleSheet.create({
         flex:1,
         flexDirection: 'row',
         width:'90%',
-        height: 110,
+        height: 120,
         borderRadius: 10,
         shadowColor: "#000",
         shadowOffset: {
@@ -253,6 +262,15 @@ const styles = StyleSheet.create({
         marginLeft:'5%',
         marginTop: 20,
         backgroundColor: 'white',
+    },
+    cajacaja:{
+        flex: 9,
+        height: '100%'
+    },
+    cajacaja2:{
+        flex: 1,
+        height: '100%',
+        alignItems: 'center'
     },
     caja2:{
         flex:1,
