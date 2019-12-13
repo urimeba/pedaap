@@ -3,91 +3,7 @@ import { SafeAreaView, View, FlatList,SectionList, StyleSheet, Text, Image, Text
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
-
-const datos=[
-    {
-        id: '1',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo Juriquilla',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    }, 
-    {
-        id: '2',
-       nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 1',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    }, 
-    {
-        id: '3',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 2',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-    {
-        id: '4',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 3',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-    {
-        id: '5',
-       nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 4',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-    {
-        id: '6',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 5',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-    {
-        id: '7',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 6',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-    {
-        id: '8',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 7',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-    {
-        id: '9',
-        nombre: '2 x 1 Cerveza Indio',
-        lugar: 'Oxxo 8',
-        vigencia: '20/11/2019',
-        categoria: 'bebidas',
-        descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        direccion: 'google maps'
-    },
-];
-
+import Logo from '../../components/StoreIcons'
 
 export default class App extends Component{
     constructor(props){
@@ -96,6 +12,7 @@ export default class App extends Component{
             filter: false,
             item: [],
             datos: [],
+            server: ''
         }
     }
 
@@ -111,6 +28,9 @@ export default class App extends Component{
         server = await AsyncStorage.getItem("server");
         idUser = await AsyncStorage.getItem("userId");
         token = await AsyncStorage.getItem("userToken");
+        this.setState({
+            server: await AsyncStorage.getItem("server"),
+        });
         id = JSON.stringify(this.props.navigation.getParam('id', '0')).replace(/"/g, '');
         // console.log('##################################'+id);
 
@@ -124,11 +44,12 @@ export default class App extends Component{
                 "Authorization": "Token "+token
             }, 
         }).then( res => {
-            console.log(res.data.Datos);
-
             let j = res.data.Datos.replace(/'/g,'"');
+            // console.log(j)
             let json_data = JSON.parse(j);
+            // console.log(json_data)
             let data = [];
+            // console.log(json_data[1] );
 
             for(var i in json_data){
                 data.push(json_data[i]);
@@ -139,8 +60,6 @@ export default class App extends Component{
             this.setState({
                 datos: data,
             });
-
-            
         }).catch(err => {
             console.log(err.response.data);
         });
@@ -167,33 +86,85 @@ export default class App extends Component{
         </View>
     )
 
-    caja= ({item})=>(
+    caja= ({item})=>{
+        let fechaSplit = item.vigencia.split("-");
+        let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
 
-        
-
-
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionE', {
-            datos: item, 
-            id: item.id,
-            nombre: item.nombre,
-            lugar: item.lugar,
-            vigencia: item.vigencia,
-            categoria: item.categoria,
-            descripcion: item.descripcion,
-            direccion: item.direccion,
-            costo: item.costo,
-            foto: item.foto
-             })} style={styles.caja}>
-            <View style={styles.imgCaja}>
-                <Image/>
-            </View>
-            <View style={styles.datosCaja}>
-                <Text style={styles.titulo}>{item.descripcion}</Text>
-                <Text style={styles.titulo}>${item.costo}</Text>
-                <Text style={styles.titulo}>{item.vigencia}</Text>
-            </View>
-        </TouchableOpacity>
-    )
+        if(item.foto == "None"){
+            return(
+                <TouchableOpacity 
+                    onPress={() => this.props.navigation.navigate('PromotionE', {
+                        datos: item,
+                        id: item.id,
+                        nombre: item.nombre,
+                        lugar: item.lugar,
+                        vigencia: item.vigencia,
+                        categoria: item.categoria,
+                        descripcion: item.descripcion,
+                        direccion: item.direccion,
+                        costo: item.costo,
+                        icono: item.icono,
+                    })}
+                    style={styles.caja}
+                >
+                    <View style={styles.imgCaja}>
+                        <Image
+                            style={styles.pngImage}
+                            source={Logo[item.icono]}
+                            resizeMode="center"
+                        />
+                    </View>
+                    <View style={styles.datosCaja}>
+                        <Text style={styles.titulo}>{item.nombre}</Text>
+                        {item.costo == '0.00' &&(
+                            <Text style={styles.tituloPromo}>Promoción</Text>
+                        )}
+                        {item.costo != '0.00' &&(
+                            <Text style={styles.tituloCosto}>${item.costo}</Text>
+                        )}
+                        <Text style={styles.titulo}>Vigencia: {fechaFormat}</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        }else{
+            return(
+                <TouchableOpacity 
+                    onPress={() => this.props.navigation.navigate('PromotionE', {
+                        datos: item,
+                        id: item.id,
+                        nombre: item.nombre,
+                        lugar: item.lugar,
+                        vigencia: item.vigencia,
+                        categoria: item.categoria,
+                        descripcion: item.descripcion,
+                        direccion: item.direccion,
+                        costo: item.costo,
+                        foto: this.state.server+'media/'+item.foto,
+                        fotoRaw: item.foto
+                    })}
+                    style={styles.caja}
+                >
+                    <View style={styles.imgCaja}>
+                        <Image
+                            style={styles.pngImagePhoto}
+                            source={{uri: this.state.server+'media/'+item.foto}}
+                            resizeMode="center"
+                        />
+                    </View>
+                    <View style={styles.datosCaja}>
+                        <Text style={styles.titulo}>{item.nombre}</Text>
+                        {item.costo == '0.00' &&(
+                            <Text style={styles.tituloPromo}>Promoción</Text>
+                        )}
+                        {item.costo != '0.00' &&(
+                            <Text style={styles.tituloCosto}>${item.costo}</Text>
+                        )}
+                        <Text style={styles.titulo}>Vigencia: {fechaFormat}</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        }
+    }
 
      _filtro=()=>{
         if(this.state.filter===false){
@@ -227,7 +198,6 @@ export default class App extends Component{
     }
 }
 
-console.log(datos[0].vigencia)
 const styles = StyleSheet.create({
     todo:{
         flex: 1,
@@ -325,14 +295,14 @@ const styles = StyleSheet.create({
         width:'90%',
         height: 100,
         borderRadius: 10,
-       shadowColor: "#000",
+        shadowColor: "#000",
         shadowOffset: {
-               width: 0,
-               height: 2,
-           },
-           shadowOpacity: 0.25,
-           shadowRadius: 3.84,
-           elevation: 5,
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
         padding: 8,
         marginLeft:'5%',
         marginTop: 20,
@@ -352,7 +322,10 @@ const styles = StyleSheet.create({
         width:'10%',
         height: '100%',
         borderRadius: 10,
-        backgroundColor:'gray'
+        // backgroundColor:'red',
+        backgroundColor:'#F0F0F0',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     datosCaja:{
         flex:3,
@@ -361,5 +334,26 @@ const styles = StyleSheet.create({
         // backgroundColor: 'pink',
         marginLeft: 10,
         padding: 10,
+    },
+    tituloCosto:{
+        flex: 1,
+        fontSize: 16,
+        color: '#6930BF'
+        // color: 'white'
+    },
+    tituloPromo:{
+        flex: 1,
+        fontSize: 16,
+        color: '#71C0F2'
+        // color: 'white'
+    },
+    pngImage:{
+        height: 50,
+        width: 50,
+    },
+    pngImagePhoto:{
+        height: '100%',
+        width: '100%',
+        borderRadius: 10,
     }
 });
