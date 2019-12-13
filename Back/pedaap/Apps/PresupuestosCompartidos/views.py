@@ -1,4 +1,5 @@
 from Apps.PresupuestosCompartidos.models import PresupuestoCompartido, UsuariosPresupuestoCompartido, CompartidoCategorias
+from Apps.Promociones.models import Promociones
 from Apps.PresupuestosCompartidos.serializers import PresupuestosCompartidoSerializer, UsuariosPresupuestoCompartidoSerializer, CompartidoCategoriasSerializer
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -22,12 +23,6 @@ class PresupuestosCompartidosViewSet(viewsets.ModelViewSet):
 
         print("Codigo " , codigo)
 
-
-
-
-
-
-
         try:
             presupuesto = PresupuestoCompartido.objects.get(codigo=codigo)
             print(presupuesto)
@@ -42,6 +37,26 @@ class PresupuestosCompartidosViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print(e)
             return Response({"Error": "Este presupuesto no existe"}, status=HTTP_400_BAD_REQUEST)
+
+    @action(methods=['post'], detail=False)
+    def getPresupuestos(self, request):
+        idUser = request.data.get("idUser")
+
+        presupuestos = PresupuestoCompartido.objects.filter(usuarioPropietario__id=idUser)
+
+        dic = {}
+        for presupuesto in presupuestos:
+            dic[str(presupuesto.id)] = {"id":str(presupuesto.id),"codigo":str(presupuesto.codigo), "monto":str(presupuesto.monto), "propietario":str(presupuesto.usuarioPropietario.username)}
+
+        print(dic)
+
+        return Response({"Datos":str(dic)}, status=HTTP_200_OK)
+
+
+
+
+
+
 
 
 class UsuariosPresupuestoCompartidoViewSet(viewsets.ModelViewSet):
@@ -61,7 +76,7 @@ class UsuariosPresupuestoCompartidoViewSet(viewsets.ModelViewSet):
         dic = {}
 
         for u in usuarios:
-            dic[u.id] = {"id":u.id, "usuario":u.usuario.username, "monto":str(u.monto)}
+            dic[str(u.id)] = {"id":u.id, "usuario":u.usuario.username, "monto":str(u.monto)}
             # print(u.id)
             # print(u.usuario)
             # print(u.monto)
@@ -72,3 +87,20 @@ class UsuariosPresupuestoCompartidoViewSet(viewsets.ModelViewSet):
 class CompartidoCategoriasViewSet(viewsets.ModelViewSet):
     queryset = CompartidoCategorias.objects.all()
     serializer_class = CompartidoCategoriasSerializer
+
+    @action(methods=['post'], detail=False)
+    def getCategorias(self, request):
+        idPresupuesto = request.data.get("idPresupuesto")
+        categorias = CompartidoCategorias.objects.filter(presupuestoCompartido__id=idPresupuesto).values('categoria')
+
+        promociones = Promociones.objects.filter(productoTienda__producto__categoria__in=categorias)
+
+        dic = {}
+
+        for p in promociones:
+            # id = str(p.id)
+            # id = '""' + id + '""'
+            # print(p.foto.name)
+            dic[str(p.id)]={"id":str(p.id), "nombre":str(p.descripcion),'foto':str(p.foto.name), 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
+            # dic[str(p.id)]={"id":str(p.id), "nombre":str(p.descripcion), 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
+        return Response({"Datos": str(dic)}, status=HTTP_200_OK)

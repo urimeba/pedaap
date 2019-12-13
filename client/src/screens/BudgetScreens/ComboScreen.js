@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, AsyncStorage} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 const datos=[
     {
@@ -93,26 +94,82 @@ export default class App extends Component{
             super(props);
             this.state={
                 establecimieniemtos: false,
-                filter:false
+                filter:false,
+                idPresupuesto:'',
+                promociones: []
             };
     }
 
+    componentDidMount(){
+        id = JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID'));
+        id= id.replace('"','');
+        id= id.replace('"','');
+        this.setState({idPresupuesto:id})
+        
+        this._getPromos();
+
+    }
+
+    _getPromos = async() =>{
+        console.log(this.state.idPresupuesto);
+        server = await AsyncStorage.getItem("server");
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+
+
+        axios({
+            method: 'POST',
+            url: server+"categoriasCompartido/getCategorias/",
+            data: {idPresupuesto:this.state.idPresupuesto },
+            headers: {
+              "content-type":"application/json",
+              "Authorization": "Token "+token
+            },
+      
+            }).then( res => {
+                //   console.log(res.data.Datos);
+                
+                a = res.data.Datos;
+                let j = a.replace(/'/g,'"');
+                let json_data = JSON.parse(j);
+                let data = [];
+                for(var i in json_data){
+                    data.push(json_data[i]);
+                }
+                
+                this.setState({promociones: data})
+                // console.log(json_data)
+
+            }).catch(err => {
+                console.log(err.response.data)
+            });
+
+    }
+
     caja= ({item})=>(
+        
         <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionC', {
             datos: item, 
             id: item.id,
             nombre: item.nombre,
+            foto: item.foto,
             lugar: item.lugar,
             vigencia: item.vigencia,
             categoria: item.categoria,
             descripcion: item.descripcion,
-            direccion: item.direccion
+            direccion: item.direccion,
+            costo: item.costo,
+            icono: item.icono
              })} style={styles.caja}>
             <View style={styles.imgCaja}>
-                <Image/>
+                <Image
+                    // style={styles.pngImage}
+                    source={{uri: this.state.server+'media/'+item.foto}}
+                    resizeMode="center"
+                />
             </View>
             <View style={styles.datosCaja}>
-                <Text style={styles.titulo}>{item.titulo}</Text>
+                <Text style={styles.titulo}>{item.nombre}</Text>
                 <Text style={styles.titulo}>{item.lugar}</Text>
                 <Text style={styles.titulo}>{item.vigencia}</Text>
             </View>
@@ -150,7 +207,7 @@ export default class App extends Component{
                 </View>
                     <FlatList
                     style={styles.flat}
-                    data={datos}
+                    data={this.state.promociones}
                     renderItem={this.caja}
                     keyExtractor={item => item.id}
                 />
@@ -296,5 +353,5 @@ const styles = StyleSheet.create({
         // backgroundColor: 'pink',
         marginLeft: 10,
         padding: 10,
-    }
+    },
 });

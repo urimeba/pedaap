@@ -56,6 +56,8 @@ export default class App extends Component{
     constructor(props){
         super(props);
         this.state={
+            datos: [],
+            idPresupuesto: ''
 
         }
     }
@@ -68,6 +70,9 @@ export default class App extends Component{
         // console.log("HOLA-----");
         // console.log(JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID')));
         id = JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID'));
+        id= id.replace('"','');
+        id= id.replace('"','');
+        this.setState({idPresupuesto:id})
         url = await AsyncStorage.getItem("server");
         token = await AsyncStorage.getItem("userToken");
         // console.log(id, url);
@@ -81,9 +86,17 @@ export default class App extends Component{
                 "Authorization":"Token "+ token
             }, 
         }).then( res => {
-            console.log(res.data.datos);
-            data = JSON.parse(res.data.datos);
-            datos.push(data);
+            a = res.data.datos;
+            let j = a.replace(/'/g,'"');
+            let json_data = JSON.parse(j);
+            let data = [];
+            for(var i in json_data){
+                data.push(json_data[i]);
+            }
+            this.setState({datos: data})
+            // console.log(data)
+            
+
         }).catch(err => {
             console.log(err)
         });
@@ -121,6 +134,7 @@ export default class App extends Component{
             }, 
         }).then( res => {
             console.log(res.data);
+            this._getInfo();
         }).catch(err => {
             console.log(err)
         });
@@ -128,7 +142,7 @@ export default class App extends Component{
     }
 
     _combo = () => {
-        this.props.navigation.navigate('ComboBudget')
+        this.props.navigation.navigate('ComboBudget', {idPresupuesto: this.state.idPresupuesto})
     }
 
     caja= ({item})=>(
@@ -139,11 +153,11 @@ export default class App extends Component{
                 <Image/>
             </View>
             <View style={styles.datosCaja}>
-                <Text style={styles.nombre}>{item.nombre}</Text>
-                <Text style={styles.aporte}>{item.aporte}</Text>
+                <Text style={styles.nombre}>{item.usuario}</Text>
+                <Text style={styles.aporte}>{item.monto}</Text>
             </View>
             <View style={styles.cerrar}>
-                <TouchableOpacity style={styles.btnCerrar} onPress={() => this._eliminar(item.id, item.nombre)}>
+                <TouchableOpacity style={styles.btnCerrar} onPress={() => this._eliminar(item.id, item.usuario)}>
                     <Icon name="close" size={24} color={'#D5D5D5'}/>
                 </TouchableOpacity>
             </View>
@@ -155,23 +169,23 @@ export default class App extends Component{
             <ScrollView style={styles.todo}>
                 <View style={styles.presupuesto}>
                     <Text style={styles.textoPresup}>Presupuesto</Text>
-                    <Text style={styles.BoxPresup}>{JSON.stringify(this.props.navigation.getParam('monto', 'NO-MONTO'))}</Text>
+                    <Text style={styles.BoxPresup}>{JSON.stringify(this.props.navigation.getParam('monto', 'NO-MONTO')).replace('"','').replace('"','')}</Text>
                 </View>
                 <TouchableOpacity style={styles.verCombos} onPress={this._combo}>
                     <Text style={styles.verCombosText}>Ver promociones</Text>
                 </TouchableOpacity>
                 <View style={styles.codigoC}>
                     <Text style={styles.titulo1}>Comparte tu código</Text>
-                    <Text style={styles.codigo}>{JSON.stringify(this.props.navigation.getParam('codigo', 'NO-CODE'))}</Text>
+                    <Text style={styles.codigo}>{JSON.stringify(this.props.navigation.getParam('codigo', 'NO-CODE')).replace('"','').replace('"','')}</Text>
                 </View>
                 <View style={styles.aportadores}>
                     <Text style={styles.titulAporta}>Aportadores</Text>
                 </View>
                 <FlatList
                     style={styles.flat}
-                    data={datos}
+                    data={this.state.datos}
                     renderItem={this.caja}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.id.toString()}
                 />
             </ScrollView>
         )
