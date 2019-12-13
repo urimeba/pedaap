@@ -56,7 +56,8 @@ export default class App extends Component{
     constructor(props){
         super(props);
         this.state={
-            datos: []
+            datos: [],
+            idPresupuesto: ''
 
         }
     }
@@ -71,6 +72,7 @@ export default class App extends Component{
         id = JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID'));
         id= id.replace('"','');
         id= id.replace('"','');
+        this.setState({idPresupuesto:id})
         url = await AsyncStorage.getItem("server");
         token = await AsyncStorage.getItem("userToken");
         // console.log(id, url);
@@ -140,7 +142,7 @@ export default class App extends Component{
     }
 
     _combo = () => {
-        this.props.navigation.navigate('ComboBudget')
+        this.props.navigation.navigate('ComboBudget', {idPresupuesto: this.state.idPresupuesto})
     }
 
     caja= ({item})=>(
@@ -167,14 +169,14 @@ export default class App extends Component{
             <ScrollView style={styles.todo}>
                 <View style={styles.presupuesto}>
                     <Text style={styles.textoPresup}>Presupuesto</Text>
-                    <Text style={styles.BoxPresup}>{JSON.stringify(this.props.navigation.getParam('monto', 'NO-MONTO'))}</Text>
+                    <Text style={styles.BoxPresup}>{JSON.stringify(this.props.navigation.getParam('monto', 'NO-MONTO')).replace('"','').replace('"','')}</Text>
                 </View>
                 <TouchableOpacity style={styles.verCombos} onPress={this._combo}>
                     <Text style={styles.verCombosText}>Ver promociones</Text>
                 </TouchableOpacity>
                 <View style={styles.codigoC}>
                     <Text style={styles.titulo1}>Comparte tu código</Text>
-                    <Text style={styles.codigo}>{JSON.stringify(this.props.navigation.getParam('codigo', 'NO-CODE'))}</Text>
+                    <Text style={styles.codigo}>{JSON.stringify(this.props.navigation.getParam('codigo', 'NO-CODE')).replace('"','').replace('"','')}</Text>
                 </View>
                 <View style={styles.aportadores}>
                     <Text style={styles.titulAporta}>Aportadores</Text>

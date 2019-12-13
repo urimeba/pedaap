@@ -39,7 +39,7 @@ export default class App extends Component{
         };
     }
 
-    componentDidMount(){
+    componentDidMount = async()  =>{
         this._getBudgets();
 
     }
@@ -89,7 +89,7 @@ export default class App extends Component{
                     <View style={styles.datosCaja}>
                         <Text style={styles.titulo}>Codigo: {item.codigo}</Text>
                         <Text style={styles.titulo12}>Creador: {item.propietario}</Text>
-                        <Text style={styles.titulo11}>Monto: {item.monto}</Text>
+                        <Text style={styles.titulo11}>Monto: ${item.monto}</Text>
 
                     </View>
                 </TouchableOpacity>
