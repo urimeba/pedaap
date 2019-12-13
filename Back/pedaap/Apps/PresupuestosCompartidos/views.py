@@ -43,9 +43,13 @@ class PresupuestosCompartidosViewSet(viewsets.ModelViewSet):
         idUser = request.data.get("idUser")
 
         presupuestos = PresupuestoCompartido.objects.filter(usuarioPropietario__id=idUser)
+        presupuestos2 = UsuariosPresupuestoCompartido.objects.filter(usuario__id=idUser)
 
         dic = {}
         for presupuesto in presupuestos:
+            dic[str(presupuesto.id)] = {"id":str(presupuesto.id),"codigo":str(presupuesto.codigo), "monto":str(presupuesto.monto), "propietario":str(presupuesto.usuarioPropietario.username)}
+
+        for presupuesto in presupuestos2:
             dic[str(presupuesto.id)] = {"id":str(presupuesto.id),"codigo":str(presupuesto.codigo), "monto":str(presupuesto.monto), "propietario":str(presupuesto.usuarioPropietario.username)}
 
         print(dic)
