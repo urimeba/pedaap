@@ -17,10 +17,10 @@ export default class App extends Component{
         this.state={
             selectedItem: null,
             datos: [
-                {id: '1', text: 'Hasta 10 personas', 'icono': 'dice-1'},
-                {id: '2', text: 'Hasta 30 personas', 'icono': 'dice-2'},
-                {id: '3', text: 'Hasta 50 personas', 'icono': 'dice-3'},
-                {id: '4', text: 'Más de 50 personas', 'icono': 'dice-4'},
+                {id: '10', text: 'Hasta 10 personas', 'icono': 'dice-1'},
+                {id: '30', text: 'Hasta 30 personas', 'icono': 'dice-2'},
+                {id: '50', text: 'Hasta 50 personas', 'icono': 'dice-3'},
+                {id: '100', text: 'Más de 50 personas', 'icono': 'dice-4'},
             ]
         }
     }

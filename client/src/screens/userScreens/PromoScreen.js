@@ -169,7 +169,10 @@ export default class App extends Component{
             })
             .catch(error=>console.log(error))
         })
-        .catch(error=>console.log(error))
+        .catch((error)=>{
+            console.log(error)
+            this.props.navigation.navigate('Login');
+        })
     }
 
     caja= ({item})=>{
@@ -451,7 +454,7 @@ const styles = StyleSheet.create({
     },
     titulod:{
         flex: 2,
-        fontSize: 14,
+        fontSize: 12,
         // color: 'white'
     },
     titulo11:{

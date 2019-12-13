@@ -1,4 +1,5 @@
 from Apps.PresupuestosCompartidos.models import PresupuestoCompartido, UsuariosPresupuestoCompartido, CompartidoCategorias
+from Apps.Promociones.models import Promociones
 from Apps.PresupuestosCompartidos.serializers import PresupuestosCompartidoSerializer, UsuariosPresupuestoCompartidoSerializer, CompartidoCategoriasSerializer
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -42,10 +43,14 @@ class PresupuestosCompartidosViewSet(viewsets.ModelViewSet):
         idUser = request.data.get("idUser")
 
         presupuestos = PresupuestoCompartido.objects.filter(usuarioPropietario__id=idUser)
+        # presupuestos2 = UsuariosPresupuestoCompartido.objects.filter(usuario__id=idUser)
 
         dic = {}
         for presupuesto in presupuestos:
             dic[str(presupuesto.id)] = {"id":str(presupuesto.id),"codigo":str(presupuesto.codigo), "monto":str(presupuesto.monto), "propietario":str(presupuesto.usuarioPropietario.username)}
+
+        # for presupuesto in presupuestos2:
+        #     dic[str(presupuesto.id)] = {"id":str(presupuesto.id),"codigo":str(presupuesto.codigo), "monto":str(presupuesto.monto), "propietario":str(presupuesto.usuarioPropietario.username)}
 
         print(dic)
 
@@ -83,6 +88,32 @@ class UsuariosPresupuestoCompartidoViewSet(viewsets.ModelViewSet):
         print(dic)
         return Response({"datos": str(dic)}, status=HTTP_200_OK)
 
+    @action(methods=['post'], detail=False)
+    def eliminarUsuario(self, request):
+        idUsuario = request.data.get("idUsuario")
+
+
+
+        print(idUsuario)
+        return Response(status=HTTP_200_OK)
+
 class CompartidoCategoriasViewSet(viewsets.ModelViewSet):
     queryset = CompartidoCategorias.objects.all()
     serializer_class = CompartidoCategoriasSerializer
+
+    @action(methods=['post'], detail=False)
+    def getCategorias(self, request):
+        idPresupuesto = request.data.get("idPresupuesto")
+        categorias = CompartidoCategorias.objects.filter(presupuestoCompartido__id=idPresupuesto).values('categoria')
+
+        promociones = Promociones.objects.filter(productoTienda__producto__categoria__in=categorias)
+
+        dic = {}
+
+        for p in promociones:
+            # id = str(p.id)
+            # id = '""' + id + '""'
+            # print(p.foto.name)
+            dic[str(p.id)]={"id":str(p.id), "nombre":str(p.descripcion),'foto':str(p.foto.name), 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
+            # dic[str(p.id)]={"id":str(p.id), "nombre":str(p.descripcion), 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
+        return Response({"Datos": str(dic)}, status=HTTP_200_OK)

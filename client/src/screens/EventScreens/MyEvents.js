@@ -9,7 +9,8 @@ import {
     TouchableOpacity,
     AsyncStorage,
     ActivityIndicator,
-    RefreshControl
+    RefreshControl,
+    Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
@@ -53,7 +54,7 @@ export default class App extends Component{
                 "Authorization": 'Token '+token
             }, 
         }).then(res => {
-            console.log(res.data.Datos)
+            // console.log(res.data.Datos)
             let j = res.data.Datos.replace(/'/g,'"');
             let json_data = JSON.parse(j);
             let data = [];
@@ -74,23 +75,75 @@ export default class App extends Component{
 
     }
 
+    _delete = async(id) =>{
+        Alert.alert(
+            'Eliminar',
+            '¿Seguro que deseas eliminar este Evento?',
+            [
+              {
+                text: 'Cancelar',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {text: 'OK', onPress: () => this._deleteEvent(id)},
+            ],
+            {cancelable: false},
+          );
+    }
+
+    _deleteEvent = async(id) =>{
+        console.log(id)
+
+        server = await AsyncStorage.getItem("server");
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+
+        axios({
+            method: 'DELETE',
+            url: server+"presupuestos/"+id+"/",
+            data: {},
+            headers: {
+              "content-type":"application/json",
+              "Authorization":"Token " +token
+            },
+      
+            }).then( res => {
+                //   console.log(res.data);
+                Alert.alert("Exito", "Eliminado correctamente");
+                this.componentDidMount();
+            }).catch(err => {
+                console.log(err.response.data)
+            //   Alert.alert("Error", err.response.data.Error);
+            });
+    }
+
 
     caja= ({item})=>{
         // let fechaSplit = item.fecha.split("-");
         // let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
             return(
-                <TouchableOpacity 
-                    onPress={() => this.props.navigation.navigate('PromosEvent',{idEvento:item.id})}
-                    style={styles.caja}
-                >
-                    <View style={styles.datosCaja}>
-                        <Text style={styles.titulo}>{item.nombre}</Text>
-                        <Text style={styles.tituloT}>Tipo: {item.tipoEvento}</Text>
-                        {/* <Text style={styles.tituloF}>Creado: {item.fecha}</Text> */}
-                        <Text style={styles.tituloF}>Monto: ${item.montoMaximo}</Text>
-                        <Text style={styles.tituloF}># personas: {item.numeroPersonas}</Text>
+                <View style={styles.caja}>
+                    <TouchableOpacity 
+                        onPress={() => this.props.navigation.navigate('PromosEvent',{idEvento:item.id})}
+                        style={styles.caja2}
+                    >
+                        <View style={styles.datosCaja}>
+                            <Text style={styles.titulo}>{item.nombre}</Text>
+                            <Text style={styles.tituloT}>Tipo: {item.tipoEvento}</Text>
+                            {/* <Text style={styles.tituloF}>Creado: {item.fecha}</Text> */}
+                            <Text style={styles.tituloF}>Monto: ${item.montoMaximo}</Text>
+                            <Text style={styles.tituloF}># personas: {item.numeroPersonas}</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <View style={styles.caja3}>
+                        <TouchableOpacity 
+                            onPress={() => this._delete(item.id)}
+                            style={styles.caja3Boton}
+                        >
+                             <Icon name={'delete-outline'} size={20} color={'#DE4C63'} />
+                        </TouchableOpacity>
                     </View>
-                </TouchableOpacity>
+                </View>
             );
     }
 
@@ -238,7 +291,7 @@ const styles = StyleSheet.create({
         flex:1,
         flexDirection: 'row',
         width:'90%',
-        height: 110,
+        height: 120,
         borderRadius: 10,
         shadowColor: "#000",
         shadowOffset: {
@@ -254,23 +307,16 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     caja2:{
-        flex:1,
-        flexDirection: 'row',
-        width:'90%',
-        height: 120,
-        borderRadius: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        padding: 8,
-        marginLeft:'5%',
-        marginTop: 20,
-        backgroundColor: 'white',
+        flex: 9,
+        height: '100%'
+    },
+    caja3:{
+        flex: 1,
+        height: '100%',
+        alignItems: 'center'
+    },
+    caja3Boton:{
+
     },
     flat:{
         flex: 1,

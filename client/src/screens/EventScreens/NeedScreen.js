@@ -78,14 +78,17 @@ export default (props) => {
         idUser = await AsyncStorage.getItem("userId");
         token = await AsyncStorage.getItem('userToken');
 
-
         // console.log(nombre+'-'+presupuesto+'-'+tipo+'-'+numAsis);
         urlUser = server + "usuarios/"+idUser+"/";
         urlTipo = server + "tiposEvento/"+tipo+"/";
 
+        let a = "";
 
-
-        a = "";
+        let obj = Object.create(null);
+        for (let [k,v] of s) {
+            obj[k] = v;
+        }
+        
         axios({
             method: 'POST',
             url: server+"presupuestos/",
@@ -94,21 +97,21 @@ export default (props) => {
                 "content-type":"application/json",
                 "Authorization": "Token "+token
             }, 
-        }).then( res => {
+        }).then( async(res) => {
             // console.log(res.data);
             // console.log("IDAAAA: "  + (res.data.id.toString()));
             a = res.data.id
-            setIdEvento(res.data.id);
+            await setIdEvento(a);
 
             for(categoria in obj){
                 if(obj[categoria]==true){
                     // console.log(categoria);
     
-                    urlPresupuesto = server+"presupuestos/"+res.data.id+"/";
+                    urlPresupuesto = server+"presupuestos/"+a+"/";
                     urlCategoria = server+"categoriaProductos/"+categoria+"/";
     
-                    // console.log(urlPresupuesto)
-                    // console.log(urlCategoria)
+                    console.log(urlPresupuesto)
+                    console.log(urlCategoria)
 
                     axios({
                     method: 'POST',
@@ -120,27 +123,28 @@ export default (props) => {
                         }, 
                     }).then( res => {
                         // console.log(res.data);
+                        // console.log('.')
                     }).catch(err => {
                         console.log(err.response);
-                    });
-    
-                   
+                    });      
                 }
             }
 
-            
-
+            goNext(a);
         }).catch(err => {
             console.log(err.response);
         });
-
-        goNext();
-
-        
     }
 
-    const goNext = () => {
-        props.navigation.navigate('Product');
+    const goNext = (a) => {
+        // console.log('#######ID'+a);
+        props.navigation.navigate('Product', {
+            nombre: nombre,
+            presupuesto: presupuesto,
+            tipo: tipo,
+            numAsis: numAsis,
+            id: a
+        });
 
     }
 
