@@ -121,14 +121,12 @@ export default class App extends Component{
             headers: {
                 "content-type":"application/json",
                 "Authorization": "Token "+token
-                }, 
-            }).then( res => {
-                console.log(res.data);
-            }).catch(err => {
-                console.log(err.response.data);
-            });
-
-
+            }, 
+        }).then( res => {
+            console.log(res.data);
+        }).catch(err => {
+            console.log(err.response.data);
+        });
     }
 
     _filtro=()=>{
@@ -188,30 +186,28 @@ export default class App extends Component{
         // console.log(item.productos)
         return(
             <View style={styles.todo}>
-            <View style={styles.container}>
-                <View style={styles.arriba}>
-                    <View style={styles.textoP}>
-                        <Text style={styles.tituloP}>Promociones</Text>
+                <View style={styles.container}>
+                    <View style={styles.arriba}>
+                        <View style={styles.textoP}>
+                            <Text style={styles.tituloP}>Promociones</Text>
+                        </View>
+                            <FlatList
+                            style={styles.flat}
+                            data={item}
+                            renderItem={this.prod}
+                            keyExtractor={item => item.id}
+                        />
                     </View>
                         <FlatList
                         style={styles.flat}
-                        data={item}
-                        renderItem={this.prod}
+                        data={datos}
+                        renderItem={this.caja}
                         keyExtractor={item => item.id}
                     />
                 </View>
-                    <FlatList
-                    style={styles.flat}
-                    data={datos}
-                    renderItem={this.caja}
-                    keyExtractor={item => item.id}
-                />
             </View>
-        
-    );
-}
-
-    
+        );
+    }
 }
 
 console.log(datos[0].vigencia)

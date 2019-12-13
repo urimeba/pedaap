@@ -59,9 +59,8 @@ export default class App extends Component{
             aportadorE:'',
             eliminar:false,
             modalVisible:false,
-            datos: []
+            datos: [],
             idPresupuesto: ''
-
         }
     }
 
@@ -176,7 +175,7 @@ export default class App extends Component{
 
     render(){
         return(
-            <ScrollView style={styles.todo}>
+            <View style={styles.todo}>
 
                         <Modal
                             animationType="slide"
@@ -239,26 +238,38 @@ export default class App extends Component{
 
 
                 <View style={styles.presupuesto}>
-                    <Text style={styles.textoPresup}>Presupuesto</Text>
-                    <Text style={styles.BoxPresup}>{JSON.stringify(this.props.navigation.getParam('monto', 'NO-MONTO')).replace('"','').replace('"','')}</Text>
+                    <View style={styles.presupuesto1}>
+                        <Text style={styles.textoPresup}>Presupuesto</Text>
+                    </View>
+                    <View style={styles.presupuesto1}>
+                        <Text style={styles.BoxPresup}>{JSON.stringify(this.props.navigation.getParam('monto', 'NO-MONTO')).replace('"','').replace('"','')}</Text>
+                    </View>
                 </View>
-                <TouchableOpacity style={styles.verCombos} onPress={this._combo}>
-                    <Text style={styles.verCombosText}>Ver promociones</Text>
-                </TouchableOpacity>
+                <View style={styles.verPromos}>
+                    <TouchableOpacity style={styles.verCombos} onPress={this._combo}>
+                        <Text style={styles.verCombosText}>Ver promociones</Text>
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.codigoC}>
-                    <Text style={styles.titulo1}>Comparte tu código</Text>
-                    <Text style={styles.codigo}>{JSON.stringify(this.props.navigation.getParam('codigo', 'NO-CODE')).replace('"','').replace('"','')}</Text>
+                    <View style={styles.codigoC1}>
+                        <Text style={styles.titulo1}>Comparte tu código</Text>
+                    </View>
+                    <View style={styles.codigoC1}>
+                        <Text style={styles.codigo}>{JSON.stringify(this.props.navigation.getParam('codigo', 'NO-CODE')).replace('"','').replace('"','')}</Text>
+                    </View>
+                    <View style={styles.codigoC1}>
+                        <Text style={styles.titulAporta}>Aportadores:</Text>
+                    </View>
                 </View>
-                <View style={styles.aportadores}>
-                    <Text style={styles.titulAporta}>Aportadores</Text>
+                <View style={styles.flatView}>
+                    <FlatList
+                        style={styles.flat}
+                        data={this.state.datos}
+                        renderItem={this.caja}
+                        keyExtractor={item => item.id.toString()}
+                    />
                 </View>
-                <FlatList
-                    style={styles.flat}
-                    data={this.state.datos}
-                    renderItem={this.caja}
-                    keyExtractor={item => item.id.toString()}
-                />
-            </ScrollView>
+            </View>
         )
     }
     
@@ -266,9 +277,10 @@ export default class App extends Component{
 
 const styles= StyleSheet.create({
     todo: {
-        flex: 3,
-        height: '100%',
-        width:'100%'
+        flex: 1,
+        // height: '100%',
+        width:'100%',
+        // backgroundColor: 'orangered'
     },
     arriba: {
         // flex:1,
@@ -281,16 +293,29 @@ const styles= StyleSheet.create({
         // backgroundColor:'orange',
     },
      presupuesto:{
+         flex: 2,
          justifyContent: 'center',
          alignItems:'center',
          alignContent:'center',
          width: '100%',
-         height:200,
-         paddingLeft:40,
-         paddingRight:40,
-         marginTop:10,
+        //  height:200,
+        //  paddingLeft:40,
+        //  paddingRight:40,
+        //  marginTop:10,
         //  backgroundColor:'red'
      },
+     presupuesto1:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems:'center',
+        alignContent:'center',
+        width: '100%',
+       //  height:200,
+       //  paddingLeft:40,
+       //  paddingRight:40,
+       //  marginTop:10,
+       //  backgroundColor:'red'
+    },
      textoPresup:{
          justifyContent: 'center',
          textAlign:'center',
@@ -301,15 +326,23 @@ const styles= StyleSheet.create({
          alignItems:'center',
          alignContent:'center',
          width:'80%',
-         height: '30%',
+         height: '70%',
          backgroundColor: '#F0F0F0',
          color: '#8A8A8A',
          borderRadius: 20,
-         marginTop: 20,
+        //  marginTop: 20,
          textAlign: 'center',
-         padding: 20,
+         padding: 10,
         //  backgroundColor:'blue'
      },
+    verPromos:{
+        flex: 1,
+        width: '100%',
+        // backgroundColor: 'pink',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        paddingRight: 10,
+    },  
      verCombos:{
          justifyContent: 'center',
          alignContent:'center',
@@ -319,29 +352,34 @@ const styles= StyleSheet.create({
          backgroundColor: '#FEDB6B',
          borderRadius: 20,
          textAlign:'center',
-         marginLeft:'60%',
+        //  marginLeft:'60%',
      },
      verCombosText:{
         fontSize: 15,
         color:'white'
      },
-     codigoC:{
+    codigoC:{
+        flex: 2,
         width: '100%',
-        height: '10%',
-        textAlign: 'left',
-        marginTop: 20,
-        padding: 20,
+        // backgroundColor: 'lightblue'
+        // height: '10%',
+        // textAlign: 'left',
+        // marginTop: 20,
+        // padding: 20,
         // backgroundColor:'yellow'
      },
+    codigoC1:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        paddingLeft: 10
+    },
      titulo1:{
-         textAlign:'left',
          fontSize: 18,
      },
      codigo:{
         fontSize:25,
-        textAlign:'left',
         color: '#71C0F2',
-        marginTop:20
      },
      aportadores:{
          width: '100%',
@@ -353,14 +391,17 @@ const styles= StyleSheet.create({
         //  backgroundColor:'purple'
      },
      titulAporta:{
-         textAlign:'left',
          fontSize:18
      },
+    flatView:{
+        flex: 6,
+        width: '100%',
+        alignItems: 'center',
+        paddingTop: 10,
+    },
      flat:{
-         width:'100%',
-         paddingLeft: 20,
-         paddingRight: 20,
-         paddingBottom:20,
+         flex: 1,
+         width:'90%',
         //  backgroundColor:'green'
         //  height: 200
      },
