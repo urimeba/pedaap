@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, AsyncStorage} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 const datos=[
     {
@@ -93,26 +94,70 @@ export default class App extends Component{
             super(props);
             this.state={
                 establecimieniemtos: false,
-                filter:false
+                filter:false,
+                idEvento: '',
+                datos: []
             };
+    }
+
+    componentDidMount = async() => {
+        id = this.props.navigation.getParam('idEvento',"NOID");
+        this.setState({idEvento:id});
+
+        this._getPromos();
+    }
+
+    _getPromos = async() =>{
+
+        server = await AsyncStorage.getItem("server");
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+
+        axios({
+            method: 'POST',
+            url: server + "presupuestosCategorias/busqueda/",
+            data: {"idPresupuesto":this.state.idEvento},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": 'Token '+token
+            }, 
+        }).then(res => {
+            let j = res.data.Datos.replace(/'/g,'"');
+            let json_data = JSON.parse(j);
+            let data = [];
+
+            for(var i in json_data){
+                data.push(json_data[i]);
+            }
+
+            console.log(data);
+
+            this.setState({
+                datos: data,
+            });
+            }).catch(err => {
+                console.log(err);
+            })
+
     }
 
     caja= ({item})=>(
         <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionE', {
             datos: item, 
             id: item.id,
-            nombre: item.nombre,
+            nombre: item.descripcion,
             lugar: item.lugar,
             vigencia: item.vigencia,
             categoria: item.categoria,
             descripcion: item.descripcion,
-            direccion: item.direccion
+            direccion: item.direccion,
+            costo: item.costo
              })} style={styles.caja}>
             <View style={styles.imgCaja}>
                 <Image/>
             </View>
             <View style={styles.datosCaja}>
-                <Text style={styles.titulo}>{item.titulo}</Text>
+                <Text style={styles.titulo}>{item.descripcion}</Text>
                 <Text style={styles.titulo}>{item.lugar}</Text>
                 <Text style={styles.titulo}>{item.vigencia}</Text>
             </View>
@@ -150,7 +195,7 @@ export default class App extends Component{
                 </View>
                     <FlatList
                     style={styles.flat}
-                    data={datos}
+                    data={this.state.datos}
                     renderItem={this.caja}
                     keyExtractor={item => item.id}
                 />
