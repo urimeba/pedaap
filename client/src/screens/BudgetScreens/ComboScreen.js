@@ -152,177 +152,177 @@ export default class App extends Component{
 
     }
 
-    caja= ({item})=>{
-        let fechaSplit = item.vigencia.split("-");
-        let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
+    // caja= ({item})=>{
+    //     let fechaSplit = item.vigencia.split("-");
+    //     let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
 
-        if(item.foto == "None"){
-            return(
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionB', {
-                    datos: item, 
-                    id: item.id,
-                    nombre: item.nombre,
-                    foto: item.foto,
-                    lugar: item.lugar,
-                    vigencia: item.vigencia,
-                    categoria: item.categoria,
-                    descripcion: item.descripcion,
-                    direccion: item.direccion,
-                    costo: item.costo,
-                    icono: item.icono
-                    })} style={styles.caja}>
-                    <View style={styles.imgCaja}>
-                        <Image
-                            style={styles.pngImage}
-                           source={Logo[item.icono]}
-                            resizeMode="center"
-                        />
-                    </View>
-                    <View style={styles.datosCaja}>
-                        <Text style={styles.titulo}>{item.nombre}</Text>
-                        <Text style={styles.titulo}>{item.lugar}</Text>
-                        <Text style={styles.titulo}>{item.vigencia}</Text>
-                    </View>
-                </TouchableOpacity>
-            );
-        }else{
-            return(
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionB', {
-                    datos: item, 
-                    id: item.id,
-                    nombre: item.nombre,
-                    foto: item.foto,
-                    lugar: item.lugar,
-                    vigencia: item.vigencia,
-                    categoria: item.categoria,
-                    descripcion: item.descripcion,
-                    direccion: item.direccion,
-                    costo: item.costo,
-                    icono: item.icono
-                    })} style={styles.caja}>
-                    <View style={styles.imgCaja}>
-                        <Image
-                            // style={styles.pngImage}
-                            source={{uri: this.state.server+'media/'+item.foto}}
-                            resizeMode="center"
-                        />
-                    </View>
-                    <View style={styles.datosCaja}>
-                        <Text style={styles.titulo}>{item.nombre}</Text>
-                        <Text style={styles.titulo}>{item.lugar}</Text>
-                        <Text style={styles.titulo}>{item.vigencia}</Text>
-                    </View>
-                </TouchableOpacity>
-            );
-        }
+    //     if(item.foto == "None"){
+    //         return(
+    //             <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionB', {
+    //                 datos: item, 
+    //                 id: item.id,
+    //                 nombre: item.nombre,
+    //                 foto: item.foto,
+    //                 lugar: item.lugar,
+    //                 vigencia: item.vigencia,
+    //                 categoria: item.categoria,
+    //                 descripcion: item.descripcion,
+    //                 direccion: item.direccion,
+    //                 costo: item.costo,
+    //                 icono: item.icono
+    //                 })} style={styles.caja}>
+    //                 <View style={styles.imgCaja}>
+    //                     <Image
+    //                         style={styles.pngImage}
+    //                        source={Logo[item.icono]}
+    //                         resizeMode="center"
+    //                     />
+    //                 </View>
+    //                 <View style={styles.datosCaja}>
+    //                     <Text style={styles.titulo}>{item.nombre}</Text>
+    //                     <Text style={styles.titulo}>{item.lugar}</Text>
+    //                     <Text style={styles.titulo}>{item.vigencia}</Text>
+    //                 </View>
+    //             </TouchableOpacity>
+    //         );
+    //     }else{
+    //         return(
+    //             <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionB', {
+    //                 datos: item, 
+    //                 id: item.id,
+    //                 nombre: item.nombre,
+    //                 foto: item.foto,
+    //                 lugar: item.lugar,
+    //                 vigencia: item.vigencia,
+    //                 categoria: item.categoria,
+    //                 descripcion: item.descripcion,
+    //                 direccion: item.direccion,
+    //                 costo: item.costo,
+    //                 icono: item.icono
+    //                 })} style={styles.caja}>
+    //                 <View style={styles.imgCaja}>
+    //                     <Image
+    //                         // style={styles.pngImage}
+    //                         source={{uri: this.state.server+'media/'+item.foto}}
+    //                         resizeMode="center"
+    //                     />
+    //                 </View>
+    //                 <View style={styles.datosCaja}>
+    //                     <Text style={styles.titulo}>{item.nombre}</Text>
+    //                     <Text style={styles.titulo}>{item.lugar}</Text>
+    //                     <Text style={styles.titulo}>{item.vigencia}</Text>
+    //                 </View>
+    //             </TouchableOpacity>
+    //         );
+    //     }
         
-    }
+    // }
 
-        if(item.foto == "None"){
-            return(
-                <TouchableOpacity 
-                    onPress={() => this.props.navigation.navigate('PromotionE', {
-                        datos: item,
-                        id: item.id,
-                        nombre: item.nombre,
-                        lugar: item.lugar,
-                        vigencia: item.vigencia,
-                        categoria: item.categoria,
-                        descripcion: item.descripcion,
-                        direccion: item.direccion,
-                        costo: item.costo,
-                        icono: item.icono,
-                    })}
-                    style={styles.caja}
-                >
-                    <View style={styles.imgCaja}>
-                        <Image
-                            style={styles.pngImage}
-                            source={Logo[item.icono]}
-                            resizeMode="center"
-                        />
-                    </View>
-                    <View style={styles.datosCaja}>
-                        <Text style={styles.titulo}>{item.nombre}</Text>
-                        {item.costo == '0.00' &&(
-                            <Text style={styles.tituloPromo}>Promoción</Text>
-                        )}
-                        {item.costo != '0.00' &&(
-                            <Text style={styles.tituloCosto}>${item.costo}</Text>
-                        )}
-                        <Text style={styles.titulo}>Vigencia: {fechaFormat}</Text>
-                    </View>
-                </TouchableOpacity>
-            );
-        }else{
-            return(
-                <TouchableOpacity 
-                    onPress={() => this.props.navigation.navigate('PromotionE', {
-                        datos: item,
-                        id: item.id,
-                        nombre: item.nombre,
-                        lugar: item.lugar,
-                        vigencia: item.vigencia,
-                        categoria: item.categoria,
-                        descripcion: item.descripcion,
-                        direccion: item.direccion,
-                        costo: item.costo,
-                        foto: this.state.server+'media/'+item.foto,
-                        fotoRaw: item.foto
-                    })}
-                    style={styles.caja}
-                >
-                    <View style={styles.imgCaja}>
-                        <Image
-                            style={styles.pngImagePhoto}
-                            source={{uri: this.state.server+'media/'+item.foto}}
-                            resizeMode="center"
-                        />
-                    </View>
-                    <View style={styles.datosCaja}>
-                        <Text style={styles.titulo}>{item.nombre}</Text>
-                        {item.costo == '0.00' &&(
-                            <Text style={styles.tituloPromo}>Promoción</Text>
-                        )}
-                        {item.costo != '0.00' &&(
-                            <Text style={styles.tituloCosto}>${item.costo}</Text>
-                        )}
-                        <Text style={styles.titulo}>Vigencia: {fechaFormat}</Text>
-                    </View>
-                </TouchableOpacity>
-            );
-        }
+    //     if(item.foto == "None"){
+    //         return(
+    //             <TouchableOpacity 
+    //                 onPress={() => this.props.navigation.navigate('PromotionE', {
+    //                     datos: item,
+    //                     id: item.id,
+    //                     nombre: item.nombre,
+    //                     lugar: item.lugar,
+    //                     vigencia: item.vigencia,
+    //                     categoria: item.categoria,
+    //                     descripcion: item.descripcion,
+    //                     direccion: item.direccion,
+    //                     costo: item.costo,
+    //                     icono: item.icono,
+    //                 })}
+    //                 style={styles.caja}
+    //             >
+    //                 <View style={styles.imgCaja}>
+    //                     <Image
+    //                         style={styles.pngImage}
+    //                         source={Logo[item.icono]}
+    //                         resizeMode="center"
+    //                     />
+    //                 </View>
+    //                 <View style={styles.datosCaja}>
+    //                     <Text style={styles.titulo}>{item.nombre}</Text>
+    //                     {item.costo == '0.00' &&(
+    //                         <Text style={styles.tituloPromo}>Promoción</Text>
+    //                     )}
+    //                     {item.costo != '0.00' &&(
+    //                         <Text style={styles.tituloCosto}>${item.costo}</Text>
+    //                     )}
+    //                     <Text style={styles.titulo}>Vigencia: {fechaFormat}</Text>
+    //                 </View>
+    //             </TouchableOpacity>
+    //         );
+    //     }else{
+    //         return(
+    //             <TouchableOpacity 
+    //                 onPress={() => this.props.navigation.navigate('PromotionE', {
+    //                     datos: item,
+    //                     id: item.id,
+    //                     nombre: item.nombre,
+    //                     lugar: item.lugar,
+    //                     vigencia: item.vigencia,
+    //                     categoria: item.categoria,
+    //                     descripcion: item.descripcion,
+    //                     direccion: item.direccion,
+    //                     costo: item.costo,
+    //                     foto: this.state.server+'media/'+item.foto,
+    //                     fotoRaw: item.foto
+    //                 })}
+    //                 style={styles.caja}
+    //             >
+    //                 <View style={styles.imgCaja}>
+    //                     <Image
+    //                         style={styles.pngImagePhoto}
+    //                         source={{uri: this.state.server+'media/'+item.foto}}
+    //                         resizeMode="center"
+    //                     />
+    //                 </View>
+    //                 <View style={styles.datosCaja}>
+    //                     <Text style={styles.titulo}>{item.nombre}</Text>
+    //                     {item.costo == '0.00' &&(
+    //                         <Text style={styles.tituloPromo}>Promoción</Text>
+    //                     )}
+    //                     {item.costo != '0.00' &&(
+    //                         <Text style={styles.tituloCosto}>${item.costo}</Text>
+    //                     )}
+    //                     <Text style={styles.titulo}>Vigencia: {fechaFormat}</Text>
+    //                 </View>
+    //             </TouchableOpacity>
+    //         );
+    //     }
         
-    }
+    // }
 
-    // caja= ({item})=>(
-    //     <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionB', {
-    //         datos: item, 
-    //         id: item.id,
-    //         nombre: item.nombre,
-    //         foto: item.foto,
-    //         lugar: item.lugar,
-    //         vigencia: item.vigencia,
-    //         categoria: item.categoria,
-    //         descripcion: item.descripcion,
-    //         direccion: item.direccion,
-    //         costo: item.costo,
-    //         icono: item.icono
-    //          })} style={styles.caja}>
-    //         <View style={styles.imgCaja}>
-    //             <Image
-    //                 // style={styles.pngImage}
-    //                 source={{uri: this.state.server+'media/'+item.foto}}
-    //                 resizeMode="center"
-    //             />
-    //         </View>
-    //         <View style={styles.datosCaja}>
-    //             <Text style={styles.titulo}>{item.nombre}</Text>
-    //             <Text style={styles.titulo}>{item.lugar}</Text>
-    //             <Text style={styles.titulo}>{item.vigencia}</Text>
-    //         </View>
-    //     </TouchableOpacity>
-    // )
+    caja= ({item})=>(
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionB', {
+            datos: item, 
+            id: item.id,
+            nombre: item.nombre,
+            foto: item.foto,
+            lugar: item.lugar,
+            vigencia: item.vigencia,
+            categoria: item.categoria,
+            descripcion: item.descripcion,
+            direccion: item.direccion,
+            costo: item.costo,
+            icono: item.icono
+             })} style={styles.caja}>
+            <View style={styles.imgCaja}>
+                <Image
+                    // style={styles.pngImage}
+                    source={{uri: this.state.server+'media/'+item.foto}}
+                    resizeMode="center"
+                />
+            </View>
+            <View style={styles.datosCaja}>
+                <Text style={styles.titulo}>{item.nombre}</Text>
+                <Text style={styles.titulo}>{item.lugar}</Text>
+                <Text style={styles.titulo}>{item.vigencia}</Text>
+            </View>
+        </TouchableOpacity>
+    )
 
      _filtro=()=>{
         if(this.state.filter===false){

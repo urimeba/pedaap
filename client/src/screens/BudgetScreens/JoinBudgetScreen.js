@@ -64,8 +64,8 @@ _unirme=async()=>{
                 },
             
                 }).then( res => {
-                        // console.log(res.data);
-                        this.props.navigation.navigate('ShareBudget',{idPresupuesto:this.state.idPresupuesto})
+                        console.log(res.data.detail);
+                        this.props.navigation.navigate('AportBudget',{idPresupuesto:this.state.idPresupuesto, idAportacion:res.data.detail})
                 }).catch(err => {
                     Alert.alert("Error", err.response.data.detail);
                 });

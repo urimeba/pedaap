@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {NetInfo} from 'react-native';
+import axios from 'axios';
 
 
 // NetInfo.isConnected.addEventListener('connectionChange', (hasInternetConnection) = console.debug(`hasInternetConnection:`, hasInternetConnection));
@@ -16,6 +17,12 @@ export default class App extends Component{
             aporte:0,
             aportes:0,
         }
+    }
+
+    componentDidMount(){
+        // console.log("#######",this.props.navigation.getParam("idPresupuesto", "NOID"))
+        // console.log("$$$$$$$",this.props.navigation.getParam("idAportacion", "NOID"))
+
     }
 
     _aporte=()=>{
@@ -43,12 +50,36 @@ export default class App extends Component{
         this.props.navigation.navigate('ComboBudget');
     }
 
-    _salir=()=>{
-        if(this.state.pres>=this.state.presIni){
-            const total = parseInt(this.state.pres) - parseInt(this.state.aportes)
-            this.setState({pres:total})
-        }
-        this.props.navigation.goBack();
+    _salir=async()=>{
+
+        // if(this.state.pres>=this.state.presIni){
+        //     const total = parseInt(this.state.pres) - parseInt(this.state.aportes)
+        //     this.setState({pres:total})
+        // }
+
+        server = await AsyncStorage.getItem("server");
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+        idAportacion = this.props.navigation.getParam("idAportacion", "NOID");
+
+        axios({
+            method: 'DELETE',
+            url: server+"usuariosCompartido/"+idAportacion+"/",
+            data: {},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": "Token "+token
+            },
+        
+            }).then( res => {
+                    console.log(res.data);
+                    this.props.navigation.goBack();
+            }).catch(err => {
+                console.log(err.response.data)
+            });
+
+
+        
     }
 
     render(){

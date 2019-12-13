@@ -104,7 +104,8 @@ class UsuariosPresupuestoCompartidoViewSet(viewsets.ModelViewSet):
             presupuesto = PresupuestoCompartido.objects.get(id=idPresupuesto)
             user = UsuariosPresupuestoCompartido(presupuestoCompartido=presupuesto, usuario=usuario, monto=0 )
             user.save()
-            return Response({"detail": "Correcto"}, status=HTTP_200_OK)
+            print(user)
+            return Response({"detail": str(user.id)}, status=HTTP_200_OK)
 
     @action(methods=['post'], detail=False)
     def eliminarUsuario(self, request):
