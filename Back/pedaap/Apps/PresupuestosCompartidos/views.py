@@ -22,12 +22,6 @@ class PresupuestosCompartidosViewSet(viewsets.ModelViewSet):
 
         print("Codigo " , codigo)
 
-
-
-
-
-
-
         try:
             presupuesto = PresupuestoCompartido.objects.get(codigo=codigo)
             print(presupuesto)
@@ -42,6 +36,26 @@ class PresupuestosCompartidosViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print(e)
             return Response({"Error": "Este presupuesto no existe"}, status=HTTP_400_BAD_REQUEST)
+
+    @action(methods=['post'], detail=False)
+    def getPresupuestos(self, request):
+        idUser = request.data.get("idUser")
+
+        presupuestos = PresupuestoCompartido.objects.filter(usuarioPropietario__id=idUser)
+
+        dic = {}
+        for presupuesto in presupuestos:
+            dic[str(presupuesto.id)] = {"id":str(presupuesto.id),"codigo":str(presupuesto.codigo), "monto":str(presupuesto.monto), "propietario":str(presupuesto.usuarioPropietario.username)}
+
+        print(dic)
+
+        return Response({"Datos":str(dic)}, status=HTTP_200_OK)
+
+
+
+
+
+
 
 
 class UsuariosPresupuestoCompartidoViewSet(viewsets.ModelViewSet):
@@ -61,7 +75,7 @@ class UsuariosPresupuestoCompartidoViewSet(viewsets.ModelViewSet):
         dic = {}
 
         for u in usuarios:
-            dic[u.id] = {"id":u.id, "usuario":u.usuario.username, "monto":str(u.monto)}
+            dic[str(u.id)] = {"id":u.id, "usuario":u.usuario.username, "monto":str(u.monto)}
             # print(u.id)
             # print(u.usuario)
             # print(u.monto)

@@ -56,6 +56,7 @@ export default class App extends Component{
     constructor(props){
         super(props);
         this.state={
+            datos: []
 
         }
     }
@@ -68,6 +69,8 @@ export default class App extends Component{
         // console.log("HOLA-----");
         // console.log(JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID')));
         id = JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID'));
+        id= id.replace('"','');
+        id= id.replace('"','');
         url = await AsyncStorage.getItem("server");
         token = await AsyncStorage.getItem("userToken");
         // console.log(id, url);
@@ -81,9 +84,17 @@ export default class App extends Component{
                 "Authorization":"Token "+ token
             }, 
         }).then( res => {
-            console.log(res.data.datos);
-            data = JSON.parse(res.data.datos);
-            datos.push(data);
+            a = res.data.datos;
+            let j = a.replace(/'/g,'"');
+            let json_data = JSON.parse(j);
+            let data = [];
+            for(var i in json_data){
+                data.push(json_data[i]);
+            }
+            this.setState({datos: data})
+            // console.log(data)
+            
+
         }).catch(err => {
             console.log(err)
         });
@@ -121,6 +132,7 @@ export default class App extends Component{
             }, 
         }).then( res => {
             console.log(res.data);
+            this._getInfo();
         }).catch(err => {
             console.log(err)
         });
@@ -139,11 +151,11 @@ export default class App extends Component{
                 <Image/>
             </View>
             <View style={styles.datosCaja}>
-                <Text style={styles.nombre}>{item.nombre}</Text>
-                <Text style={styles.aporte}>{item.aporte}</Text>
+                <Text style={styles.nombre}>{item.usuario}</Text>
+                <Text style={styles.aporte}>{item.monto}</Text>
             </View>
             <View style={styles.cerrar}>
-                <TouchableOpacity style={styles.btnCerrar} onPress={() => this._eliminar(item.id, item.nombre)}>
+                <TouchableOpacity style={styles.btnCerrar} onPress={() => this._eliminar(item.id, item.usuario)}>
                     <Icon name="close" size={24} color={'#D5D5D5'}/>
                 </TouchableOpacity>
             </View>
@@ -169,9 +181,9 @@ export default class App extends Component{
                 </View>
                 <FlatList
                     style={styles.flat}
-                    data={datos}
+                    data={this.state.datos}
                     renderItem={this.caja}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.id.toString()}
                 />
             </ScrollView>
         )

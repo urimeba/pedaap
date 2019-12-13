@@ -50,6 +50,8 @@ class PresupuestoCategoriasViewSet(viewsets.ModelViewSet):
         categorias = PresupuestoCategorias.objects.filter(presupuesto__id=idPresupuesto).values('categoria')
         promos = Promociones.objects.filter(productoTienda__producto__categoria__in=categorias)
 
+        print(promos)
+
         dic = {}
         for p in promos:
             dic[str(p.id)]={"id":str(p.id), "nombre":str(p.descripcion),'foto':str(p.foto.name), 'lugar':p.productoTienda.tienda.nombre, 'vigencia':str(p.fechaVencimiento), 'categoria':p.productoTienda.producto.categoria.nombre, 'descripcion':p.descripcion, 'direccion':p.productoTienda.tienda.direccion, 'costo':str(p.costo), 'icono':str(p.productoTienda.tienda.icono)}
