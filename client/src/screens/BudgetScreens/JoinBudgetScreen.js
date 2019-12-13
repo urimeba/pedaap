@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity,Alert, ScrollView} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity,Alert, ScrollView, AsyncStorage} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
+
 const code={codigo:'A'}
 export default class Join extends Component{
     constructor(props){
@@ -11,13 +13,53 @@ export default class Join extends Component{
             codigo:'',
             error1:false,//no existe el codigo
             error2:false,//campo vacio
-            succes:false ,// se encontro el codigo
+            succes:false ,// se encontro el codigo,
+            idPresupuesto:''
         };
     }
 
 
-_unirme=()=>{
-    // Alert.alert(this.state.codigo)
+_unirme=async()=>{
+
+    // console.log(this.state.codigo);
+
+    server = await AsyncStorage.getItem("server");
+    idUser = await AsyncStorage.getItem("userId");
+    token = await AsyncStorage.getItem("userToken");
+
+    axios({
+        method: 'POST',
+        url: server+"compartidos/getPresupuesto/",
+        data: {codigo:this.state.codigo},
+        headers: {
+          "content-type":"application/json",
+          "Authorization": "Token "+token
+        },
+  
+        }).then( res => {
+                // console.log(res.data);
+
+                let j = res.data.Datos.replace(/'/g,'"');
+                let json_data = JSON.parse(j);
+                let data = [];
+                // console.log(json_data);
+
+                for(var i in json_data){
+                    // console.log(json_data[i]);
+                    data.push(json_data[i]);
+                }
+
+                // console.log(data);
+                code.codigo = this.state.codigo;
+                console.log(Object.keys(json_data)[0])
+                this.setState({idPresupuesto: Object.keys(json_data)[0]})
+              
+        }).catch(err => {
+            console.log(err.response.data)
+        });
+
+        setTimeout(() =>{
+            // Alert.alert(this.state.codigo)
     if(this.state.codigo===""){
         this.setState({error2:true})
         this.setState({error1:false})
@@ -28,7 +70,8 @@ _unirme=()=>{
          this.setState({error1:false})
         this.setState({error2:false})
         this.setState({succes:true})
-        this.props.navigation.navigate('ShareBudget',)
+        console.log(this.state.idPresupuesto)
+        this.props.navigation.navigate('ShareBudget',{idPresupuesto:this.state.idPresupuesto})
         
     }else{
         this.setState({error1:true})
@@ -38,6 +81,10 @@ _unirme=()=>{
          return false
         // Alert.alert('yes')
     }
+        }, 700)
+
+
+    
 }
 
     ontext=(codigo)=>{

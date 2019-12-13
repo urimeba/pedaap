@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Modal,Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage, Alert} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Modal,Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage, Alert, RefreshControl} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
@@ -60,7 +60,10 @@ export default class App extends Component{
             eliminar:false,
             modalVisible:false,
             datos: [],
-            idPresupuesto: ''
+            idPresupuesto: '',
+            codigo:'',
+            monto: '',
+            loading: false
         }
     }
 
@@ -68,43 +71,58 @@ export default class App extends Component{
         this.setState({modalVisible: visible});
     } 
     componentDidMount(){
+        // idPresupuesto = this.props.navigation.getParam("idPresupuesto", "0")
+        // console.log("###################",idPresupuesto)
         this._getInfo();
       }
 
     _getInfo = async() =>{
-        // console.log("HOLA-----");
-        // console.log(JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID')));
-        id = JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID'));
-        id= id.replace('"','');
-        id= id.replace('"','');
-        this.setState({idPresupuesto:id})
-        url = await AsyncStorage.getItem("server");
+        id = this.props.navigation.getParam('idPresupuesto', 'NO-ID');
+        // console.log("#############",id)
+
+        server = await AsyncStorage.getItem("server");
         token = await AsyncStorage.getItem("userToken");
-        // console.log(id, url);
 
         axios({
-            method: 'POST',
-            url: url+"usuariosCompartido/getUsuariosCompartido/",
-            data: {id:id},
+            method: 'GET',
+            url: server+"compartidos/"+id+"/",
+            data: {},
             headers: {
                 "content-type":"application/json",
                 "Authorization":"Token "+ token
             }, 
-        }).then( res => {
-            a = res.data.datos;
-            let j = a.replace(/'/g,'"');
-            let json_data = JSON.parse(j);
-            let data = [];
-            for(var i in json_data){
-                data.push(json_data[i]);
-            }
-            this.setState({datos: data})
-            // console.log(data)
-            
+            }).then( res => {
+                // console.log(res.data)
+                this.setState({codigo: res.data.codigo, monto:res.data.monto})
+                this.forceUpdate();
 
-        }).catch(err => {
-            console.log(err)
-        });
+                this._getUsers(id);
+
+            }).catch(err => {
+                console.log(err)
+            });
+    }
+
+    _getUsers(idPresupuesto){
+
+        axios({
+            method: 'POST',
+            url: server+"usuariosCompartido/getUsuariosCompartido/",
+            data: {idPresupuesto:idPresupuesto},
+            headers: {
+                "content-type":"application/json",
+                "Authorization":"Token "+ token
+            }, 
+            }).then( res => {
+                // console.log(res.data)
+
+            }).catch(err => {
+                console.log(err)
+            });
+
+
+
+
     }
 
     _eliminar=(id, aportador)=>{
@@ -151,7 +169,8 @@ export default class App extends Component{
     }
 
     _combo = () => {
-        this.props.navigation.navigate('ComboBudget', {idPresupuesto: this.state.idPresupuesto})
+        id = JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID'));
+        this.props.navigation.navigate('ComboBudget', {idPresupuesto: id})
     }
 
     caja= ({item})=>(
@@ -242,7 +261,7 @@ export default class App extends Component{
                         <Text style={styles.textoPresup}>Presupuesto</Text>
                     </View>
                     <View style={styles.presupuesto1}>
-                        <Text style={styles.BoxPresup}>{JSON.stringify(this.props.navigation.getParam('monto', 'NO-MONTO')).replace('"','').replace('"','')}</Text>
+                        <Text style={styles.BoxPresup}>{this.state.monto}</Text>
                     </View>
                 </View>
                 <View style={styles.verPromos}>
@@ -255,7 +274,7 @@ export default class App extends Component{
                         <Text style={styles.titulo1}>Comparte tu código</Text>
                     </View>
                     <View style={styles.codigoC1}>
-                        <Text style={styles.codigo}>{JSON.stringify(this.props.navigation.getParam('codigo', 'NO-CODE')).replace('"','').replace('"','')}</Text>
+                        <Text style={styles.codigo}>{this.state.codigo}</Text>
                     </View>
                     <View style={styles.codigoC1}>
                         <Text style={styles.titulAporta}>Aportadores:</Text>

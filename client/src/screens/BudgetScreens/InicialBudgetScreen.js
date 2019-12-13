@@ -40,7 +40,7 @@ export default class Event extends Component{
         if(this.state.presupuesto=="" || this.state.nombrePres==""){
             this.setState({error1:true})
         }else{
-             this.props.navigation.navigate('CategoriasS');
+             this.props.navigation.navigate('CategoriasS', {nombre:this.state.nombrePres, monto:this.state.presupuesto});
         }
     }
 

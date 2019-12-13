@@ -3,6 +3,7 @@ import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,Toucha
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
+import Logo from '../../components/StoreIcons';
 
 const datos=[
     {
@@ -101,31 +102,31 @@ export default class App extends Component{
     }
 
     componentDidMount(){
-        id = JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID'));
-        id= id.replace('"','');
-        id= id.replace('"','');
-        this.setState({idPresupuesto:id})
+        // id = JSON.stringify(this.props.navigation.getParam('idPresupuesto', 'NO-ID'));
+        // id= id.replace('"','');
+        // id= id.replace('"','');
+        // this.setState({idPresupuesto:id})
         
         this._getPromos();
 
     }
 
     _getPromos = async() =>{
-        console.log(this.state.idPresupuesto);
+        id = this.props.navigation.getParam('idPresupuesto', 'NO-ID');
+        id= id.replace('"','');
+        id= id.replace('"','');
         server = await AsyncStorage.getItem("server");
         idUser = await AsyncStorage.getItem("userId");
         token = await AsyncStorage.getItem("userToken");
 
-
         axios({
             method: 'POST',
             url: server+"categoriasCompartido/getCategorias/",
-            data: {idPresupuesto:this.state.idPresupuesto },
+            data: {idPresupuesto:id},
             headers: {
               "content-type":"application/json",
               "Authorization": "Token "+token
             },
-      
             }).then( res => {
                 //   console.log(res.data.Datos);
                 
@@ -138,7 +139,7 @@ export default class App extends Component{
                 }
                 
                 this.setState({promociones: data})
-                // console.log(json_data)
+                console.log(data)
 
             }).catch(err => {
                 console.log(err.response.data)
@@ -146,34 +147,115 @@ export default class App extends Component{
 
     }
 
-    caja= ({item})=>(
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionB', {
-            datos: item, 
-            id: item.id,
-            nombre: item.nombre,
-            foto: item.foto,
-            lugar: item.lugar,
-            vigencia: item.vigencia,
-            categoria: item.categoria,
-            descripcion: item.descripcion,
-            direccion: item.direccion,
-            costo: item.costo,
-            icono: item.icono
-             })} style={styles.caja}>
-            <View style={styles.imgCaja}>
-                <Image
-                    // style={styles.pngImage}
-                    source={{uri: this.state.server+'media/'+item.foto}}
-                    resizeMode="center"
-                />
-            </View>
-            <View style={styles.datosCaja}>
-                <Text style={styles.titulo}>{item.nombre}</Text>
-                <Text style={styles.titulo}>{item.lugar}</Text>
-                <Text style={styles.titulo}>{item.vigencia}</Text>
-            </View>
-        </TouchableOpacity>
-    )
+    caja= ({item})=>{
+        let fechaSplit = item.vigencia.split("-");
+        let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
+
+        if(item.foto == "None"){
+            return(
+                <TouchableOpacity 
+                    onPress={() => this.props.navigation.navigate('PromotionE', {
+                        datos: item,
+                        id: item.id,
+                        nombre: item.nombre,
+                        lugar: item.lugar,
+                        vigencia: item.vigencia,
+                        categoria: item.categoria,
+                        descripcion: item.descripcion,
+                        direccion: item.direccion,
+                        costo: item.costo,
+                        icono: item.icono,
+                    })}
+                    style={styles.caja}
+                >
+                    <View style={styles.imgCaja}>
+                        <Image
+                            style={styles.pngImage}
+                            source={Logo[item.icono]}
+                            resizeMode="center"
+                        />
+                    </View>
+                    <View style={styles.datosCaja}>
+                        <Text style={styles.titulo}>{item.nombre}</Text>
+                        {item.costo == '0.00' &&(
+                            <Text style={styles.tituloPromo}>Promoción</Text>
+                        )}
+                        {item.costo != '0.00' &&(
+                            <Text style={styles.tituloCosto}>${item.costo}</Text>
+                        )}
+                        <Text style={styles.titulo}>Vigencia: {fechaFormat}</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        }else{
+            return(
+                <TouchableOpacity 
+                    onPress={() => this.props.navigation.navigate('PromotionE', {
+                        datos: item,
+                        id: item.id,
+                        nombre: item.nombre,
+                        lugar: item.lugar,
+                        vigencia: item.vigencia,
+                        categoria: item.categoria,
+                        descripcion: item.descripcion,
+                        direccion: item.direccion,
+                        costo: item.costo,
+                        foto: this.state.server+'media/'+item.foto,
+                        fotoRaw: item.foto
+                    })}
+                    style={styles.caja}
+                >
+                    <View style={styles.imgCaja}>
+                        <Image
+                            style={styles.pngImagePhoto}
+                            source={{uri: this.state.server+'media/'+item.foto}}
+                            resizeMode="center"
+                        />
+                    </View>
+                    <View style={styles.datosCaja}>
+                        <Text style={styles.titulo}>{item.nombre}</Text>
+                        {item.costo == '0.00' &&(
+                            <Text style={styles.tituloPromo}>Promoción</Text>
+                        )}
+                        {item.costo != '0.00' &&(
+                            <Text style={styles.tituloCosto}>${item.costo}</Text>
+                        )}
+                        <Text style={styles.titulo}>Vigencia: {fechaFormat}</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        }
+        
+    }
+
+    // caja= ({item})=>(
+    //     <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionB', {
+    //         datos: item, 
+    //         id: item.id,
+    //         nombre: item.nombre,
+    //         foto: item.foto,
+    //         lugar: item.lugar,
+    //         vigencia: item.vigencia,
+    //         categoria: item.categoria,
+    //         descripcion: item.descripcion,
+    //         direccion: item.direccion,
+    //         costo: item.costo,
+    //         icono: item.icono
+    //          })} style={styles.caja}>
+    //         <View style={styles.imgCaja}>
+    //             <Image
+    //                 // style={styles.pngImage}
+    //                 source={{uri: this.state.server+'media/'+item.foto}}
+    //                 resizeMode="center"
+    //             />
+    //         </View>
+    //         <View style={styles.datosCaja}>
+    //             <Text style={styles.titulo}>{item.nombre}</Text>
+    //             <Text style={styles.titulo}>{item.lugar}</Text>
+    //             <Text style={styles.titulo}>{item.vigencia}</Text>
+    //         </View>
+    //     </TouchableOpacity>
+    // )
 
      _filtro=()=>{
         if(this.state.filter===false){

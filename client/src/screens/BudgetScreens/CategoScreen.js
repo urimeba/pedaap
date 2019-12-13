@@ -34,7 +34,7 @@ export default (props) => {
                     }
                 });
                 let resp = await request.json();
-                console.log(resp.results);
+                // console.log(resp.results);
                 setDataP(resp.results);
             } catch (error) {
                 console.log(error);
@@ -64,43 +64,70 @@ export default (props) => {
         /*
             Se convierte el MAP en un JSON que se puede enviar a la API
         */
-        let obj = Object.create(null);
-        for (let [k,v] of s) {
-            obj[k] = v;
-        }
-        console.log(JSON.stringify(obj));
 
-
-        servidor = await AsyncStorage.getItem("server")
-        
+       
+        server = await AsyncStorage.getItem("server")
         idUser = await AsyncStorage.getItem("userId");
         token = await AsyncStorage.getItem("userToken");
+        monto = props.navigation.getParam("monto", 0);
+        nombre = props.navigation.getParam("nombre", "nombre");
 
-        for(categoria in obj){
-            if(obj[categoria]==true){
-                console.log(categoria);
-                url = servidor+'userCategorias/';
+        urlUser = server+"usuarios/"+idUser+"/";
 
-                axios({
-                    method: 'POST',
-                    url: url,
-                    data: {user:servidor+"usuarios/"+idUser+"/", categoria: servidor+"categoriaProductos/"+categoria+"/"},
-                    headers: {
-                        "content-type":"application/json",
-                        "Authorization": "Token "+token
-                    }, 
-                }).then( res => {
-                    console.log(res.data);
-                }).catch(err => {
-                    console.log(err.response.data);
-                });
+        axios({
+        method: 'POST',
+        url: server+"compartidos/",
+        data: {usuarioPropietario:urlUser, monto:monto},
+        headers: {
+            "content-type":"application/json",
+            "Authorization": "Token "+token
+        }, 
+        }).then( res => {
+            // console.log(res.data);
+
+            let obj = Object.create(null);
+            for (let [k,v] of s) {
+                obj[k] = v;
             }
-        }
-        goNext();
+            // // console.log(JSON.stringify(obj));
+
+            for(categoria in obj){
+                if(obj[categoria]==true){
+                    // console.log(categoria);
+
+                    urlPresupuesto = server+"compartidos/"+res.data.id+"/"
+                    urlCategoria = server+"categoriaProductos/"+categoria+"/"
+
+                    axios({
+                        method: 'POST',
+                        url: server+"categoriasCompartido/",
+                        data: {presupuestoCompartido:urlPresupuesto , categoria:urlCategoria},
+                        headers: {
+                            "content-type":"application/json",
+                            "Authorization": "Token "+token
+                        }, 
+                    }).then( res => {
+                        // console.log(res.data);
+                    }).catch(err => {
+                        console.log(err.response.data);
+                    });
+                }
+            }
+
+            goNext(res.data.id);
+
+
+        }).catch(err => {
+            console.log(err.response.data);
+        });
+
+
+        
     }
 
-    const goNext = () => {
-        props.navigation.navigate('ShareBudget');
+    const goNext = (id) => {
+        // console.log("###############33", id)
+        props.navigation.navigate('ShareBudget',{idPresupuesto: id});
     }
 
     return (

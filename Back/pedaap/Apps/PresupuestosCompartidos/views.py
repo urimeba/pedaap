@@ -69,9 +69,9 @@ class UsuariosPresupuestoCompartidoViewSet(viewsets.ModelViewSet):
 
     @action(methods=['post'], detail=False)
     def getUsuariosCompartido(self, request):
-        idPrespusto = request.data.get("id")
+        idPresupuesto = request.data.get("idPresupuesto")
 
-        presupuesto = PresupuestoCompartido.objects.get(id=idPrespusto)
+        presupuesto = PresupuestoCompartido.objects.get(id=idPresupuesto)
 
         usuarios = UsuariosPresupuestoCompartido.objects.filter(presupuestoCompartido=presupuesto)
 
