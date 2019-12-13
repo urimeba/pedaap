@@ -51,9 +51,9 @@ export default class App extends Component{
     } 
 
     _enviar =async () => {
-        // console.log("kfnvfnk")
+        console.log("kfnvfnk")
         // console.log(this.state.categoria)
-        // console.log(this.state.fechaExpiracion, this.state.fechaInicio, this.state.costo, this.state.descrip, this.state.producto, this.state.tienda)
+        console.log(this.state.fechaExpiracion, this.state.fechaInicio, this.state.costo, this.state.descrip, this.state.producto, this.state.tienda)
         if (this.state.fechaInicio =="" || this.state.fechaExpiracion =="" || this.state.costo =="" || this.state.descrip == "" || this.state.producto == "" || this.state.tienda == "") {
             
             this.setState({error1:true})
@@ -214,10 +214,10 @@ export default class App extends Component{
         // var sec = new Date().getSeconds(); //Current Seconds
 
         photoName = idUser.toString() + "_" + date.toString() + "_" + this.state.producto + ".jpg";
-        console.log(idUser.toString())
-        console.log(date.toString())
-        console.log(this.state.producto)
-        console.log(photoName)
+        // console.log(idUser.toString())
+        // console.log(date.toString())
+        // console.log(this.state.producto)
+        // console.log(photoName)
 
 
         const data = new FormData();
@@ -231,7 +231,7 @@ export default class App extends Component{
         data.append('idUser', idUser);
 
         url1 = url+"promociones/alta/"
-        console.log(url1)
+        // console.log(url1)
 
         axios({
             method: 'POST',
@@ -253,8 +253,8 @@ export default class App extends Component{
 
 
 
-            // console.log(err.response.data.Error)
-            console.log(err)
+            // console.log(err.response.data)
+            // console.log(err)
             // Alert.alert("Error", err.response.data.Error);
         });
 
