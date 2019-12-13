@@ -114,7 +114,15 @@ export default class App extends Component{
                 "Authorization":"Token "+ token
             }, 
             }).then( res => {
-                // console.log(res.data)
+                a = res.data.datos;
+                let j = a.replace(/'/g,'"');
+                let json_data = JSON.parse(j);
+                let data = [];
+                for(var i in json_data){
+                    data.push(json_data[i]);
+                }
+                console.log()
+                this.setState({datos: data})
 
             }).catch(err => {
                 console.log(err)

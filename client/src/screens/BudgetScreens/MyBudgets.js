@@ -49,10 +49,12 @@ export default class App extends Component{
         idUser = await AsyncStorage.getItem("userId");
         token = await AsyncStorage.getItem("userToken");
 
+        console.log(idUser)
+
         axios({
             method: 'POST',
             url: server+"compartidos/getPresupuestos/",
-            data: {idUser:idUser },
+            data: {idUser:idUser},
             headers: {
               "content-type":"application/json",
               "Authorization": "Token "+token
