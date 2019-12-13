@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage, Alert} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {NetInfo} from 'react-native';
@@ -16,6 +16,9 @@ export default class App extends Component{
             presIni:200,
             aporte:0,
             aportes:0,
+            monto:0,
+            creador:"",
+            aportacion:0,
         }
     }
 
@@ -23,11 +26,74 @@ export default class App extends Component{
         // console.log("#######",this.props.navigation.getParam("idPresupuesto", "NOID"))
         // console.log("$$$$$$$",this.props.navigation.getParam("idAportacion", "NOID"))
 
+        this._getInfo();
+
+    }
+
+    _getInfo =async() =>{
+        server = await AsyncStorage.getItem("server");
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+        idPresupuesto = this.props.navigation.getParam("idPresupuesto", "NOID");
+        idAportacion = this.props.navigation.getParam("idAportacion", "NOID");
+
+        axios({
+            method: 'GET',
+            url: server+"compartidos/"+idPresupuesto+"/",
+            data: {},
+            headers: {
+                "content-type":"application/json",
+                "Authorization": "Token "+token
+            },
+        
+            }).then( res => {
+                    console.log(res.data);
+                    this.setState({monto:res.data.monto})
+
+                    axios({
+                        method: 'GET',
+                        url: res.data.usuarioPropietario,
+                        data: {},
+                        headers: {
+                            "content-type":"application/json",
+                            "Authorization": "Token "+token
+                        },
+                    
+                        }).then( res => {
+                                console.log(res.data);
+                                this.setState({creador:res.data.username})
+                        }).catch(err => {
+                            console.log(err.response.data)
+                        });
+
+
+            }).catch(err => {
+                console.log(err.response.data)
+            });
+
+
+            axios({
+                method: 'GET',
+                url: server+"usuariosCompartido"+idAportacion,
+                data: {},
+                headers: {
+                    "content-type":"application/json",
+                    "Authorization": "Token "+token
+                },
+            
+                }).then( res => {
+                        console.log(res.data);
+                        this.setState({aportacion:res.data.monto})
+                }).catch(err => {
+                    console.log(err.response.data)
+                });
+
     }
 
     _aporte=()=>{
-        var total= parseInt(this.state.aporte)+ parseInt(this.state.pres)
-        console.log(total, 'total')
+        var total= parseInt(this.state.aporte)+ parseInt(this.state.pres);
+
+        // console.log(total, 'total')
         // console.log(this.state.aporte,'thisaporte')
         // console.log(this.state.pres,'pres')
          var apor = parseInt(this.state.aportes) + parseInt(this.state.aporte)
@@ -36,6 +102,47 @@ export default class App extends Component{
     
 
         this.setState({pres:total,aportes:apor})
+
+        if(this.state.aportacion>0){
+            console.log("Mayor a cero");
+
+
+            axios({
+                method: 'PATCH',
+                url: server+"usuariosCompartido"+idAportacion,
+                data: {monto: this.state.aportacion},
+                headers: {
+                    "content-type":"application/json",
+                    "Authorization": "Token "+token
+                },
+            
+                }).then( res => {
+                        console.log(res.data);
+                        this.setState({aportacion:res.data.monto})
+                }).catch(err => {
+                    console.log(err.response.data)
+                });
+
+                axios({
+                method: 'POST',
+                url: server+"compartidos/sumAportaciones/",
+                data: {idAportacion: this.props.navigation.getParam("idAportacion", "NOID")},
+                headers: {
+                    "content-type":"application/json",
+                    "Authorization": "Token "+token
+                },
+            
+                }).then( res => {
+                        console.log(res.data);
+                        // this.setState({aportacion:res.data.monto})
+                }).catch(err => {
+                    console.log(err.response.data)
+                });
+
+        }
+        else{
+            Alert.alert("Error", "Ingresa un numero mayor a cero");
+        }
     }
 
     // aporte(aporte){
@@ -47,7 +154,7 @@ export default class App extends Component{
     
 
     _combo=()=>{
-        this.props.navigation.navigate('ComboBudget');
+        this.props.navigation.navigate('ComboBudget', );
     }
 
     _salir=async()=>{
@@ -88,7 +195,7 @@ export default class App extends Component{
                 <View style={styles.titulo1}>
                     <Text style={styles.text1}>Presupuesto</Text>
                     <View style={styles.nombreE}>
-                        <Text style={styles.textC2}>{this.state.pres}</Text> 
+                        <Text style={styles.textC2}>{this.state.monto}</Text> 
                     </View>
                 </View>
                 <TouchableOpacity style={styles.verCombos} onPress={this._combo}>
@@ -101,7 +208,7 @@ export default class App extends Component{
                             <Image/>
                         </View>
                         <View style={styles.datosCaja}>
-                            <Text style={styles.nombre}>Carlos</Text>
+                            <Text style={styles.nombre}>{this.state.creador}</Text>
                             <Text style={styles.aporte}>$200</Text>
                         </View>
                     </View>
@@ -122,7 +229,8 @@ export default class App extends Component{
                             placeholder="$300"
                             placeholderTextColor = "#848482"
                             keyboardType = 'numeric'
-                            onChangeText={(aporte)=>this.setState({aporte})}
+                            onChangeText={(aportacion)=>this.setState({aportacion})}
+                            value={`${this.state.aportacion}`}
                         />
                         <TouchableOpacity
                             style={styles.btnCrear}

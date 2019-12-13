@@ -9,7 +9,7 @@ class PresupuestosCompartidoSerializer(serializers.HyperlinkedModelSerializer):
 class UsuariosPresupuestoCompartidoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = UsuariosPresupuestoCompartido
-        fields=['id', 'presupuestoCompartido', 'usuario']
+        fields=['id', 'presupuestoCompartido', 'usuario', 'monto']
 
 class CompartidoCategoriasSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

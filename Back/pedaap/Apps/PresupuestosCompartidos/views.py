@@ -17,6 +17,35 @@ class PresupuestosCompartidosViewSet(viewsets.ModelViewSet):
     queryset = PresupuestoCompartido.objects.all()
     serializer_class = PresupuestosCompartidoSerializer
 
+    @action(methods=['post'], detail=False)
+    def sumAportaciones(self, request):
+        idPresupuesto = request.data.get("idPresupuesto")
+
+
+
+        montoDueño = PresupuestoCompartido.objects.get(id=idPresupuesto).monto
+        aportaciones = UsuariosPresupuestoCompartido.objects.filter(presupuestoCompartido__id=idPresupuesto).values('monto')
+
+        montoTotal = montoDueño
+
+        for aportacion in aportaciones:
+            print(aportacion['monto'])
+            montoDueño+=aportacion['monto']
+
+
+        # print(montoDueño)
+        # print(aportaciones)
+
+        presupuesto = PresupuestoCompartido.objects.get(id=idPresupuesto)
+        presupuesto.monto = montoDueño
+        presupuesto.save()
+
+
+
+
+        return Response( status=HTTP_200_OK)
+
+
 
     @action(methods=['post'], detail=False)
     def getPresupuesto(self, request):
