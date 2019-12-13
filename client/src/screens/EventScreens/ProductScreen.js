@@ -12,7 +12,8 @@ export default class App extends Component{
             filter: false,
             item: [],
             datos: [],
-            server: ''
+            server: '',
+            filtro: false
         }
     }
 
@@ -166,12 +167,22 @@ export default class App extends Component{
         }
     }
 
-     _filtro=()=>{
+    _filtro=()=>{
         if(this.state.filter===false){
-            this.setState({filter:true})
+            let sortData = this.state.datos;
+            sortData.sort((a, b) => parseFloat(a.costo) - parseFloat(b.costo));
+            this.setState({
+                datos: sortData,
+                filter:true
+            })
         }
         if(this.state.filter===true){
-            this.setState({filter:false})
+            let sortData = this.state.datos;
+            sortData.sort((a, b) => parseFloat(b.costo) - parseFloat(a.costo));
+            this.setState({
+                datos: sortData,
+                filter:false
+            })
         }
     }
 
@@ -191,6 +202,7 @@ export default class App extends Component{
                         data={this.state.datos}
                         renderItem={this.caja}
                         keyExtractor={item => item.id}
+                        extraData={this.state}
                     />
                 </View>
             </View>
