@@ -9,7 +9,8 @@ import {
     TouchableOpacity,
     AsyncStorage,
     ActivityIndicator,
-    RefreshControl
+    RefreshControl,
+    Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
@@ -74,6 +75,48 @@ export default class App extends Component{
 
     }
 
+    _delete = async(id) =>{
+        Alert.alert(
+            'Eliminar',
+            '¿Seguro que deseas eliminar este Evento?',
+            [
+              {
+                text: 'Cancelar',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {text: 'OK', onPress: () => this._deleteEvent(id)},
+            ],
+            {cancelable: false},
+          );
+    }
+
+    _deleteEvent = async(id) =>{
+        console.log(id)
+
+        server = await AsyncStorage.getItem("server");
+        idUser = await AsyncStorage.getItem("userId");
+        token = await AsyncStorage.getItem("userToken");
+
+        axios({
+            method: 'DELETE',
+            url: server+"presupuestos/"+id+"/",
+            data: {},
+            headers: {
+              "content-type":"application/json",
+              "Authorization":"Token " +token
+            },
+      
+            }).then( res => {
+                //   console.log(res.data);
+                Alert.alert("Exito", "Eliminado correctamente");
+                this.componentDidMount();
+            }).catch(err => {
+                console.log(err.response.data)
+            //   Alert.alert("Error", err.response.data.Error);
+            });
+    }
+
 
     caja= ({item})=>{
         // let fechaSplit = item.fecha.split("-");
@@ -94,7 +137,7 @@ export default class App extends Component{
                     </TouchableOpacity>
                     <View style={styles.caja3}>
                         <TouchableOpacity 
-                            onPress={() => console.log('Eliminar')}
+                            onPress={() => this._delete(item.id)}
                             style={styles.caja3Boton}
                         >
                              <Icon name={'delete-outline'} size={20} color={'#DE4C63'} />
