@@ -169,7 +169,10 @@ export default class App extends Component{
             })
             .catch(error=>console.log(error))
         })
-        .catch(error=>console.log(error))
+        .catch((error)=>{
+            console.log(error)
+            this.props.navigation.navigate('Login');
+        })
     }
 
     caja= ({item})=>{
