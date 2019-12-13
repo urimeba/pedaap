@@ -1,5 +1,6 @@
 from Apps.PresupuestosCompartidos.models import PresupuestoCompartido, UsuariosPresupuestoCompartido, CompartidoCategorias
 from Apps.Promociones.models import Promociones
+from Apps.Usuarios.models import User
 from Apps.PresupuestosCompartidos.serializers import PresupuestosCompartidoSerializer, UsuariosPresupuestoCompartidoSerializer, CompartidoCategoriasSerializer
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -89,11 +90,25 @@ class UsuariosPresupuestoCompartidoViewSet(viewsets.ModelViewSet):
         return Response({"datos": str(dic)}, status=HTTP_200_OK)
 
     @action(methods=['post'], detail=False)
+    def getCreateUser(self, request):
+        idPresupuesto = request.data.get("idPresupuesto")
+        idUsuario = request.data.get("idUsuario")
+        print(idPresupuesto, idUsuario)
+
+        try:
+            user = UsuariosPresupuestoCompartido.objects.get(presupuestoCompartido__id=idPresupuesto, usuario__id=idUsuario )
+            return Response({"detail": "Ya estas en este presupuesto"}, status=HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            # raise
+            usuario = User.objects.get(id=idUsuario)
+            presupuesto = PresupuestoCompartido.objects.get(id=idPresupuesto)
+            user = UsuariosPresupuestoCompartido(presupuestoCompartido=presupuesto, usuario=usuario, monto=0 )
+            user.save()
+            return Response({"detail": "Correcto"}, status=HTTP_200_OK)
+
+    @action(methods=['post'], detail=False)
     def eliminarUsuario(self, request):
         idUsuario = request.data.get("idUsuario")
-
-
-
         print(idUsuario)
         return Response(status=HTTP_200_OK)
 

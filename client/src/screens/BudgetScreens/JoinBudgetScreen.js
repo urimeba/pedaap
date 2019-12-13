@@ -53,6 +53,22 @@ _unirme=async()=>{
                 code.codigo = this.state.codigo;
                 console.log(Object.keys(json_data)[0])
                 this.setState({idPresupuesto: Object.keys(json_data)[0]})
+
+                axios({
+                method: 'POST',
+                url: server+"usuariosCompartido/getCreateUser/",
+                data: {idPresupuesto:Object.keys(json_data)[0], idUsuario:idUser},
+                headers: {
+                    "content-type":"application/json",
+                    "Authorization": "Token "+token
+                },
+            
+                }).then( res => {
+                        // console.log(res.data);
+                        this.props.navigation.navigate('ShareBudget',{idPresupuesto:this.state.idPresupuesto})
+                }).catch(err => {
+                    Alert.alert("Error", err.response.data.detail);
+                });
               
         }).catch(err => {
             console.log(err.response.data)
@@ -70,8 +86,7 @@ _unirme=async()=>{
          this.setState({error1:false})
         this.setState({error2:false})
         this.setState({succes:true})
-        console.log(this.state.idPresupuesto)
-        this.props.navigation.navigate('ShareBudget',{idPresupuesto:this.state.idPresupuesto})
+        
         
     }else{
         this.setState({error1:true})
