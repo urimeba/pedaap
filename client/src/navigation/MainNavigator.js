@@ -35,6 +35,6 @@ export default createAppContainer(createSwitchNavigator(
         },
     },
     {
-        initialRouteName: 'Login',
+        initialRouteName: 'User',
     }
 ));

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage, Alert} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Modal,Text, Image, TextInput,TouchableOpacity, ScrollView, AsyncStorage, Alert} from 'react-native';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
@@ -56,12 +56,18 @@ export default class App extends Component{
     constructor(props){
         super(props);
         this.state={
-            datos: [],
+            aportadorE:'',
+            eliminar:false,
+            modalVisible:false,
+            datos: []
             idPresupuesto: ''
 
         }
     }
 
+    setModalVisible(visible) {
+        this.setState({modalVisible: visible});
+    } 
     componentDidMount(){
         this._getInfo();
       }
@@ -104,23 +110,25 @@ export default class App extends Component{
 
     _eliminar=(id, aportador)=>{
         // console.log(id);
+        this.setState({aportadorE:aportador, eliminar:true})
+        this.setModalVisible(true);
+        // Alert.alert(
+        //     'Confirmar',
+        //     '¿Deseas eliminar a '+aportador+" de este presupuesto?",
+        //     [
+        //       {
+        //         text: 'Cancelar', onPress: () => console.log('Cancel Pressed'), style: 'cancel',
+        //       },
 
-        Alert.alert(
-            'Confirmar',
-            '¿Deseas eliminar a '+aportador+" de este presupuesto?",
-            [
-              {
-                text: 'Cancelar', onPress: () => console.log('Cancel Pressed'), style: 'cancel',
-              },
-
-              {text: 'OK', onPress: () => this._deleteUser(id)},
-            ],
-            {cancelable: false},
-          );
+        //       {text: 'OK', onPress: () => this._deleteUser(id)},
+        //     ],
+        //     {cancelable: false},
+        //   );
 
     }
 
     _deleteUser= async(id) =>{
+        this.setModalVisible(!this.state.modalVisible);
         url = await AsyncStorage.getItem("server");
         token = await AsyncStorage.getItem("userToken");
         // console.log(id);
@@ -169,6 +177,67 @@ export default class App extends Component{
     render(){
         return(
             <ScrollView style={styles.todo}>
+
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            // transparent={false}
+                            style={{width: 80, height: 80, backgroundColor: 'pink'}}
+                            visible={this.state.modalVisible}
+                            onRequestClose={() => {
+                                this.setState({modalVisible:false})
+                            }}>
+                            <View style = {styles.modal} >
+                                
+                                {this.state.eliminar===true &&(
+                                    <View style={{justifyContent:'center', alignContent:'center',alignItems:'center'}}>
+                                        <Image
+                                            style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
+                                            source={require('../../img/remove.png')}
+                                        />
+                                        <Text style={{marginTop: 20, textAlign:'center'}} >¿Deseas eliminar a {this.state.aportadorE} de este presupuesto?</Text>
+                                    <View style={{justifyContent:'center',flexDirection:'row', alignContent:'center',alignItems:'center'}}>
+                                        <TouchableOpacity
+                                            style={styles.botonModalA}
+                                                 onPress = {
+                                                     this._deleteUser
+                                                 } >
+                                            <Text style={{color: 'white'}}>Aceptar</Text>
+                                        </TouchableOpacity>
+                                            <TouchableOpacity
+                                            style={styles.botonModalC}
+                                             onPress={() => {
+                                                this.setModalVisible(!this.state.modalVisible);
+                                                }}
+                                               >
+                                            <Text style={{color: 'white'}}>Cancelar</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                    
+                                )}
+                                {this.state.succes===true &&(
+                                    <View style={{justifyContent:'center', alignContent:'center', alignItems:'center'}}>
+                                        <Image
+                                            style={{ width: 50, height: 50, alignSelf:'center', marginTop: 20}}
+                                            source={require('../../img/check.png')}
+                                        />
+                                        < Text style={{marginTop: 20}}>Modificdo correctamente</Text>
+                                        <TouchableOpacity
+                                            style={styles.botonModal}
+                                            onPress={() => {
+                                            this.setModalVisible(!this.state.modalVisible);
+                                            }}>
+                                            <Text style={{color: 'white'}}>Aceptar</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                            </View>
+        </Modal>
+
+
+
+
                 <View style={styles.presupuesto}>
                     <Text style={styles.textoPresup}>Presupuesto</Text>
                     <Text style={styles.BoxPresup}>{JSON.stringify(this.props.navigation.getParam('monto', 'NO-MONTO')).replace('"','').replace('"','')}</Text>
@@ -351,6 +420,63 @@ const styles= StyleSheet.create({
          alignContent:'center',
          width:'100%',
          height: '100%',
-     }
+     },
+      botonModal:{
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FEDB6B',
+        color: 'white',
+        width: 70,
+        height: 30,
+        padding: 5,
+        borderRadius: 8,
+        marginTop: 20,
+    },
+     botonModalA:{
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#71C0F2',
+        color: 'white',
+        width: 70,
+        height: 30,
+        padding: 5,
+        borderRadius: 8,
+        marginTop: 20,
+        marginRight:10
+    },
+     botonModalC:{
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#DE4C63',
+        color: 'white',
+        width: 75,
+        height: 30,
+        marginLeft: 10,
+        padding: 5,
+        borderRadius: 8,
+        marginTop: 20,
+    },
+    modal: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+        textAlign:'center',
+        // backgroundColor: '#F0F0F0',
+        backgroundColor: 'white',
+        width: '80%',
+        height: 230,
+        borderRadius: 10,
+        marginLeft: '10%',
+        marginTop: '10%',
+        padding: 20,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    }
 
 })

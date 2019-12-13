@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     bottomBox:{
-        flex: 1,
+        flex: 2,
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 5,
@@ -62,7 +62,8 @@ const styles = StyleSheet.create({
     },
     bottomBoxText:{
         color: '#FFFFFF',
-        fontSize: 18,
+        fontSize: 15,
+        textAlign:'center'
     },
     png: {
         height: '90%',

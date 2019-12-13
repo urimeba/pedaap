@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     bottomBox:{
-        flex: 1,
+        flex: 2,
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 5,

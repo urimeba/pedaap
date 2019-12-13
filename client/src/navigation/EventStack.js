@@ -8,6 +8,8 @@ import NumAsis from '../screens/EventScreens/NumAsisScreen';
 import Product from '../screens/EventScreens/ProductScreen';
 import MyEvents from '../screens/EventScreens/MyEvents';
 import PromosEvent from '../screens/EventScreens/promosEvent';
+import PromotionE from '../screens/userScreens/PromotionScreen';
+
 import { NavigationEvents } from 'react-navigation';
 
 
@@ -41,6 +43,9 @@ const EventStack = createStackNavigator(
         },
         PromosEvent:{
             screen: PromosEvent,
+        },
+        PromotionE:{
+            screen: PromotionE,
         },
     },
     {

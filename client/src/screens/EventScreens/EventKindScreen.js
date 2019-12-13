@@ -16,6 +16,7 @@ export default class App extends Component{
         super(props);
         this.state={
             selectedItem: null,
+            evento:'',
             datos: [
                 {id: '1', text: 'Familiar', icono: 'account-group'},
                 {id: '2', text: 'Amigos', icono: 'account-group-outline'},
