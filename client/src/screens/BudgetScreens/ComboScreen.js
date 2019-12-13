@@ -97,7 +97,8 @@ export default class App extends Component{
                 establecimieniemtos: false,
                 filter:false,
                 idPresupuesto:'',
-                promociones: []
+                promociones: [],
+                server: ''
             };
     }
 
@@ -118,6 +119,10 @@ export default class App extends Component{
         server = await AsyncStorage.getItem("server");
         idUser = await AsyncStorage.getItem("userId");
         token = await AsyncStorage.getItem("userToken");
+
+        this.setState({
+            server: server
+        })
 
         axios({
             method: 'POST',
@@ -150,6 +155,68 @@ export default class App extends Component{
     caja= ({item})=>{
         let fechaSplit = item.vigencia.split("-");
         let fechaFormat = fechaSplit[2]+'/'+fechaSplit[1]+'/'+fechaSplit[0];
+
+        if(item.foto == "None"){
+            return(
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionB', {
+                    datos: item, 
+                    id: item.id,
+                    nombre: item.nombre,
+                    foto: item.foto,
+                    lugar: item.lugar,
+                    vigencia: item.vigencia,
+                    categoria: item.categoria,
+                    descripcion: item.descripcion,
+                    direccion: item.direccion,
+                    costo: item.costo,
+                    icono: item.icono
+                    })} style={styles.caja}>
+                    <View style={styles.imgCaja}>
+                        <Image
+                            style={styles.pngImage}
+                           source={Logo[item.icono]}
+                            resizeMode="center"
+                        />
+                    </View>
+                    <View style={styles.datosCaja}>
+                        <Text style={styles.titulo}>{item.nombre}</Text>
+                        <Text style={styles.titulo}>{item.lugar}</Text>
+                        <Text style={styles.titulo}>{item.vigencia}</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        }else{
+            return(
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('PromotionB', {
+                    datos: item, 
+                    id: item.id,
+                    nombre: item.nombre,
+                    foto: item.foto,
+                    lugar: item.lugar,
+                    vigencia: item.vigencia,
+                    categoria: item.categoria,
+                    descripcion: item.descripcion,
+                    direccion: item.direccion,
+                    costo: item.costo,
+                    icono: item.icono
+                    })} style={styles.caja}>
+                    <View style={styles.imgCaja}>
+                        <Image
+                            // style={styles.pngImage}
+                            source={{uri: this.state.server+'media/'+item.foto}}
+                            resizeMode="center"
+                        />
+                    </View>
+                    <View style={styles.datosCaja}>
+                        <Text style={styles.titulo}>{item.nombre}</Text>
+                        <Text style={styles.titulo}>{item.lugar}</Text>
+                        <Text style={styles.titulo}>{item.vigencia}</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        }
+        
+    }
 
         if(item.foto == "None"){
             return(
@@ -266,7 +333,7 @@ export default class App extends Component{
         }
     }
 
-    render(){
+render(){
     return (
         <View style={styles.todo}>
             <View style={styles.container}>
