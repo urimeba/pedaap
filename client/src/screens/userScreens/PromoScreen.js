@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
     },
     titulod:{
         flex: 2,
-        fontSize: 16,
+        fontSize: 14,
         // color: 'white'
     },
     titulo11:{

@@ -70,7 +70,7 @@ export default class App extends Component{
                                     <View style={styles.inputs}>
                                         <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('vigencia', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
-                                    <Text style={styles.titulo1}>Direccion</Text>
+                                    <Text style={styles.titulo1}>Dirección</Text>
                                     <View style={styles.inputs}>
                                         <Text style={styles.titulo}>{JSON.stringify(this.props.navigation.getParam('direccion', 'promo')).replace(/"/g, '')}</Text>
                                     </View>
