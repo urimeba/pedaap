@@ -94,7 +94,7 @@ DATABASES = {
         'NAME': 'fiestaap',
         'HOST':'localhost',
         'USER':'root',
-        'PASSWORD':'',
+        'PASSWORD':'passwordAnonymous',
         'PORT':'3306'
     }
 }
@@ -142,9 +142,9 @@ STATICFILES_DIRS = (
 # STATIC_ROOT = os.path.join(BASE_DIR, 'Static')
 AUTH_USER_MODEL = 'Usuarios.User'
 
-TWILIO_ACCOUNT_SID = 'AC5770f9d44bc5f3ad36f3839537c832db'
-TWILIO_AUTH_TOKEN = 'eb7bed12a3369a6963b8f89137415719'
-TWILIO_PHONE_NUMBER= '+12407861324'
+TWILIO_ACCOUNT_SID = ''
+TWILIO_AUTH_TOKEN = ''
+TWILIO_PHONE_NUMBER= ''
 PHONENUMBER_DB_FORMAT="INTERNATIONAL"
 
 
@@ -163,7 +163,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'fiestaapqueretaro@gmail.com'
-EMAIL_HOST_PASSWORD = 'mochila1'
+EMAIL_HOST_PASSWORD = ''
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

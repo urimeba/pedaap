@@ -1,7 +1,7 @@
 
 *.pyc
 
-*.sqlite3
+Back/pedaap/Apps/Juegos/migrations/
 
 Back/pedaap/Apps/Notificaciones/migrations/
 
@@ -13,16 +13,6 @@ Back/pedaap/Apps/Productos/migrations/
 
 Back/pedaap/Apps/Promociones/migrations/
 
-Back/pedaap/Apps/Restaurantes/migrations/
-
 Back/pedaap/Apps/Tiendas/migrations/
 
 Back/pedaap/Apps/Usuarios/migrations/
-
-Back/pedaap/Apps/Juegos/migrations/
-
-Back/pedaap/Static/
-
-Back/pedaap/media/
-
-*.log
